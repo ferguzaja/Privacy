@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cómo crear contenido — SENDA 5.5</title>
+  <style>
+    /* Paleta SENDA (tema de la app) */
+    :root {
+      --forest: #0E1F24;      /* bosque profundo — fondo principal */
+      --mountain: #2E4A46;    /* montaña — contenedores */
+      --gold: #D4B278;        /* oro antiguo — acentos y títulos */
+      --parchment: #F4E6C8;   /* pergamino — texto */
+      --sunset: #A4472D;      /* atardecer — acentos cálidos */
+      --storm: #5A6B7A;       /* cielo tormenta — secundarios */
+      --shadow: #1F2A32;      /* sombra — superficies */
+      --earth: #8C5E3C;       /* tierra */
+      --red: #C7302B;         /* alertas */
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: Georgia, "Times New Roman", serif;
+      line-height: 1.65;
+      margin: 0;
+      color: var(--parchment);
+      background: var(--forest);
+    }
+    .wrap {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 0 20px 72px;
+    }
+    header.banner {
+      width: 100%;
+      max-width: 1024px;
+      margin: 0 auto;
+      display: block;
+    }
+    header.banner img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .intro {
+      background: var(--shadow);
+      border: 1px solid rgba(212,178,120,0.3);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin: 28px 0;
+    }
+    h1 {
+      color: var(--gold);
+      font-size: 2rem;
+      margin: 32px 0 0.3rem;
+      letter-spacing: 0.5px;
+    }
+    h2 {
+      color: var(--gold);
+      font-size: 1.4rem;
+      margin-top: 2.4rem;
+      padding-bottom: 0.35rem;
+      border-bottom: 1px solid rgba(212,178,120,0.4);
+    }
+    h3 { color: var(--gold); font-size: 1.12rem; margin-top: 1.7rem; }
+    .updated { color: var(--storm); font-size: 0.9rem; margin-top: 0; }
+    a { color: var(--gold); }
+    strong { color: #fff0d4; }
+    code {
+      background: var(--shadow);
+      color: var(--gold);
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-size: 0.88em;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+    pre {
+      background: var(--shadow);
+      border: 1px solid rgba(212,178,120,0.25);
+      border-radius: 10px;
+      padding: 14px 16px;
+      overflow-x: auto;
+      font-size: 0.84em;
+      line-height: 1.5;
+    }
+    pre code { background: none; color: var(--parchment); padding: 0; font-size: 1em; }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin: 1.1rem 0;
+      font-size: 0.9em;
+    }
+    th, td {
+      border: 1px solid rgba(212,178,120,0.25);
+      padding: 7px 11px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th { background: var(--mountain); color: var(--gold); }
+    tr:nth-child(even) td { background: rgba(31,42,50,0.5); }
+    blockquote {
+      margin: 1.1rem 0;
+      padding: 0.6rem 1.1rem;
+      border-left: 4px solid var(--gold);
+      background: rgba(46,74,70,0.35);
+      border-radius: 0 8px 8px 0;
+      color: var(--parchment);
+    }
+    hr { border: none; border-top: 1px solid rgba(212,178,120,0.3); margin: 2.6rem 0; }
+    ul { padding-left: 1.4rem; }
+    li { margin: 0.2rem 0; }
+  </style>
+</head>
+<body>
+  <header class="banner">
+    <img src="senda_banner.png" alt="SENDA 5.5" />
+  </header>
+
+  <div class="wrap">
+    <h1>Cómo crear contenido (data-driven)</h1>
+    <p class="updated">Guía para packs de expansión — SENDA 5.5</p>
+
+    <div class="intro">
+      <p style="margin:0">Esta guía explica cómo definir el contenido de la app en el formato JSON
+      que deserializa: <strong>clases</strong> (y subclases), <strong>trasfondos</strong>,
+      <strong>especies</strong>, <strong>dotes</strong>, <strong>conjuros</strong>,
+      <strong>invocaciones</strong>, <strong>equipo</strong> y <strong>bestias</strong>. Todo el
+      contenido es <em>data-driven</em>: no hay lógica hardcodeada. Cada objeto vive en un
+      <strong>content pack</strong> y el motor lo interpreta a partir de sus mecánicas
+      (<code>mechanics</code> / <code>grants</code>, llamadas <em>grants</em>).</p>
+    </div>
+
+    <p>La guía arranca por la <strong>clase</strong> (el objeto más grande y completo) y luego cubre
+    el resto de tipos y las unidades de distancia.</p>
+
+    <hr />
+
+    <h2>1. Dónde vive una clase: el content pack</h2>
+    <p>Una clase nunca va suelta. Va dentro de un <code>ContentPack</code>, en la lista
+    <code>classes</code>:</p>
+    <pre><code>{
+  "version": "2",
+  "id": "mi_pack",
+  "name": "Mi pack de clases",
+  "author": "Tu nombre",
+  "license": "…",
+
+  "classes": [ /* aquí van una o más clases (ClassDef) */ ],
+  "species": [],
+  "backgrounds": [],
+  "feats": [],
+  "spells": [],
+  "invocations": [],
+  "equipment": [],
+  "beasts": []
+}</code></pre>
+    <p>Solo <code>id</code> es obligatorio en el pack; todas las listas son opcionales (un pack puede
+    aportar solo clases).</p>
+
+    <h3>Reglas de parseo que conviene conocer</h3>
+    <ul>
+      <li><strong>Discriminador <code>"type"</code></strong>: dentro de <code>mechanics</code>, el
+      campo <code>type</code> decide qué grant es.</li>
+      <li><strong><code>ignoreUnknownKeys = true</code></strong>: campos extra en el JSON no rompen
+      el parseo.</li>
+      <li><strong>Degradación elegante</strong>: un <code>type</code> de grant que el motor no
+      conoce se convierte en <code>UNKNOWN</code> en vez de fallar. El <code>display</code> del rasgo
+      se sigue mostrando.</li>
+      <li><strong><code>explicitNulls = false</code></strong>: puedes omitir los campos opcionales en
+      lugar de ponerlos a <code>null</code>.</li>
+    </ul>
+
+    <hr />
+
+    <h2>2. Anatomía de una clase (ClassDef)</h2>
+    <table>
+      <tr><th>Campo</th><th>Tipo</th><th>Obligatorio</th><th>Notas</th></tr>
+      <tr><td><code>id</code></td><td>string</td><td>Sí</td><td>Identificador único (p. ej. <code>"barbarian"</code>). Se referencia desde otros objetos.</td></tr>
+      <tr><td><code>display</code></td><td>DisplayInfo</td><td>Sí</td><td>Bloque de presentación. Solo <code>name</code> es obligatorio.</td></tr>
+      <tr><td><code>hitDie</code></td><td>int</td><td>Sí</td><td>Dado de golpe (6, 8, 10, 12).</td></tr>
+      <tr><td><code>primaryAbility</code></td><td>[string]</td><td>No</td><td>Características primarias (p. ej. <code>["STR"]</code>).</td></tr>
+      <tr><td><code>recommendedAbilityOrder</code></td><td>[string]</td><td>No</td><td>Orden de prioridad para el array estándar. Vacío = STR..CHA.</td></tr>
+      <tr><td><code>savingThrows</code></td><td>[string]</td><td>No</td><td>Salvaciones con competencia (p. ej. <code>["STR","CON"]</code>).</td></tr>
+      <tr><td><code>proficiencies</code></td><td>ClassProficiencies</td><td>No</td><td>Competencias de armadura/armas/habilidades.</td></tr>
+      <tr><td><code>startingEquipment</code></td><td>[EquipmentItem]</td><td>No</td><td>Equipo inicial (solo display).</td></tr>
+      <tr><td><code>goldAlternative</code></td><td>int?</td><td>No</td><td>Oro alternativo al equipo inicial.</td></tr>
+      <tr><td><code>subclassUnlockLevel</code></td><td>int?</td><td>No</td><td>Nivel al que se elige subclase (p. ej. 3).</td></tr>
+      <tr><td><code>progression</code></td><td>[LevelRow]</td><td>No</td><td>Tabla nivel a nivel (1–20).</td></tr>
+      <tr><td><code>features</code></td><td>[FeatureDef]</td><td>No</td><td>Rasgos de la clase.</td></tr>
+      <tr><td><code>subclasses</code></td><td>[SubclassDef]</td><td>No</td><td>Subclases disponibles.</td></tr>
+    </table>
+
+    <h3>DisplayInfo</h3>
+    <p>Presente en clases, rasgos, subclases y opciones. <code>name</code> es lo único
+    obligatorio.</p>
+    <pre><code>{
+  "name": "Bárbaro",
+  "description": "Texto largo opcional.",
+  "icon": "🔥",
+  "flavorText": "Cita ambiental opcional."
+}</code></pre>
+
+    <h3>ClassProficiencies</h3>
+    <pre><code>{
+  "armor":  ["light", "medium", "shields"],
+  "weapon": ["simple", "martial"],
+  "skills": ["Atletismo", "Percepción"],
+  "tools":  [],
+  "numSkillChoices": 2
+}</code></pre>
+    <p><code>numSkillChoices</code> = cuántas habilidades elige el jugador de la lista
+    <code>skills</code>.</p>
+
+    <h3>startingEquipment</h3>
+    <p>Cada ítem es solo un <code>display</code> (aún no tiene mecánica):</p>
+    <pre><code>"startingEquipment": [
+  { "display": { "name": "Hacha a dos manos" } },
+  { "display": { "name": "Paquete de explorador" } },
+  { "display": { "name": "15 po" } }
+]</code></pre>
+
+    <hr />
+
+    <h2>3. La tabla de progresión (progression)</h2>
+    <p>Es una lista de filas (<code>LevelRow</code>), una por nivel:</p>
+    <pre><code>{ "level": 1, "proficiencyBonus": 2, "features": ["rage","unarmored_defense"], "table": { "rage_uses": 2, "rage_damage": 2 } }</code></pre>
+    <table>
+      <tr><th>Campo</th><th>Tipo</th><th>Notas</th></tr>
+      <tr><td><code>level</code></td><td>int</td><td>Nivel de clase (1–20).</td></tr>
+      <tr><td><code>proficiencyBonus</code></td><td>int?</td><td>Bono de competencia en ese nivel.</td></tr>
+      <tr><td><code>features</code></td><td>[string]</td><td><strong>IDs</strong> de rasgos que se desbloquean en ese nivel. Deben coincidir con <code>features[].id</code>.</td></tr>
+      <tr><td><code>table</code></td><td>map&lt;string,int&gt;</td><td>Mapa libre clave→entero.</td></tr>
+    </table>
+    <p><strong><code>table</code> es la clave de las mecánicas que escalan.</strong> Un
+    <code>RESOURCE</code> (u otros grants) con <code>scaling.rule = "FROM_TABLE"</code> y
+    <code>tableKey = "rage_uses"</code> lee el valor de <code>table["rage_uses"]</code> en el nivel
+    actual. Así defines "cuántas furias por nivel" sin escribir código.</p>
+    <blockquote>Los <code>features</code> de la fila de progresión enlazan por <strong>id</strong>
+    con el <code>features</code> de la clase. El texto del rasgo vive una sola vez en
+    <code>features</code>; la tabla solo lo referencia.</blockquote>
+
+    <hr />
+
+    <h2>4. Rasgos (FeatureDef)</h2>
+    <p>Un rasgo es una unidad de contenido con presentación (<code>display</code>) y cero o más
+    mecánicas (<code>mechanics</code>).</p>
+    <pre><code>{
+  "id": "rage",
+  "level": 1,
+  "display": { "name": "Furia", "description": "…", "icon": "🔥" },
+  "mechanics": [ /* grants */ ]
+}</code></pre>
+    <ul>
+      <li><code>id</code> (obligatorio): único dentro de la clase; es lo que referencia
+      <code>progression</code>.</li>
+      <li><code>level</code> (opcional): nivel al que aparece.</li>
+      <li><code>display</code> (obligatorio).</li>
+      <li><code>mechanics</code> (opcional): lista de grants. <strong>Puede ir vacía</strong> → el
+      rasgo es solo texto.</li>
+    </ul>
+    <p>Un rasgo puramente narrativo:</p>
+    <pre><code>{
+  "id": "danger_sense",
+  "level": 2,
+  "display": { "name": "Sentir el peligro", "description": "Ventaja en TS de Destreza…", "icon": "👁️" },
+  "mechanics": []
+}</code></pre>
+
+    <hr />
+
+    <h2>5. Mecánicas (grants): el catálogo type</h2>
+    <p>Cada grant se identifica con <code>"type"</code>. <strong>Todos</strong> aceptan además dos
+    campos opcionales:</p>
+    <ul>
+      <li><code>minLevel</code> (int?): nivel mínimo de clase para que aplique.</li>
+      <li><code>subclassId</code> (string?): el grant solo aplica si el personaje tiene esa
+      subclase.</li>
+    </ul>
+
+    <h3>5.1 Recursos y acciones</h3>
+    <p><strong><code>RESOURCE</code></strong> — recurso rastreable con botones +/−.</p>
+    <pre><code>{
+  "type": "RESOURCE",
+  "id": "rage_uses",
+  "label": "Furias",
+  "icon": "🔥",
+  "recovery": "SHORT_REST",
+  "scaling": { "rule": "FROM_TABLE", "tableKey": "rage_uses" },
+  "hidden": false
+}</code></pre>
+    <ul>
+      <li><code>recovery</code>: <code>NONE</code> | <code>SHORT_REST</code> | <code>LONG_REST</code> | <code>DAWN</code>…</li>
+      <li><code>scaling.rule</code>: <code>FIXED</code> (usa <code>value</code>) | <code>LEVEL</code> | <code>PROFICIENCY</code> | <code>ABILITY_MOD</code> (usa <code>ability</code>) | <code>FROM_TABLE</code> (usa <code>tableKey</code>). <code>multiplier</code> opcional multiplica el resultado.</li>
+      <li><code>hidden</code>: si es <code>true</code>, el pool existe pero no se dibuja como tracker propio (lo consume una acción).</li>
+    </ul>
+
+    <p><strong><code>COMBAT_TOGGLE</code></strong> — estado on/off; puede anidar más grants en
+    <code>onActivate</code>.</p>
+    <pre><code>{
+  "type": "COMBAT_TOGGLE",
+  "id": "rage_active",
+  "label": "Activar Furia",
+  "costResource": "rage_uses",
+  "costAmount": 1,
+  "onActivate": [
+    { "type": "DAMAGE_RESISTANCE", "damageTypes": ["bludgeoning","piercing","slashing"], "condition": "WHILE_RAGING" }
+  ]
+}</code></pre>
+
+    <p><strong><code>COMBAT_ACTION</code></strong> — acción puntual que gasta un recurso; puede tirar
+    dados.</p>
+    <pre><code>{
+  "type": "COMBAT_ACTION",
+  "id": "brutal_strike_action",
+  "label": "Golpe brutal",
+  "costResource": "rage_uses",
+  "costAmount": 1,
+  "rollDice": "1d10",
+  "rollKind": "DAMAGE",
+  "description": "…"
+}</code></pre>
+
+    <p><strong><code>CHOICE</code></strong> — abre un selector para el jugador.</p>
+    <pre><code>{
+  "type": "CHOICE",
+  "id": "asi_4",
+  "title": "Mejora de característica",
+  "pick": 1,
+  "kind": "FEAT",
+  "level": 4
+}</code></pre>
+    <p><code>kind</code> común: <code>SKILL</code>, <code>FEAT</code>, <code>SUBCLASS</code>,
+    <code>SPELL</code>, <code>WEAPON_MASTERY</code>, <code>CUSTOM</code>. Campos extra según
+    <code>kind</code>: <code>pool</code>, <code>count</code>, <code>category</code>,
+    <code>featId</code>, <code>spellLevel</code>, <code>fromClass</code>, <code>fromClasses</code>,
+    <code>points</code>, <code>options</code>.</p>
+    <p>Para <code>kind: "CUSTOM"</code> defines tú las opciones, y cada una puede otorgar grants al
+    elegirse:</p>
+    <pre><code>{
+  "type": "CHOICE",
+  "id": "divine_fury_type",
+  "title": "Tipo de daño",
+  "pick": 1,
+  "kind": "CUSTOM",
+  "options": [
+    { "id": "opt_necrotic", "display": { "name": "Necrótico" }, "grants": [] },
+    { "id": "opt_radiant",  "display": { "name": "Radiante"  }, "grants": [] }
+  ]
+}</code></pre>
+
+    <h3>5.2 Combate y defensa</h3>
+    <table>
+      <tr><th><code>type</code></th><th>Para qué</th><th>Campos clave</th></tr>
+      <tr><td><code>AC_FORMULA</code></td><td>Fórmula de CA (defensa sin armadura). Compite como candidato al máximo.</td><td><code>base</code>, <code>abilities</code>, <code>maxDex?</code>, <code>condition</code> (default <code>NO_ARMOR</code>), <code>shieldAllowed</code></td></tr>
+      <tr><td><code>AC_BONUS</code></td><td>Bono plano que <strong>suma</strong> a la mejor CA.</td><td><code>amount</code>, <code>condition?</code> (<code>WHILE_EQUIPPED</code>, <code>WHILE_ATTUNED</code>)</td></tr>
+      <tr><td><code>SPEED_BONUS</code> / <code>SPEED_PENALTY</code></td><td>Modifica velocidad.</td><td><code>bonus</code>/<code>amount</code>, <code>condition?</code></td></tr>
+      <tr><td><code>DAMAGE_RESISTANCE</code></td><td>Resistencia a tipos de daño.</td><td><code>damageTypes</code>, <code>condition?</code></td></tr>
+      <tr><td><code>DAMAGE_REDUCTION</code></td><td>Reducción plana de daño.</td><td><code>source</code> (<code>PROFICIENCY</code>/<code>FIXED</code>/<code>DICE</code>), <code>flat</code>, <code>dice?</code></td></tr>
+      <tr><td><code>DAMAGE_BONUS</code></td><td>Bono al daño.</td><td><code>source</code> (<code>FIXED</code>/<code>PROFICIENCY</code>/<code>ABILITY_MOD</code>/<code>FROM_TABLE</code>), <code>attackTypes</code></td></tr>
+      <tr><td><code>ATTACK_BONUS</code></td><td>Bono a la tirada de ataque (to-hit).</td><td>igual que <code>DAMAGE_BONUS</code></td></tr>
+      <tr><td><code>EXTRA_ATTACK</code></td><td>Nº total de ataques.</td><td><code>totalAttacks</code></td></tr>
+      <tr><td><code>WEAPON_MASTERY</code></td><td>Marcador de maestría (suele modelarse como <code>CHOICE</code>).</td><td><code>count?</code></td></tr>
+      <tr><td><code>MAX_HP_BONUS</code></td><td>Bono a PG máximos.</td><td><code>source</code> (<code>PER_LEVEL</code>/<code>FIXED</code>), <code>perLevel</code>, <code>flat</code></td></tr>
+      <tr><td><code>INITIATIVE_BONUS</code></td><td>Bono a iniciativa.</td><td><code>source</code> (<code>PROFICIENCY</code>/<code>FIXED</code>), <code>flat</code></td></tr>
+    </table>
+
+    <h3>5.3 Características, competencias y magia</h3>
+    <table>
+      <tr><th><code>type</code></th><th>Para qué</th><th>Campos clave</th></tr>
+      <tr><td><code>ABILITY_BOOST</code></td><td>Sube características.</td><td><code>boosts: [{ ability, amount, max? }]</code></td></tr>
+      <tr><td><code>PROFICIENCY</code></td><td>Otorga competencia.</td><td><code>kind</code>, <code>items</code></td></tr>
+      <tr><td><code>ABILITY_CHECK_BONUS</code></td><td>Bono a pruebas.</td><td><code>ability?</code>, <code>amount</code>, <code>skill?</code>, <code>condition?</code></td></tr>
+      <tr><td><code>SPELLCASTING</code></td><td>Declara lanzador de conjuros.</td><td><code>casterType</code>, <code>ability</code>, <code>preparedFormula?</code>, <code>spellListClassId?</code></td></tr>
+      <tr><td><code>INNATE_SPELL</code></td><td>Conjuro innato / siempre preparado.</td><td><code>spellId</code>, <code>usesPerRest?</code>, <code>restType?</code>, <code>alwaysPrepared?</code>, <code>ability?</code></td></tr>
+      <tr><td><code>SENSES</code></td><td>Visión en la oscuridad, etc.</td><td><code>darkvisionFeet?</code>, <code>blindsightFeet?</code>, <code>tremorsenseFeet?</code>, <code>truesightFeet?</code></td></tr>
+      <tr><td><code>INVOCATIONS</code></td><td>Tabla nivel→count de invocaciones.</td><td><code>progression: [{ level, count }]</code></td></tr>
+      <tr><td><code>ROLL_TABLE</code></td><td>Tabla aleatoria (tira dado y consulta).</td><td><code>dice</code>, <code>entries: [{ min, max, result }]</code></td></tr>
+    </table>
+
+    <h3>5.4 Situacionales / objetos (declarativos)</h3>
+    <p>Se conservan tipados y se muestran como texto; la mayoría no produce cálculo automático:
+    <code>ADVANTAGE</code>, <code>AUTO_SUCCESS</code>, <code>LIGHT_SOURCE</code>, <code>FUEL</code>,
+    <code>MAGNIFICATION</code>, <code>LOCK</code>, <code>LIFT_CAPACITY_MULTIPLIER</code>,
+    <code>MATERIAL_COMPONENT_SUBSTITUTE</code>, <code>EXPAND_BUNDLE</code>,
+    <code>UTILITY_ACTION</code>.</p>
+    <p><code>UNKNOWN</code> no se escribe a mano: es el resultado de un <code>type</code> que el motor
+    no reconoce.</p>
+
+    <hr />
+
+    <h2>6. Subclases (SubclassDef)</h2>
+    <p>Una subclase reutiliza el mismo <code>FeatureDef</code> que la clase. Sus rasgos suelen llevar
+    el <code>level</code> correspondiente, y si un grant debe aplicar solo a esa subclase, se marca
+    con <code>subclassId</code>.</p>
+    <pre><code>{
+  "id": "berserker",
+  "display": { "name": "Senda del Berserker", "flavorText": "…", "description": "…" },
+  "features": [
+    {
+      "id": "berserker_intimidating_presence",
+      "level": 14,
+      "display": { "name": "Presencia intimidante", "description": "…", "icon": "😈" },
+      "mechanics": [
+        {
+          "type": "RESOURCE",
+          "id": "intimidating_presence_use",
+          "label": "Presencia intimidante",
+          "recovery": "LONG_REST",
+          "scaling": { "rule": "FIXED", "value": 1 },
+          "minLevel": 14,
+          "subclassId": "berserker"
+        }
+      ]
+    }
+  ]
+}</code></pre>
+    <p>En la clase, la elección de subclase se modela con un <code>CHOICE</code> de
+    <code>kind: "SUBCLASS"</code> en el rasgo del nivel indicado por
+    <code>subclassUnlockLevel</code>.</p>
+
+    <hr />
+
+    <h2>7. Cómo encajan las piezas (flujo mental)</h2>
+    <ul>
+      <li>Defines la clase con su <code>display</code>, <code>hitDie</code>, competencias y
+      equipo.</li>
+      <li>Rellenas <code>progression</code> nivel a nivel: en cada fila listas los
+      <strong>ids</strong> de los rasgos que se desbloquean y los valores de <code>table</code> que
+      escalan.</li>
+      <li>Defines esos rasgos en <code>features</code>, cada uno con su <code>display</code> y sus
+      <code>mechanics</code>.</li>
+      <li>Las mecánicas que crecen con el nivel leen de <code>table</code> vía
+      <code>scaling.rule = "FROM_TABLE"</code>.</li>
+      <li>Añades <code>subclasses</code>, cada una con sus propios rasgos y grants marcados con
+      <code>subclassId</code>.</li>
+    </ul>
+    <p>Regla de oro: <strong>el texto vive una vez</strong> (en <code>features</code> /
+    <code>subclasses[].features</code>); la tabla de progresión solo referencia por id.</p>
+
+    <hr />
+
+    <h2>8. Ejemplo mínimo y completo</h2>
+    <p>Una clase de 1 nivel con un recurso que escala por tabla y un toggle que suma CA:</p>
+    <pre><code>{
+  "id": "guardian",
+  "display": { "name": "Guardián", "description": "Combatiente resistente.", "icon": "🛡️" },
+  "hitDie": 10,
+  "primaryAbility": ["STR"],
+  "recommendedAbilityOrder": ["STR", "CON", "DEX", "WIS", "CHA", "INT"],
+  "savingThrows": ["STR", "CON"],
+  "proficiencies": {
+    "armor":  ["light", "medium", "heavy", "shields"],
+    "weapon": ["simple", "martial"],
+    "skills": ["Atletismo", "Percepción", "Intimidación"],
+    "numSkillChoices": 2
+  },
+  "startingEquipment": [
+    { "display": { "name": "Cota de mallas" } },
+    { "display": { "name": "Escudo" } },
+    { "display": { "name": "Espada larga" } }
+  ],
+  "goldAlternative": 100,
+  "subclassUnlockLevel": 3,
+  "progression": [
+    { "level": 1, "proficiencyBonus": 2, "features": ["guardian_stance"], "table": { "stance_uses": 2 } }
+  ],
+  "features": [
+    {
+      "id": "guardian_stance",
+      "level": 1,
+      "display": { "name": "Postura defensiva", "description": "Como acción adicional ganas +1 a la CA.", "icon": "🛡️" },
+      "mechanics": [
+        {
+          "type": "RESOURCE",
+          "id": "stance_uses",
+          "label": "Posturas",
+          "icon": "🛡️",
+          "recovery": "SHORT_REST",
+          "scaling": { "rule": "FROM_TABLE", "tableKey": "stance_uses" }
+        },
+        {
+          "type": "COMBAT_TOGGLE",
+          "id": "stance_active",
+          "label": "Activar postura",
+          "costResource": "stance_uses",
+          "costAmount": 1,
+          "onActivate": [
+            { "type": "AC_BONUS", "amount": 1, "condition": "WHILE_EQUIPPED" }
+          ]
+        }
+      ]
+    }
+  ],
+  "subclasses": []
+}</code></pre>
+
+    <hr />
+
+    <h2>9. Checklist antes de dar por buena una clase</h2>
+    <ul>
+      <li><code>id</code>, <code>display.name</code> y <code>hitDie</code> presentes.</li>
+      <li>Todo id en <code>progression[].features</code> existe en <code>features[].id</code>.</li>
+      <li>Cada <code>costResource</code> apunta a un <code>RESOURCE.id</code> que existe.</li>
+      <li>Cada <code>scaling.tableKey</code> (<code>FROM_TABLE</code>) tiene su clave en
+      <code>table</code> de cada nivel relevante.</li>
+      <li>Los grants de subclase que deban aislarse llevan <code>subclassId</code>.</li>
+      <li>Los <code>type</code> de grant coinciden con el catálogo (§5); un typo se degrada a
+      <code>UNKNOWN</code>.</li>
+      <li>Valida el JSON: importarlo como pack usa <code>ContentPackSerializer.parseOrNull</code>,
+      que devuelve <code>Result</code> en vez de lanzar.</li>
+    </ul>
+
+    <hr />
+
+    <h1>Otros tipos de contenido</h1>
+    <p>Todos los objetos de un pack comparten dos bloques ya vistos en la clase:</p>
+    <ul>
+      <li><strong><code>display</code></strong> (<code>DisplayInfo</code>): <code>name</code>
+      obligatorio; <code>description</code>, <code>icon</code>, <code>flavorText</code>
+      opcionales.</li>
+      <li><strong><code>mechanics</code> / <code>grants</code></strong> (lista de <em>grants</em>):
+      las mismas mecánicas del catálogo de §5. Un grant con <code>type</code> desconocido degrada a
+      <code>UNKNOWN</code> sin romper el parseo.</li>
+    </ul>
+    <p>Cada tipo vive en su lista dentro del <code>ContentPack</code>: <code>species</code>,
+    <code>backgrounds</code>, <code>feats</code>, <code>spells</code>, <code>invocations</code>,
+    <code>equipment</code>, <code>beasts</code>.</p>
+
+    <hr />
+
+    <h2>10. Trasfondo (BackgroundDef) → lista backgrounds</h2>
+    <p>Un trasfondo es simple: presentación + mecánicas + equipo inicial.</p>
+    <table>
+      <tr><th>Campo</th><th>Tipo</th><th>Obligatorio</th><th>Notas</th></tr>
+      <tr><td><code>id</code></td><td>string</td><td>Sí</td><td>Identificador único.</td></tr>
+      <tr><td><code>display</code></td><td>DisplayInfo</td><td>Sí</td><td></td></tr>
+      <tr><td><code>mechanics</code></td><td>[Grant]</td><td>No</td><td>Competencias, dotes de origen, conjuros, etc.</td></tr>
+      <tr><td><code>startingEquipment</code></td><td>[EquipmentItem]</td><td>No</td><td>Cada ítem es <code>{ "display": { "name": "…" } }</code>.</td></tr>
+      <tr><td><code>goldAlternative</code></td><td>int?</td><td>No</td><td>Oro alternativo al equipo.</td></tr>
+    </table>
+    <pre><code>{
+  "id": "sage",
+  "display": { "name": "Sabio", "description": "Pasaste años estudiando…", "icon": "📚" },
+  "mechanics": [
+    { "type": "PROFICIENCY", "kind": "SKILL", "items": ["Arcanos", "Historia"] },
+    { "type": "PROFICIENCY", "kind": "TOOL", "items": ["Utensilios de calígrafo"] },
+    {
+      "type": "CHOICE",
+      "id": "sage_asi",
+      "title": "Mejora de característica del trasfondo",
+      "pick": 1,
+      "kind": "CUSTOM",
+      "options": [
+        { "id": "sage_int2", "display": { "name": "+2 INT" }, "grants": [ { "type": "ABILITY_BOOST", "boosts": [ { "ability": "INT", "amount": 2, "max": 20 } ] } ] }
+      ]
+    },
+    {
+      "type": "CHOICE",
+      "id": "sage_origin_feat",
+      "title": "Dote de origen",
+      "pick": 1,
+      "kind": "FEAT",
+      "category": "ORIGIN"
+    }
+  ],
+  "startingEquipment": [
+    { "display": { "name": "Libro de saberes" } },
+    { "display": { "name": "8 po" } }
+  ],
+  "goldAlternative": 50
+}</code></pre>
+
+    <hr />
+
+    <h2>11. Especie / raza (SpeciesDef) → lista species</h2>
+    <table>
+      <tr><th>Campo</th><th>Tipo</th><th>Obligatorio</th><th>Notas</th></tr>
+      <tr><td><code>id</code></td><td>string</td><td>Sí</td><td></td></tr>
+      <tr><td><code>display</code></td><td>DisplayInfo</td><td>Sí</td><td></td></tr>
+      <tr><td><code>speed</code></td><td>int?</td><td>No</td><td>Velocidad base <strong>en pies</strong> (convención SRD). La UI convierte a metros.</td></tr>
+      <tr><td><code>size</code></td><td>string?</td><td>No</td><td>En el SRD base se usa <code>"MEDIUM"</code> / <code>"SMALL"</code>.</td></tr>
+      <tr><td><code>darkvision</code></td><td>int?</td><td>No</td><td>Radio de visión en la oscuridad <strong>en pies</strong> (0 = no tiene).</td></tr>
+      <tr><td><code>traits</code></td><td>[FeatureDef]</td><td>No</td><td>Rasgos raciales (mismo <code>FeatureDef</code> que las clases).</td></tr>
+      <tr><td><code>mechanics</code></td><td>[Grant]</td><td>No</td><td>Grants que aplican a nivel de especie.</td></tr>
+    </table>
+    <p>Hay dos sitios para poner mecánicas: dentro de un <code>trait</code>
+    (<code>FeatureDef.mechanics</code>) cuando forman parte de un rasgo con nombre propio, o
+    directamente en <code>mechanics</code> de la especie para efectos globales. Preferir
+    <code>traits</code> cuando el rasgo tiene su propio nombre y texto.</p>
+    <pre><code>{
+  "id": "elf",
+  "display": { "name": "Elfo", "flavorText": "…", "description": "…" },
+  "speed": 30,
+  "size": "MEDIUM",
+  "darkvision": 60,
+  "traits": [
+    {
+      "id": "elf_keen_senses",
+      "display": { "name": "Sentidos agudos", "description": "Competencia en Percepción.", "icon": "👁️" },
+      "mechanics": [ { "type": "PROFICIENCY", "kind": "SKILL", "items": ["Percepción"] } ]
+    },
+    {
+      "id": "elf_fey_ancestry",
+      "display": { "name": "Linaje feérico", "description": "Ventaja contra el estado hechizado." },
+      "mechanics": [ { "type": "ADVANTAGE", "appliesTo": "SAVING_THROW", "condition": "VS_CHARMED" } ]
+    },
+    {
+      "id": "elf_darkvision_trait",
+      "display": { "name": "Visión en la oscuridad" },
+      "mechanics": [ { "type": "SENSES", "darkvisionFeet": 60 } ]
+    }
+  ],
+  "mechanics": []
+}</code></pre>
+    <blockquote>El campo <code>darkvision</code> de la especie y un grant <code>SENSES</code>
+    (<code>darkvisionFeet</code>) cumplen roles parecidos y <strong>ambos van en pies</strong>. El
+    motor toma el máximo entre el <code>darkvision</code> de la especie y todos los
+    <code>SENSES</code> activos. Ver §18 para unidades.</blockquote>
+
+    <hr />
+
+    <h2>12. Dote (FeatDef) → lista feats</h2>
+    <p>Las dotes se referencian desde los <code>CHOICE</code> de <code>kind: "FEAT"</code> (en clases
+    y trasfondos).</p>
+    <table>
+      <tr><th>Campo</th><th>Tipo</th><th>Obligatorio</th><th>Notas</th></tr>
+      <tr><td><code>id</code></td><td>string</td><td>Sí</td><td></td></tr>
+      <tr><td><code>category</code></td><td>string?</td><td>No</td><td><code>ORIGIN</code>, <code>GENERAL</code>, <code>FIGHTING_STYLE</code>, <code>EPIC</code>. Filtra qué CHOICE la ofrece.</td></tr>
+      <tr><td><code>display</code></td><td>DisplayInfo</td><td>Sí</td><td></td></tr>
+      <tr><td><code>prerequisite</code></td><td>Prerequisite?</td><td>No</td><td>Requisitos para poder elegirla.</td></tr>
+      <tr><td><code>repeatable</code></td><td>bool</td><td>No</td><td><code>true</code> = se puede tomar varias veces. Default <code>false</code>.</td></tr>
+      <tr><td><code>mechanics</code></td><td>[Grant]</td><td>No</td><td>Efectos de la dote.</td></tr>
+    </table>
+    <p><strong>Prerequisite</strong> (todos los campos opcionales):</p>
+    <pre><code>{
+  "minLevel": 4,
+  "ability": "STR",
+  "abilityOptions": ["STR", "DEX"],
+  "minScore": 13,
+  "requiresSpellcasting": true
+}</code></pre>
+    <p>Usa <code>ability</code> + <code>minScore</code> para una característica única, o
+    <code>abilityOptions</code> + <code>minScore</code> cuando basta con cumplir una de varias.</p>
+    <pre><code>{
+  "id": "tough",
+  "category": "ORIGIN",
+  "display": { "name": "Duro", "description": "Tus PG máximos aumentan en 2 por nivel.", "icon": "❤️" },
+  "repeatable": false,
+  "mechanics": [
+    { "type": "MAX_HP_BONUS", "source": "PER_LEVEL", "perLevel": 2 }
+  ]
+}</code></pre>
+
+    <hr />
+
+    <h2>13. Conjuro (SpellDef) → lista spells</h2>
+    <p>Los conjuros no usan grants: son datos estáticos. Se enlazan con clases por
+    <code>classes</code> / <code>spellListClassId</code>.</p>
+    <table>
+      <tr><th>Campo</th><th>Tipo</th><th>Obligatorio</th><th>Notas</th></tr>
+      <tr><td><code>id</code></td><td>string</td><td>Sí</td><td></td></tr>
+      <tr><td><code>display</code></td><td>DisplayInfo</td><td>Sí</td><td></td></tr>
+      <tr><td><code>level</code></td><td>int</td><td>Sí</td><td><code>0</code> = truco (cantrip).</td></tr>
+      <tr><td><code>school</code></td><td>string?</td><td>No</td><td>Escuela (texto libre).</td></tr>
+      <tr><td><code>castingTime</code></td><td>string?</td><td>No</td><td>P. ej. <code>"1 acción"</code>.</td></tr>
+      <tr><td><code>range</code></td><td>string?</td><td>No</td><td></td></tr>
+      <tr><td><code>components</code></td><td>string?</td><td>No</td><td>P. ej. <code>"V, S, M"</code>.</td></tr>
+      <tr><td><code>duration</code></td><td>string?</td><td>No</td><td></td></tr>
+      <tr><td><code>concentration</code></td><td>bool</td><td>No</td><td>Default <code>false</code>.</td></tr>
+      <tr><td><code>ritual</code></td><td>bool</td><td>No</td><td>Default <code>false</code>.</td></tr>
+      <tr><td><code>higherLevel</code></td><td>string?</td><td>No</td><td>Efecto a niveles superiores.</td></tr>
+      <tr><td><code>classes</code></td><td>[string]</td><td>No</td><td>IDs de clases con acceso. Cruza con <code>SPELLCASTING.spellListClassId</code>.</td></tr>
+    </table>
+    <pre><code>{
+  "id": "fire_bolt",
+  "display": { "name": "Rayo de fuego", "description": "Lanzas una mota de fuego…" },
+  "level": 0,
+  "school": "Evocación",
+  "castingTime": "1 acción",
+  "range": "36 m",
+  "components": "V, S",
+  "duration": "Instantánea",
+  "higherLevel": "El daño aumenta a niveles 5, 11 y 17.",
+  "classes": ["sorcerer", "wizard"]
+}</code></pre>
+
+    <hr />
+
+    <h2>14. Invocación sobrenatural (InvocationDef) → lista invocations</h2>
+    <p>Invocaciones del Brujo (u otras clases que declaren invocaciones con el grant
+    <code>INVOCATIONS</code>). Cada invocación es presentación + prerequisitos + mecánicas.</p>
+    <table>
+      <tr><th>Campo</th><th>Tipo</th><th>Obligatorio</th><th>Notas</th></tr>
+      <tr><td><code>id</code></td><td>string</td><td>Sí</td><td></td></tr>
+      <tr><td><code>display</code></td><td>DisplayInfo</td><td>Sí</td><td></td></tr>
+      <tr><td><code>minLevel</code></td><td>int</td><td>No</td><td>Nivel mínimo de clase. Default <code>1</code>.</td></tr>
+      <tr><td><code>prerequisiteIds</code></td><td>[string]</td><td>No</td><td>IDs de otras invocaciones requeridas.</td></tr>
+      <tr><td><code>pactRequired</code></td><td>string?</td><td>No</td><td>Pacto necesario (p. ej. <code>"PACT_OF_THE_BLADE"</code>).</td></tr>
+      <tr><td><code>mechanics</code></td><td>[Grant]</td><td>No</td><td>Suele ser <code>INNATE_SPELL</code>, <code>AC_FORMULA</code> o <code>PROFICIENCY</code>.</td></tr>
+    </table>
+    <pre><code>{
+  "id": "agonizing_blast",
+  "display": { "name": "Explosión agonizante", "description": "Sumas tu mod. de Carisma al daño de Descarga sobrenatural." },
+  "minLevel": 1,
+  "prerequisiteIds": [],
+  "mechanics": [
+    { "type": "DAMAGE_BONUS", "source": "ABILITY_MOD", "ability": "CHA", "attackTypes": ["eldritch_blast"] }
+  ]
+}</code></pre>
+
+    <hr />
+
+    <h2>15. Equipo (EquipmentDef) → lista equipment</h2>
+    <p>El objeto más rico en datos. Tiene <code>display</code>, una <code>category</code>, bloques
+    tipados opcionales según el tipo, y <code>grants</code> para efectos mecánicos.</p>
+    <table>
+      <tr><th>Campo</th><th>Tipo</th><th>Obligatorio</th><th>Notas</th></tr>
+      <tr><td><code>id</code></td><td>string</td><td>Sí</td><td></td></tr>
+      <tr><td><code>display</code></td><td>DisplayInfo</td><td>Sí</td><td></td></tr>
+      <tr><td><code>category</code></td><td>string</td><td>Sí</td><td><code>WEAPON</code>, <code>ARMOR</code>, <code>SHIELD</code>, <code>TOOL</code>, <code>ADVENTURING_GEAR</code>, <code>CONTAINER</code>, <code>CONSUMABLE</code>…</td></tr>
+      <tr><td><code>subtype</code></td><td>string?</td><td>No</td><td>P. ej. <code>"martial_melee"</code>, <code>"heavy"</code>, <code>"light"</code>.</td></tr>
+      <tr><td><code>cost</code></td><td>Cost?</td><td>No</td><td><code>{ "amount": 15, "unit": "gp" }</code>.</td></tr>
+      <tr><td><code>weight</code></td><td>double?</td><td>No</td><td>En kg.</td></tr>
+      <tr><td><code>rarity</code></td><td>string?</td><td>No</td><td><code>common</code>, <code>uncommon</code>, <code>rare</code>, <code>very_rare</code>, <code>legendary</code>, <code>artifact</code>.</td></tr>
+      <tr><td><code>requiresAttunement</code></td><td>bool</td><td>No</td><td>Default <code>false</code>.</td></tr>
+      <tr><td>bloques tipados</td><td>—</td><td>No</td><td><code>weapon</code>, <code>armor</code>, <code>shield</code>, <code>tool</code>, <code>container</code>, <code>focus</code>, <code>ammunition</code>.</td></tr>
+      <tr><td><code>grants</code></td><td>[Grant]</td><td>No</td><td>Efectos mecánicos. Vacío = objeto descriptivo.</td></tr>
+    </table>
+    <p>Bloques tipados más usados:</p>
+    <ul>
+      <li><strong><code>weapon</code></strong> (<code>WeaponData</code>): <code>damageDice</code>,
+      <code>damageType</code>, <code>versatileDice</code>, <code>properties</code>,
+      <code>masteryProperty</code>, <code>attackAbilities</code>,
+      <code>range { normal, long, unit }</code>, <code>fixedDamage</code>.</li>
+      <li><strong><code>armor</code></strong> (<code>ArmorData</code>): <code>baseAc</code>,
+      <code>category</code> (<code>LIGHT</code>/<code>MEDIUM</code>/<code>HEAVY</code>),
+      <code>maxDex</code> o <code>dexterityCap</code>, <code>strengthRequirement</code>,
+      <code>stealthDisadvantage</code>.</li>
+      <li><strong><code>shield</code></strong> (<code>ShieldData</code>): <code>acBonus</code>
+      (default 2).</li>
+      <li><strong><code>tool</code></strong>, <strong><code>container</code></strong>,
+      <strong><code>focus</code></strong>, <strong><code>ammunition</code></strong>: ver
+      <code>EquipmentDef.kt</code>.</li>
+    </ul>
+    <p>Arma:</p>
+    <pre><code>{
+  "id": "longsword",
+  "display": { "name": "Espada larga" },
+  "category": "WEAPON",
+  "subtype": "martial_melee",
+  "cost": { "amount": 15, "unit": "gp" },
+  "weight": 1.5,
+  "weapon": {
+    "damageDice": "1d8",
+    "damageType": "slashing",
+    "versatileDice": "1d10",
+    "properties": ["versatile"],
+    "masteryProperty": "sap",
+    "attackAbilities": ["STR"]
+  }
+}</code></pre>
+    <p>Objeto mágico con sintonización (los grants condicionados aplican al sintonizar/equipar):</p>
+    <pre><code>{
+  "id": "cloak_of_protection",
+  "display": { "name": "Capa de protección" },
+  "category": "ADVENTURING_GEAR",
+  "rarity": "uncommon",
+  "requiresAttunement": true,
+  "grants": [
+    { "type": "AC_BONUS", "amount": 1, "condition": "WHILE_ATTUNED" }
+  ]
+}</code></pre>
+
+    <hr />
+
+    <h2>16. Bestia (BeastDef) → lista beasts</h2>
+    <p>Para la Forma Salvaje del Druida. <strong>No lleva grants</strong>: son datos estáticos que
+    sustituyen el perfil del personaje al transformarse.</p>
+    <table>
+      <tr><th>Campo</th><th>Tipo</th><th>Notas</th></tr>
+      <tr><td><code>id</code></td><td>string</td><td>Obligatorio.</td></tr>
+      <tr><td><code>display</code></td><td>DisplayInfo</td><td>Obligatorio.</td></tr>
+      <tr><td><code>cr</code></td><td>string</td><td>Texto del desafío (<code>"1/4"</code>). Default <code>"0"</code>.</td></tr>
+      <tr><td><code>crValue</code></td><td>double</td><td>Valor numérico (0.25). Filtra por nivel de druida.</td></tr>
+      <tr><td><code>size</code></td><td>string</td><td>Default <code>"Mediana"</code>.</td></tr>
+      <tr><td><code>ac</code></td><td>int</td><td>Default 10.</td></tr>
+      <tr><td><code>hp</code></td><td>int</td><td>Default 1.</td></tr>
+      <tr><td><code>speed</code> / <code>swimSpeed</code> / <code>flySpeed</code> / <code>climbSpeed</code></td><td>int</td><td>Velocidades en metros (0 = no la tiene).</td></tr>
+      <tr><td><code>strength</code> / <code>dexterity</code> / <code>constitution</code></td><td>int</td><td>Default 10.</td></tr>
+      <tr><td><code>senses</code></td><td>string</td><td>P. ej. <code>"visión en la oscuridad 18 m"</code>.</td></tr>
+      <tr><td><code>attacks</code></td><td>string</td><td>Ataques en texto, uno por línea.</td></tr>
+      <tr><td><code>notes</code></td><td>string</td><td>Rasgos especiales, inmunidades, etc.</td></tr>
+    </table>
+    <pre><code>{
+  "id": "wolf",
+  "display": { "name": "Lobo" },
+  "cr": "1/4",
+  "crValue": 0.25,
+  "size": "Mediana",
+  "ac": 13,
+  "hp": 11,
+  "speed": 12,
+  "strength": 12,
+  "dexterity": 15,
+  "constitution": 12,
+  "senses": "percepción pasiva 13",
+  "attacks": "Mordisco: +4 al golpe, 2d4+2 perforante.",
+  "notes": "Tácticas de manada: ventaja si un aliado está a 1,5 m del objetivo."
+}</code></pre>
+
+    <hr />
+
+    <h2>17. Resumen: qué lleva grants y qué no</h2>
+    <table>
+      <tr><th>Tipo</th><th>Lista</th><th>¿Grants?</th><th>Bloque de datos propio</th></tr>
+      <tr><td>Clase</td><td><code>classes</code></td><td>Sí (en <code>features[].mechanics</code>)</td><td><code>progression</code> + <code>proficiencies</code></td></tr>
+      <tr><td>Subclase</td><td>dentro de la clase</td><td>Sí (en <code>features[].mechanics</code>, con <code>subclassId</code>)</td><td>—</td></tr>
+      <tr><td>Trasfondo</td><td><code>backgrounds</code></td><td>Sí (<code>mechanics</code>)</td><td><code>startingEquipment</code></td></tr>
+      <tr><td>Especie</td><td><code>species</code></td><td>Sí (<code>traits[].mechanics</code> y/o <code>mechanics</code>)</td><td><code>speed</code>, <code>size</code>, <code>darkvision</code></td></tr>
+      <tr><td>Dote</td><td><code>feats</code></td><td>Sí (<code>mechanics</code>)</td><td><code>prerequisite</code>, <code>category</code>, <code>repeatable</code></td></tr>
+      <tr><td>Conjuro</td><td><code>spells</code></td><td><strong>No</strong></td><td>datos estáticos + <code>classes</code></td></tr>
+      <tr><td>Invocación</td><td><code>invocations</code></td><td>Sí (<code>mechanics</code>)</td><td><code>minLevel</code>, <code>prerequisiteIds</code>, <code>pactRequired</code></td></tr>
+      <tr><td>Equipo</td><td><code>equipment</code></td><td>Sí (<code>grants</code>)</td><td>bloques <code>weapon</code>/<code>armor</code>/<code>shield</code>/…</td></tr>
+      <tr><td>Bestia</td><td><code>beasts</code></td><td><strong>No</strong></td><td>stats de criatura</td></tr>
+    </table>
+    <p>Checklist transversal: valida siempre con <code>ContentPackSerializer.parseOrNull</code>
+    (devuelve <code>Result</code>), revisa que los ids referenciados existan (dotes desde
+    <code>CHOICE</code>, <code>costResource</code> hacia un <code>RESOURCE</code>,
+    <code>classes</code> de conjuro hacia el <code>spellListClassId</code> de la clase) y recuerda
+    que cualquier <code>type</code> de grant no reconocido degrada a <code>UNKNOWN</code> sin romper
+    el pack.</p>
+
+    <hr />
+
+    <h2>18. Unidades de distancia (importante)</h2>
+    <p>No todas las distancias usan la misma unidad. Hay dos convenciones según de dónde venga el
+    dato:</p>
+    <p><strong>Contenido de personaje → PIES (convención SRD).</strong> Se guarda en pies y la UI
+    convierte a metros al mostrar (<code>5 pies = 1,5 m</code>, es decir metros = pies × 3 / 10):</p>
+    <ul>
+      <li><code>SpeciesDef.speed</code> y <code>SpeciesDef.darkvision</code> → pies. En
+      <code>srd_base.json</code>: elfo <code>speed: 30</code> (9 m), enano
+      <code>darkvision: 120</code> (36 m).</li>
+      <li>Grant <code>SENSES</code> → <code>darkvisionFeet</code>, <code>blindsightFeet</code>,
+      <code>tremorsenseFeet</code>, <code>truesightFeet</code>.</li>
+      <li>El motor acumula estos sentidos tomando el máximo entre todas las fuentes. Todo comparte
+      unidad (pies), así que la comparación es correcta.</li>
+    </ul>
+    <p><strong>Equipo y objetos → METROS por defecto, con campo <code>unit</code>
+    explícito.</strong> Estos grants y bloques llevan un <code>unit</code> (default <code>"m"</code>),
+    así que puedes indicar la unidad por objeto:</p>
+    <ul>
+      <li><code>SpeedBonusGrant.bonus</code> / <code>SpeedPenaltyGrant</code> (<code>unit</code>,
+      default <code>"m"</code>).</li>
+      <li><code>WeaponRange { normal, long, unit }</code> (default <code>"m"</code>).</li>
+      <li><code>LightSourceGrant</code>, <code>Measure { amount, unit }</code> (longitud de cuerdas,
+      etc.).</li>
+    </ul>
+    <p>Regla práctica:</p>
+    <table>
+      <tr><th>Dato</th><th>Unidad</th><th>Ejemplo</th></tr>
+      <tr><td><code>SpeciesDef.speed</code>, <code>SpeciesDef.darkvision</code></td><td>pies</td><td><code>"speed": 30</code> → 9 m</td></tr>
+      <tr><td><code>SENSES</code> (<code>*Feet</code>)</td><td>pies</td><td><code>"darkvisionFeet": 60</code> → 18 m</td></tr>
+      <tr><td><code>SpeedBonusGrant.bonus</code>, <code>SpeedPenaltyGrant.amount</code></td><td>metros (o <code>unit</code>)</td><td><code>"bonus": 3</code> = +3 m</td></tr>
+      <tr><td><code>WeaponRange</code>, <code>LightSourceGrant</code>, <code>Measure</code></td><td>según <code>unit</code> (default m)</td><td><code>{ "normal": 24, "unit": "m" }</code></td></tr>
+      <tr><td><code>BeastDef.speed/swim/fly/climb</code></td><td>metros</td><td><code>"speed": 12</code> = 12 m</td></tr>
+    </table>
+    <blockquote>Al crear una <strong>especie</strong>, usa siempre pies (30, 60, 120…) para mantener
+    la coherencia con el motor y el SRD base. Al crear <strong>equipo</strong>, usa metros salvo que
+    pongas <code>unit</code> explícito.</blockquote>
+  </div>
+</body>
+</html>
