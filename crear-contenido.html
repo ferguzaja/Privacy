@@ -328,11 +328,64 @@
   "kind": "FEAT",
   "level": 4
 }</code></pre>
-    <p><code>kind</code> común: <code>SKILL</code>, <code>FEAT</code>, <code>SUBCLASS</code>,
-    <code>SPELL</code>, <code>WEAPON_MASTERY</code>, <code>CUSTOM</code>. Campos extra según
+    <p><code>kind</code> común: <code>SKILL</code>, <code>EXPERTISE</code>,
+    <code>SKILL_OR_EXPERTISE</code>, <code>FEAT</code>, <code>SUBCLASS</code>,
+    <code>SPELL</code>, <code>WEAPON_MASTERY</code>, <code>ABILITY_SCORE_IMPROVEMENT</code>,
+    <code>CUSTOM</code>. Campos extra según
     <code>kind</code>: <code>pool</code>, <code>count</code>, <code>category</code>,
     <code>featId</code>, <code>spellLevel</code>, <code>fromClass</code>, <code>fromClasses</code>,
-    <code>points</code>, <code>options</code>.</p>
+    <code>points</code>, <code>options</code>, <code>schools</code>, <code>ritual</code>,
+    <code>pickFromStat</code>, <code>grantsSavingThrowProficiency</code>.</p>
+    <p>Notas de los <code>kind</code> de habilidad:</p>
+    <ul>
+      <li><code>SKILL</code>: otorga COMPETENCIA; las habilidades que ya tienes aparecen deshabilitadas.</li>
+      <li><code>EXPERTISE</code>: otorga PERICIA; solo ofrece habilidades en las que YA eres competente.</li>
+      <li><code>SKILL_OR_EXPERTISE</code>: patrón de dotes tipo <strong>Mente aguda</strong> /
+      <strong>Observador</strong>. Si NO eres competente, ganas competencia; si YA lo eres, ganas pericia.</li>
+    </ul>
+    <p>Campos que afinan una elección de conjuro (<code>kind: "SPELL"</code>) y de característica
+    (<code>kind: "ABILITY_SCORE_IMPROVEMENT"</code>), usados por las dotes del PHB 2024:</p>
+    <ul>
+      <li><code>schools</code> (lista, default <code>[]</code>): restringe el selector a esas escuelas
+      de magia; vacío = cualquiera. Patrón de <strong>Influencia feérica</strong>
+      (<code>["ADIVINACION","ENCANTAMIENTO"]</code>) e <strong>Influencia sombría</strong>
+      (<code>["ILUSION","NIGROMANCIA"]</code>).</li>
+      <li><code>ritual</code> (bool, default <code>false</code>): solo ofrece conjuros lanzables como
+      ritual. Lo usa <strong>Lanzador ritual</strong>.</li>
+      <li><code>pickFromStat</code> (string?, default null): si está presente, el número de elecciones
+      (<code>pick</code>) se calcula en runtime. Valor soportado: <code>"PROFICIENCY_BONUS"</code> →
+      <code>pick</code> = bonificador de competencia del personaje. Lo usa <strong>Lanzador ritual</strong>.</li>
+      <li><code>grantsSavingThrowProficiency</code> (bool, default <code>false</code>): <strong>solo</strong>
+      con <code>kind: "ABILITY_SCORE_IMPROVEMENT"</code>. Además de subir la característica, otorga
+      COMPETENCIA en su tirada de salvación. Patrón de la dote <strong>Resiliente</strong>.</li>
+    </ul>
+    <pre><code>{
+  "type": "CHOICE",
+  "id": "fey_touched_spell",
+  "title": "Influencia feérica: conjuro a elección",
+  "pick": 1,
+  "kind": "SPELL",
+  "spellLevel": 1,
+  "schools": ["ADIVINACION", "ENCANTAMIENTO"]
+}</code></pre>
+    <pre><code>{
+  "type": "CHOICE",
+  "id": "ritual_caster_spells",
+  "title": "Lanzador ritual: conjuros ritual",
+  "kind": "SPELL",
+  "spellLevel": 1,
+  "ritual": true,
+  "pickFromStat": "PROFICIENCY_BONUS"
+}</code></pre>
+    <pre><code>{
+  "type": "CHOICE",
+  "id": "resilient_boost",
+  "title": "Mejora de Resiliente",
+  "kind": "ABILITY_SCORE_IMPROVEMENT",
+  "pool": ["STR", "DEX", "CON", "INT", "WIS", "CHA"],
+  "points": 1,
+  "grantsSavingThrowProficiency": true
+}</code></pre>
     <p>Para <code>kind: "CUSTOM"</code> defines tú las opciones, y cada una puede otorgar grants al
     elegirse:</p>
     <pre><code>{
@@ -363,6 +416,23 @@
       <tr><td><code>INITIATIVE_BONUS</code></td><td>Bono a iniciativa.</td><td><code>source</code> (<code>PROFICIENCY</code>/<code>FIXED</code>), <code>flat</code></td></tr>
     </table>
 
+    <p><strong><code>attackTypes</code></strong> (en <code>DAMAGE_BONUS</code> y <code>ATTACK_BONUS</code>)
+    filtra a qué ataques aplica el bono. Vacío = todos. El motor clasifica cada arma y le asigna
+    estas etiquetas:</p>
+    <table>
+      <tr><th>Etiqueta</th><th>Aplica a</th></tr>
+      <tr><td><code>ALL</code></td><td>cualquier ataque (siempre presente)</td></tr>
+      <tr><td><code>melee_str</code> / <code>melee_dex</code></td><td>cuerpo a cuerpo según use FUE o DES</td></tr>
+      <tr><td><code>ranged_str</code> / <code>ranged_dex</code></td><td>a distancia según use FUE o DES</td></tr>
+      <tr><td><code>melee_one_handed</code> / <code>melee_two_handed</code></td><td>cuerpo a cuerpo según manos requeridas</td></tr>
+      <tr><td><code>melee_heavy</code></td><td>cuerpo a cuerpo con la propiedad «pesada» (<strong>Maestro en armas pesadas</strong>)</td></tr>
+      <tr><td><code>thrown</code></td><td>arma con la propiedad arrojadiza</td></tr>
+      <tr><td><code>light</code></td><td>arma con la propiedad ligera</td></tr>
+      <tr><td><code>melee_one_handed_offhand_free</code></td><td>cuerpo a cuerpo a una mano con la otra mano libre (estilo Duelo)</td></tr>
+    </table>
+    <p>Ejemplo — Maestro en armas pesadas (daño extra = bonif. de competencia al golpear con arma pesada):</p>
+    <pre><code>{ "type": "DAMAGE_BONUS", "source": "PROFICIENCY", "attackTypes": ["melee_heavy"] }</code></pre>
+
     <h3>5.3 Características, competencias y magia</h3>
     <table>
       <tr><th><code>type</code></th><th>Para qué</th><th>Campos clave</th></tr>
@@ -374,7 +444,13 @@
       <tr><td><code>SENSES</code></td><td>Visión en la oscuridad, etc.</td><td><code>darkvisionFeet?</code>, <code>blindsightFeet?</code>, <code>tremorsenseFeet?</code>, <code>truesightFeet?</code></td></tr>
       <tr><td><code>INVOCATIONS</code></td><td>Tabla nivel→count de invocaciones.</td><td><code>progression: [{ level, count }]</code></td></tr>
       <tr><td><code>ROLL_TABLE</code></td><td>Tabla aleatoria (tira dado y consulta).</td><td><code>dice</code>, <code>entries: [{ min, max, result }]</code></td></tr>
+      <tr><td><code>COMPUTED_STAT</code></td><td>Pasiva numérica genérica (emite <code>ComputedStat(key, value)</code>).</td><td><code>key</code>, <code>value</code>, <code>mode</code> (<code>SUM</code> default / <code>MAX</code>)</td></tr>
     </table>
+    <p><strong><code>COMPUTED_STAT</code></strong> es el comodín para pasivas numéricas simples que no
+    justifican un <code>type</code> propio. <code>mode: "SUM"</code> acumula con otros de la misma
+    <code>key</code>, <code>mode: "MAX"</code> conserva el mayor. Ejemplo — <strong>Maestro en
+    armaduras medias</strong>, que sube a 3 el tope de modificador de DES de la armadura media:</p>
+    <pre><code>{ "type": "COMPUTED_STAT", "key": "MEDIUM_ARMOR_MAX_DEX", "value": 3, "mode": "MAX" }</code></pre>
 
     <h3>5.4 Situacionales / objetos (declarativos)</h3>
     <p>Se conservan tipados y se muestran como texto; la mayoría no produce cálculo automático:
@@ -647,6 +723,44 @@
   "repeatable": false,
   "mechanics": [
     { "type": "MAX_HP_BONUS", "source": "PER_LEVEL", "perLevel": 2 }
+  ]
+}</code></pre>
+
+    <p>La mayoría de las dotes del PHB 2024 combinan una <strong>mejora de característica</strong>
+    (un <code>CHOICE</code> de <code>kind: "ABILITY_SCORE_IMPROVEMENT"</code>) con uno o más grants
+    de efecto. Patrones útiles:</p>
+    <ul>
+      <li><strong>Resiliente</strong> — mejora que además da competencia en la salvación de la
+      característica elegida (<code>grantsSavingThrowProficiency: true</code>). Lleva
+      <code>repeatable: true</code>.</li>
+      <li><strong>Lanzador ritual</strong> — mejora + un <code>CHOICE</code> de conjuros con
+      <code>ritual: true</code> y <code>pickFromStat: "PROFICIENCY_BONUS"</code>.</li>
+      <li><strong>Influencia feérica / sombría</strong> — mejora + <code>INNATE_SPELL</code> fijo +
+      un <code>CHOICE</code> de conjuro filtrado por <code>schools</code>.</li>
+      <li><strong>Moderadamente acorazado</strong> — mejora + <code>PROFICIENCY</code>
+      (<code>kind: "ARMOR"</code>). Para topes numéricos usa <code>COMPUTED_STAT</code>.</li>
+      <li><strong>Dones épicos</strong> (<code>category: "EPIC"</code>,
+      <code>prerequisite.minLevel: 19</code>) — mejora hasta 30 + grants como <code>SENSES</code>
+      (Don de la visión verdadera: <code>truesightFeet</code>) o un <code>CHOICE</code> de
+      <code>kind: "CUSTOM"</code> cuyas <code>options[].grants</code> otorgan
+      <code>DAMAGE_RESISTANCE</code> (Don de la resistencia a energías).</li>
+    </ul>
+    <pre><code>{
+  "id": "resilient",
+  "category": "GENERAL",
+  "display": { "name": "Resiliente", "description": "+1 a una característica y competencia en sus salvaciones.", "icon": "🛡️" },
+  "prerequisite": { "minLevel": 4 },
+  "repeatable": true,
+  "mechanics": [
+    {
+      "type": "CHOICE",
+      "id": "resilient_boost",
+      "title": "Mejora de Resiliente",
+      "kind": "ABILITY_SCORE_IMPROVEMENT",
+      "pool": ["STR", "DEX", "CON", "INT", "WIS", "CHA"],
+      "points": 1,
+      "grantsSavingThrowProficiency": true
+    }
   ]
 }</code></pre>
 
