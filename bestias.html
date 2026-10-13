@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bestias — Crear contenido · SENDA 5.5</title>
+  <style>
+    :root {
+      --forest: #0E1F24; --mountain: #2E4A46; --gold: #D4B278;
+      --parchment: #F4E6C8; --sunset: #A4472D; --storm: #5A6B7A;
+      --shadow: #1F2A32; --earth: #8C5E3C; --red: #C7302B; --green: #4E7A52;
+    }
+    * { box-sizing: border-box; }
+    body { font-family: Georgia, "Times New Roman", serif; line-height: 1.65;
+      margin: 0; color: var(--parchment); background: var(--forest); }
+    .wrap { max-width: 820px; margin: 0 auto; padding: 0 20px 72px; }
+    header.banner { width: 100%; max-width: 1024px; margin: 0 auto; display: block; }
+    header.banner img { width: 100%; height: auto; display: block; }
+    nav.pagenav { max-width: 820px; margin: 10px auto 0; padding: 10px 20px;
+      display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 0.86rem;
+      border-bottom: 1px solid rgba(212,178,120,0.25); }
+    nav.pagenav a { color: var(--storm); text-decoration: none; }
+    nav.pagenav a:hover { color: var(--gold); }
+    nav.pagenav a.active { color: var(--gold); font-weight: bold; }
+    h1 { color: var(--gold); font-size: 2rem; margin: 32px 0 0.3rem; letter-spacing: 0.5px; }
+    h2 { color: var(--gold); font-size: 1.4rem; margin-top: 2.4rem;
+      padding-bottom: 0.35rem; border-bottom: 1px solid rgba(212,178,120,0.4); }
+    h3 { color: var(--gold); font-size: 1.12rem; margin-top: 1.7rem; }
+    .updated { color: var(--storm); font-size: 0.9rem; margin-top: 0; }
+    a { color: var(--gold); }
+    strong { color: #fff0d4; }
+    code { background: var(--shadow); color: var(--gold); padding: 1px 6px;
+      border-radius: 4px; font-size: 0.88em;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    pre { background: var(--shadow); border: 1px solid rgba(212,178,120,0.25);
+      border-radius: 10px; padding: 14px 16px; overflow-x: auto; font-size: 0.84em; line-height: 1.5; }
+    pre code { background: none; color: var(--parchment); padding: 0; font-size: 1em; }
+    table { border-collapse: collapse; width: 100%; margin: 1.1rem 0; font-size: 0.9em; }
+    th, td { border: 1px solid rgba(212,178,120,0.25); padding: 7px 11px;
+      text-align: left; vertical-align: top; }
+    th { background: var(--mountain); color: var(--gold); }
+    tr:nth-child(even) td { background: rgba(31,42,50,0.5); }
+    blockquote { margin: 1.1rem 0; padding: 0.6rem 1.1rem; border-left: 4px solid var(--gold);
+      background: rgba(46,74,70,0.35); border-radius: 0 8px 8px 0; color: var(--parchment); }
+    hr { border: none; border-top: 1px solid rgba(212,178,120,0.3); margin: 2.6rem 0; }
+    ul, ol { padding-left: 1.4rem; }
+    li { margin: 0.2rem 0; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 14px; margin: 24px 0; }
+    .card { background: var(--shadow); border: 1px solid rgba(212,178,120,0.3);
+      border-radius: 12px; padding: 16px 18px; text-decoration: none; display: block; }
+    .card:hover { border-color: var(--gold); }
+    .card h3 { margin: 0 0 6px; color: var(--gold); }
+    .card p { margin: 0; color: var(--parchment); font-size: 0.9em; }
+    .idxletter { color: var(--gold); font-size: 1.2rem; margin: 1.4rem 0 0.3rem;
+      border-bottom: 1px solid rgba(212,178,120,0.3); }
+  </style>
+</head>
+<body>
+  <header class="banner">
+    <img src="senda_banner.png" alt="SENDA 5.5" />
+  </header>
+<nav class="pagenav">
+  <a href="crear-contenido.html">Guía</a>
+  <a href="indice.html">Índice</a>
+  <a href="empezar.html">Primeros pasos</a>
+  <a href="clase.html">Clase</a>
+  <a href="mecanicas.html">Mecánicas (grants)</a>
+  <a href="trasfondo.html">Trasfondo</a>
+  <a href="especie.html">Especie</a>
+  <a href="dote.html">Dote</a>
+  <a href="conjuros-invocaciones.html">Conjuros e invocaciones</a>
+  <a href="equipo.html">Equipo</a>
+  <a href="bestias.html" class="active">Bestias</a>
+</nav>
+  <div class="wrap">
+<h1>Bestias</h1>
+<h2 id="16-bestia-beastdef-lista-beasts">16. Bestia (<code>BeastDef</code>) → lista <code>beasts</code></h2>
+<p>Para la Forma Salvaje del Druida. <strong>No lleva grants</strong>: son datos estáticos que sustituyen el perfil del personaje al transformarse.</p>
+<table>
+  <tr><th>Campo</th><th>Tipo</th><th>Notas</th></tr>
+  <tr><td><code>id</code></td><td>string</td><td>Obligatorio.</td></tr>
+  <tr><td><code>display</code></td><td>DisplayInfo</td><td>Obligatorio.</td></tr>
+  <tr><td><code>cr</code></td><td>string</td><td>Texto del desafío (<code>&quot;1/4&quot;</code>). Default <code>&quot;0&quot;</code>.</td></tr>
+  <tr><td><code>crValue</code></td><td>double</td><td>Valor numérico (0.25). Filtra por nivel de druida.</td></tr>
+  <tr><td><code>size</code></td><td>string</td><td>Default <code>&quot;Mediana&quot;</code>.</td></tr>
+  <tr><td><code>ac</code></td><td>int</td><td>Default 10.</td></tr>
+  <tr><td><code>hp</code></td><td>int</td><td>Default 1.</td></tr>
+  <tr><td><code>speed</code> / <code>swimSpeed</code> / <code>flySpeed</code> / <code>climbSpeed</code></td><td>int</td><td>Velocidades en metros (0 = no la tiene).</td></tr>
+  <tr><td><code>strength</code> / <code>dexterity</code> / <code>constitution</code></td><td>int</td><td>Default 10.</td></tr>
+  <tr><td><code>senses</code></td><td>string</td><td>P. ej. <code>&quot;visión en la oscuridad 18 m&quot;</code>.</td></tr>
+  <tr><td><code>attacks</code></td><td>string</td><td>Ataques en texto, uno por línea.</td></tr>
+  <tr><td><code>notes</code></td><td>string</td><td>Rasgos especiales, inmunidades, etc.</td></tr>
+</table>
+<pre><code>{
+  &quot;id&quot;: &quot;wolf&quot;,
+  &quot;display&quot;: { &quot;name&quot;: &quot;Lobo&quot; },
+  &quot;cr&quot;: &quot;1/4&quot;,
+  &quot;crValue&quot;: 0.25,
+  &quot;size&quot;: &quot;Mediana&quot;,
+  &quot;ac&quot;: 13,
+  &quot;hp&quot;: 11,
+  &quot;speed&quot;: 12,
+  &quot;strength&quot;: 12,
+  &quot;dexterity&quot;: 15,
+  &quot;constitution&quot;: 12,
+  &quot;senses&quot;: &quot;percepción pasiva 13&quot;,
+  &quot;attacks&quot;: &quot;Mordisco: +4 al golpe, 2d4+2 perforante.&quot;,
+  &quot;notes&quot;: &quot;Tácticas de manada: ventaja si un aliado está a 1,5 m del objetivo.&quot;
+}</code></pre>
+<hr />
+  </div>
+</body>
+</html>

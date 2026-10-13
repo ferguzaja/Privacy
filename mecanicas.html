@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mecánicas (grants) — Crear contenido · SENDA 5.5</title>
+  <style>
+    :root {
+      --forest: #0E1F24; --mountain: #2E4A46; --gold: #D4B278;
+      --parchment: #F4E6C8; --sunset: #A4472D; --storm: #5A6B7A;
+      --shadow: #1F2A32; --earth: #8C5E3C; --red: #C7302B; --green: #4E7A52;
+    }
+    * { box-sizing: border-box; }
+    body { font-family: Georgia, "Times New Roman", serif; line-height: 1.65;
+      margin: 0; color: var(--parchment); background: var(--forest); }
+    .wrap { max-width: 820px; margin: 0 auto; padding: 0 20px 72px; }
+    header.banner { width: 100%; max-width: 1024px; margin: 0 auto; display: block; }
+    header.banner img { width: 100%; height: auto; display: block; }
+    nav.pagenav { max-width: 820px; margin: 10px auto 0; padding: 10px 20px;
+      display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 0.86rem;
+      border-bottom: 1px solid rgba(212,178,120,0.25); }
+    nav.pagenav a { color: var(--storm); text-decoration: none; }
+    nav.pagenav a:hover { color: var(--gold); }
+    nav.pagenav a.active { color: var(--gold); font-weight: bold; }
+    h1 { color: var(--gold); font-size: 2rem; margin: 32px 0 0.3rem; letter-spacing: 0.5px; }
+    h2 { color: var(--gold); font-size: 1.4rem; margin-top: 2.4rem;
+      padding-bottom: 0.35rem; border-bottom: 1px solid rgba(212,178,120,0.4); }
+    h3 { color: var(--gold); font-size: 1.12rem; margin-top: 1.7rem; }
+    .updated { color: var(--storm); font-size: 0.9rem; margin-top: 0; }
+    a { color: var(--gold); }
+    strong { color: #fff0d4; }
+    code { background: var(--shadow); color: var(--gold); padding: 1px 6px;
+      border-radius: 4px; font-size: 0.88em;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    pre { background: var(--shadow); border: 1px solid rgba(212,178,120,0.25);
+      border-radius: 10px; padding: 14px 16px; overflow-x: auto; font-size: 0.84em; line-height: 1.5; }
+    pre code { background: none; color: var(--parchment); padding: 0; font-size: 1em; }
+    table { border-collapse: collapse; width: 100%; margin: 1.1rem 0; font-size: 0.9em; }
+    th, td { border: 1px solid rgba(212,178,120,0.25); padding: 7px 11px;
+      text-align: left; vertical-align: top; }
+    th { background: var(--mountain); color: var(--gold); }
+    tr:nth-child(even) td { background: rgba(31,42,50,0.5); }
+    blockquote { margin: 1.1rem 0; padding: 0.6rem 1.1rem; border-left: 4px solid var(--gold);
+      background: rgba(46,74,70,0.35); border-radius: 0 8px 8px 0; color: var(--parchment); }
+    hr { border: none; border-top: 1px solid rgba(212,178,120,0.3); margin: 2.6rem 0; }
+    ul, ol { padding-left: 1.4rem; }
+    li { margin: 0.2rem 0; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 14px; margin: 24px 0; }
+    .card { background: var(--shadow); border: 1px solid rgba(212,178,120,0.3);
+      border-radius: 12px; padding: 16px 18px; text-decoration: none; display: block; }
+    .card:hover { border-color: var(--gold); }
+    .card h3 { margin: 0 0 6px; color: var(--gold); }
+    .card p { margin: 0; color: var(--parchment); font-size: 0.9em; }
+    .idxletter { color: var(--gold); font-size: 1.2rem; margin: 1.4rem 0 0.3rem;
+      border-bottom: 1px solid rgba(212,178,120,0.3); }
+  </style>
+</head>
+<body>
+  <header class="banner">
+    <img src="senda_banner.png" alt="SENDA 5.5" />
+  </header>
+<nav class="pagenav">
+  <a href="crear-contenido.html">Guía</a>
+  <a href="indice.html">Índice</a>
+  <a href="empezar.html">Primeros pasos</a>
+  <a href="clase.html">Clase</a>
+  <a href="mecanicas.html" class="active">Mecánicas (grants)</a>
+  <a href="trasfondo.html">Trasfondo</a>
+  <a href="especie.html">Especie</a>
+  <a href="dote.html">Dote</a>
+  <a href="conjuros-invocaciones.html">Conjuros e invocaciones</a>
+  <a href="equipo.html">Equipo</a>
+  <a href="bestias.html">Bestias</a>
+</nav>
+  <div class="wrap">
+<h1>Mecánicas (grants)</h1>
+<h2 id="5-mecanicas-grants-el-catalogo-type">5. Mecánicas (grants): el catálogo <code>type</code></h2>
+<p>Cada grant se identifica con <code>&quot;type&quot;</code>. <strong>Todos</strong> aceptan además dos campos opcionales:</p>
+<ul>
+<li><code>minLevel</code> (int?): nivel mínimo de clase para que aplique.</li>
+<li><code>subclassId</code> (string?): el grant solo aplica si el personaje tiene esa subclase.</li>
+</ul>
+<h3 id="5-1-recursos-y-acciones">5.1 Recursos y acciones</h3>
+<p><strong><code>RESOURCE</code></strong> — recurso rastreable con botones +/−.</p>
+<pre><code>{
+  &quot;type&quot;: &quot;RESOURCE&quot;,
+  &quot;id&quot;: &quot;rage_uses&quot;,
+  &quot;label&quot;: &quot;Furias&quot;,
+  &quot;icon&quot;: &quot;🔥&quot;,
+  &quot;recovery&quot;: &quot;SHORT_REST&quot;,
+  &quot;scaling&quot;: { &quot;rule&quot;: &quot;FROM_TABLE&quot;, &quot;tableKey&quot;: &quot;rage_uses&quot; },
+  &quot;hidden&quot;: false
+}</code></pre>
+<ul>
+<li><code>recovery</code>: <code>NONE</code> | <code>SHORT_REST</code> | <code>LONG_REST</code> | <code>DAWN</code>…</li>
+<li><code>scaling.rule</code>: <code>FIXED</code> (usa <code>value</code>) | <code>LEVEL</code> | <code>PROFICIENCY</code> | <code>ABILITY_MOD</code> (usa <code>ability</code>) | <code>FROM_TABLE</code> (usa <code>tableKey</code>). <code>multiplier</code> opcional multiplica el resultado.</li>
+<li><code>hidden</code>: si es <code>true</code>, el pool existe pero no se dibuja como tracker propio (lo consume una acción).</li>
+</ul>
+<p><strong><code>COMBAT_TOGGLE</code></strong> — estado on/off; puede anidar más grants en <code>onActivate</code>.</p>
+<pre><code>{
+  &quot;type&quot;: &quot;COMBAT_TOGGLE&quot;,
+  &quot;id&quot;: &quot;rage_active&quot;,
+  &quot;label&quot;: &quot;Activar Furia&quot;,
+  &quot;costResource&quot;: &quot;rage_uses&quot;,
+  &quot;costAmount&quot;: 1,
+  &quot;onActivate&quot;: [
+    { &quot;type&quot;: &quot;DAMAGE_RESISTANCE&quot;, &quot;damageTypes&quot;: [&quot;bludgeoning&quot;,&quot;piercing&quot;,&quot;slashing&quot;], &quot;condition&quot;: &quot;WHILE_RAGING&quot; }
+  ]
+}</code></pre>
+<p><strong><code>COMBAT_ACTION</code></strong> — acción puntual que gasta un recurso; puede tirar dados.</p>
+<pre><code>{
+  &quot;type&quot;: &quot;COMBAT_ACTION&quot;,
+  &quot;id&quot;: &quot;brutal_strike_action&quot;,
+  &quot;label&quot;: &quot;Golpe brutal&quot;,
+  &quot;costResource&quot;: &quot;rage_uses&quot;,
+  &quot;costAmount&quot;: 1,
+  &quot;rollDice&quot;: &quot;1d10&quot;,
+  &quot;rollKind&quot;: &quot;DAMAGE&quot;,
+  &quot;description&quot;: &quot;…&quot;
+}</code></pre>
+<p><strong><code>CHOICE</code></strong> — abre un selector para el jugador.</p>
+<pre><code>{
+  &quot;type&quot;: &quot;CHOICE&quot;,
+  &quot;id&quot;: &quot;asi_4&quot;,
+  &quot;title&quot;: &quot;Mejora de característica&quot;,
+  &quot;pick&quot;: 1,
+  &quot;kind&quot;: &quot;FEAT&quot;,
+  &quot;level&quot;: 4
+}</code></pre>
+<p><code>kind</code> común: <code>SKILL</code>, <code>EXPERTISE</code>, <code>SKILL_OR_EXPERTISE</code>, <code>FEAT</code>, <code>SUBCLASS</code>, <code>SPELL</code>, <code>WEAPON_MASTERY</code>, <code>ABILITY_SCORE_IMPROVEMENT</code>, <code>CUSTOM</code>.</p>
+<p>Notas de los <code>kind</code> de habilidad:</p>
+<ul>
+<li><code>SKILL</code>: otorga COMPETENCIA. Las habilidades que el personaje ya tiene se muestran deshabilitadas (&quot;ya la tienes&quot;) y no son seleccionables.</li>
+<li><code>EXPERTISE</code>: otorga PERICIA; solo ofrece habilidades en las que YA se es competente.</li>
+<li><code>SKILL_OR_EXPERTISE</code>: patrón de dotes tipo <strong>Mente aguda</strong> / <strong>Observador</strong>. Si el personaje NO es competente en la habilidad elegida, gana competencia; si YA lo es, gana pericia. No deshabilita las conocidas (elegir una conocida es lo que da la pericia).</li>
+</ul>
+<p>Campos extra según <code>kind</code>: <code>pool</code>, <code>count</code>, <code>category</code>, <code>featId</code>, <code>spellLevel</code>, <code>fromClass</code>, <code>fromClasses</code>, <code>points</code>, <code>options</code>, <code>schools</code>, <code>ritual</code>, <code>pickFromStat</code>, <code>grantsSavingThrowProficiency</code>.</p>
+<p>Campos que afinan una elección de conjuro (<code>kind: &quot;SPELL&quot;</code>) y de característica (<code>kind: &quot;ABILITY_SCORE_IMPROVEMENT&quot;</code>), usados por las dotes del PHB 2024:</p>
+<ul>
+<li><code>schools</code> (lista de string, default <code>[]</code>): restringe el selector a esas escuelas de magia; vacío = cualquiera. Patrón de <strong>Influencia feérica</strong> (<code>[&quot;ADIVINACION&quot;,&quot;ENCANTAMIENTO&quot;]</code>) e <strong>Influencia sombría</strong> (<code>[&quot;ILUSION&quot;,&quot;NIGROMANCIA&quot;]</code>).</li>
+<li><code>ritual</code> (bool, default <code>false</code>): solo ofrece conjuros que puedan lanzarse como ritual. Lo usa <strong>Lanzador ritual</strong>.</li>
+<li><code>pickFromStat</code> (string?, default null): si está presente, el número de elecciones (<code>pick</code>) se calcula en runtime en vez de usar el <code>pick</code> fijo. Valor soportado: <code>&quot;PROFICIENCY_BONUS&quot;</code> → <code>pick</code> = bonificador de competencia del personaje (escala al subir de nivel). Lo usa <strong>Lanzador ritual</strong> (eliges tantos conjuros ritual como tu bonif. de competencia).</li>
+<li><code>grantsSavingThrowProficiency</code> (bool, default <code>false</code>): <strong>solo</strong> con <code>kind: &quot;ABILITY_SCORE_IMPROVEMENT&quot;</code>. Además de subir la característica elegida, otorga COMPETENCIA en su tirada de salvación (emite <code>SAVE_PROF_&lt;código&gt;</code>). Patrón de la dote <strong>Resiliente</strong>; las salvaciones en las que ya seas competente aparecen deshabilitadas.</li>
+</ul>
+<pre><code>{
+  &quot;type&quot;: &quot;CHOICE&quot;,
+  &quot;id&quot;: &quot;fey_touched_spell&quot;,
+  &quot;title&quot;: &quot;Influencia feérica: conjuro a elección&quot;,
+  &quot;pick&quot;: 1,
+  &quot;kind&quot;: &quot;SPELL&quot;,
+  &quot;spellLevel&quot;: 1,
+  &quot;schools&quot;: [&quot;ADIVINACION&quot;, &quot;ENCANTAMIENTO&quot;]
+}</code></pre>
+<pre><code>{
+  &quot;type&quot;: &quot;CHOICE&quot;,
+  &quot;id&quot;: &quot;ritual_caster_spells&quot;,
+  &quot;title&quot;: &quot;Lanzador ritual: conjuros ritual&quot;,
+  &quot;kind&quot;: &quot;SPELL&quot;,
+  &quot;spellLevel&quot;: 1,
+  &quot;ritual&quot;: true,
+  &quot;pickFromStat&quot;: &quot;PROFICIENCY_BONUS&quot;
+}</code></pre>
+<pre><code>{
+  &quot;type&quot;: &quot;CHOICE&quot;,
+  &quot;id&quot;: &quot;resilient_boost&quot;,
+  &quot;title&quot;: &quot;Mejora de Resiliente&quot;,
+  &quot;kind&quot;: &quot;ABILITY_SCORE_IMPROVEMENT&quot;,
+  &quot;pool&quot;: [&quot;STR&quot;, &quot;DEX&quot;, &quot;CON&quot;, &quot;INT&quot;, &quot;WIS&quot;, &quot;CHA&quot;],
+  &quot;points&quot;: 1,
+  &quot;grantsSavingThrowProficiency&quot;: true
+}</code></pre>
+<p>Para <code>kind: &quot;CUSTOM&quot;</code> defines tú las opciones, y cada una puede otorgar grants al elegirse:</p>
+<pre><code>{
+  &quot;type&quot;: &quot;CHOICE&quot;,
+  &quot;id&quot;: &quot;divine_fury_type&quot;,
+  &quot;title&quot;: &quot;Tipo de daño&quot;,
+  &quot;pick&quot;: 1,
+  &quot;kind&quot;: &quot;CUSTOM&quot;,
+  &quot;options&quot;: [
+    { &quot;id&quot;: &quot;opt_necrotic&quot;, &quot;display&quot;: { &quot;name&quot;: &quot;Necrótico&quot; }, &quot;grants&quot;: [] },
+    { &quot;id&quot;: &quot;opt_radiant&quot;,  &quot;display&quot;: { &quot;name&quot;: &quot;Radiante&quot;  }, &quot;grants&quot;: [] }
+  ]
+}</code></pre>
+<h3 id="5-2-combate-y-defensa">5.2 Combate y defensa</h3>
+<table>
+  <tr><th><code>type</code></th><th>Para qué</th><th>Campos clave</th></tr>
+  <tr><td><code>AC_FORMULA</code></td><td>Fórmula de CA (defensa sin armadura). Compite como candidato al máximo.</td><td><code>base</code>, <code>abilities</code>, <code>maxDex?</code>, <code>condition</code> (default <code>NO_ARMOR</code>), <code>shieldAllowed</code></td></tr>
+  <tr><td><code>AC_BONUS</code></td><td>Bono plano que <strong>suma</strong> a la mejor CA.</td><td><code>amount</code>, <code>condition?</code> (<code>WHILE_EQUIPPED</code>, <code>WHILE_ATTUNED</code>)</td></tr>
+  <tr><td><code>SPEED_BONUS</code> / <code>SPEED_PENALTY</code></td><td>Modifica velocidad.</td><td><code>bonus</code>/<code>amount</code>, <code>condition?</code></td></tr>
+  <tr><td><code>DAMAGE_RESISTANCE</code></td><td>Resistencia a tipos de daño.</td><td><code>damageTypes</code>, <code>condition?</code></td></tr>
+  <tr><td><code>DAMAGE_REDUCTION</code></td><td>Reducción plana de daño.</td><td><code>source</code> (<code>PROFICIENCY</code>/<code>FIXED</code>/<code>DICE</code>), <code>flat</code>, <code>dice?</code></td></tr>
+  <tr><td><code>DAMAGE_BONUS</code></td><td>Bono al daño.</td><td><code>source</code> (<code>FIXED</code>/<code>PROFICIENCY</code>/<code>ABILITY_MOD</code>/<code>FROM_TABLE</code>), <code>attackTypes</code></td></tr>
+  <tr><td><code>ATTACK_BONUS</code></td><td>Bono a la tirada de ataque (to-hit).</td><td>igual que <code>DAMAGE_BONUS</code></td></tr>
+</table>
+<p><strong><code>attackTypes</code></strong> (en <code>DAMAGE_BONUS</code> y <code>ATTACK_BONUS</code>) filtra a qué ataques aplica el bono. Vacío = todos. El motor clasifica cada arma y le asigna estas etiquetas:</p>
+<table>
+  <tr><th>Etiqueta</th><th>Aplica a</th></tr>
+  <tr><td><code>ALL</code></td><td>cualquier ataque (siempre presente)</td></tr>
+  <tr><td><code>melee_str</code> / <code>melee_dex</code></td><td>cuerpo a cuerpo según use FUE o DES</td></tr>
+  <tr><td><code>ranged_str</code> / <code>ranged_dex</code></td><td>a distancia según use FUE o DES</td></tr>
+  <tr><td><code>melee_one_handed</code> / <code>melee_two_handed</code></td><td>cuerpo a cuerpo según manos requeridas</td></tr>
+  <tr><td><code>melee_heavy</code></td><td>cuerpo a cuerpo con la propiedad «pesada» (<strong>Maestro en armas pesadas</strong>)</td></tr>
+  <tr><td><code>thrown</code></td><td>arma con la propiedad arrojadiza</td></tr>
+  <tr><td><code>light</code></td><td>arma con la propiedad ligera</td></tr>
+  <tr><td><code>melee_one_handed_offhand_free</code></td><td>cuerpo a cuerpo a una mano con la otra mano libre (estilo Duelo)</td></tr>
+</table>
+<p>Ejemplo — Maestro en armas pesadas (daño extra = bonif. de competencia al golpear con arma pesada):</p>
+<pre><code>{ &quot;type&quot;: &quot;DAMAGE_BONUS&quot;, &quot;source&quot;: &quot;PROFICIENCY&quot;, &quot;attackTypes&quot;: [&quot;melee_heavy&quot;] }</code></pre>
+<p>| <code>EXTRA_ATTACK</code> | Nº total de ataques. | <code>totalAttacks</code> | | <code>WEAPON_MASTERY</code> | Marcador de maestría (suele modelarse como <code>CHOICE</code>). | <code>count?</code> | | <code>MAX_HP_BONUS</code> | Bono a PG máximos. | <code>source</code> (<code>PER_LEVEL</code>/<code>FIXED</code>), <code>perLevel</code>, <code>flat</code> | | <code>INITIATIVE_BONUS</code> | Bono a iniciativa. | <code>source</code> (<code>PROFICIENCY</code>/<code>FIXED</code>), <code>flat</code> |</p>
+<h3 id="5-3-caracteristicas-competencias-y-magia">5.3 Características, competencias y magia</h3>
+<table>
+  <tr><th><code>type</code></th><th>Para qué</th><th>Campos clave</th></tr>
+  <tr><td><code>ABILITY_BOOST</code></td><td>Sube características.</td><td><code>boosts: [{ ability, amount, max? }]</code></td></tr>
+  <tr><td><code>PROFICIENCY</code></td><td>Otorga competencia.</td><td><code>kind</code>, <code>items</code></td></tr>
+  <tr><td><code>ABILITY_CHECK_BONUS</code></td><td>Bono a pruebas.</td><td><code>ability?</code>, <code>amount</code>, <code>skill?</code>, <code>condition?</code></td></tr>
+  <tr><td><code>SPELLCASTING</code></td><td>Declara lanzador de conjuros.</td><td><code>casterType</code>, <code>ability</code>, <code>preparedFormula?</code>, <code>spellListClassId?</code></td></tr>
+  <tr><td><code>INNATE_SPELL</code></td><td>Conjuro innato / siempre preparado.</td><td><code>spellId</code>, <code>usesPerRest?</code>, <code>restType?</code>, <code>alwaysPrepared?</code>, <code>ability?</code></td></tr>
+  <tr><td><code>SENSES</code></td><td>Visión en la oscuridad, etc. (en <strong>metros</strong>)</td><td><code>darkvision?</code>, <code>blindsight?</code>, <code>tremorsense?</code>, <code>truesight?</code></td></tr>
+  <tr><td><code>INVOCATIONS</code></td><td>Tabla nivel→count de invocaciones.</td><td><code>progression: [{ level, count }]</code></td></tr>
+  <tr><td><code>ROLL_TABLE</code></td><td>Tabla aleatoria (tira dado y consulta).</td><td><code>dice</code>, <code>entries: [{ min, max, result }]</code></td></tr>
+  <tr><td><code>COMPUTED_STAT</code></td><td>Pasiva numérica genérica (emite <code>ComputedStat(key, value)</code>).</td><td><code>key</code>, <code>value</code>, <code>mode</code> (<code>SUM</code> default / <code>MAX</code>)</td></tr>
+</table>
+<p><strong><code>COMPUTED_STAT</code></strong> es el comodín para pasivas numéricas simples que no justifican un <code>type</code> propio. El motor emite <code>ComputedStat(key, value)</code> y lo propaga a <code>stats</code>; <code>mode: &quot;SUM&quot;</code> acumula con otros de la misma <code>key</code>, <code>mode: &quot;MAX&quot;</code> conserva el mayor. Ejemplo — <strong>Maestro en armaduras medias</strong>, que sube a 3 el tope de modificador de DES de la armadura media:</p>
+<pre><code>{ &quot;type&quot;: &quot;COMPUTED_STAT&quot;, &quot;key&quot;: &quot;MEDIUM_ARMOR_MAX_DEX&quot;, &quot;value&quot;: 3, &quot;mode&quot;: &quot;MAX&quot; }</code></pre>
+<h3 id="5-4-situacionales-objetos-declarativos">5.4 Situacionales / objetos (declarativos)</h3>
+<p>Se conservan tipados y se muestran como texto; la mayoría no produce cálculo automático: <code>ADVANTAGE</code>, <code>AUTO_SUCCESS</code>, <code>LIGHT_SOURCE</code>, <code>FUEL</code>, <code>MAGNIFICATION</code>, <code>LOCK</code>, <code>LIFT_CAPACITY_MULTIPLIER</code>, <code>MATERIAL_COMPONENT_SUBSTITUTE</code>, <code>EXPAND_BUNDLE</code>, <code>UTILITY_ACTION</code>.</p>
+<p><code>UNKNOWN</code> no se escribe a mano: es el resultado de un <code>type</code> que el motor no reconoce.</p>
+<hr />
+<hr />
+<h2 id="18-unidades-de-distancia-importante">18. Unidades de distancia (importante)</h2>
+<p><strong>Todas las distancias de la app están en METROS.</strong> No hay mezcla de unidades: velocidad, sentidos, alcances de arma, radios de luz y velocidades de bestia usan metros. Equivalencia del juego: <strong>5 pies = 1,5 m</strong> (1 casilla).</p>
+<p>Campos que son distancias (todos en metros):</p>
+<ul>
+<li><code>SpeciesDef.speed</code> y <code>SpeciesDef.darkvision</code> → metros (<code>double</code>). En <code>srd_base.json</code>: elfo <code>speed: 9.0</code>, enano <code>darkvision: 36.0</code>, goliat <code>speed: 10.5</code> y <code>darkvision: 0.0</code>.</li>
+<li>Grant <code>SENSES</code> → <code>darkvision</code>, <code>blindsight</code>, <code>tremorsense</code>, <code>truesight</code> (metros, <code>double</code>).</li>
+<li><code>SpeedBonusGrant.bonus</code> / <code>SpeedPenaltyGrant.amount</code> → metros.</li>
+<li><code>WeaponRange { normal, long, unit }</code>, <code>LightSourceGrant</code>, <code>Measure { amount, unit }</code> → el <code>unit</code> sigue existiendo y por defecto es <code>&quot;m&quot;</code>.</li>
+<li><code>BeastDef.speed/swim/fly/climb</code> → metros.</li>
+</ul>
+<p>Como todo comparte unidad, el motor compara y acumula sin convertir (p. ej. <code>SheetData.darkvision</code> toma el máximo entre el <code>darkvision</code> de la especie y los grants <code>SENSES</code>). La UI solo añade el sufijo <code>&quot; m&quot;</code> al mostrar (con coma decimal: <code>10,5 m</code>).</p>
+<p>Regla práctica:</p>
+<table>
+  <tr><th>Dato</th><th>Unidad</th><th>Ejemplo</th></tr>
+  <tr><td><code>SpeciesDef.speed</code>, <code>SpeciesDef.darkvision</code></td><td>metros</td><td><code>&quot;speed&quot;: 9</code> = 9 m</td></tr>
+  <tr><td><code>SENSES</code> (<code>darkvision</code>/<code>blindsight</code>/…)</td><td>metros</td><td><code>&quot;darkvision&quot;: 18</code> = 18 m</td></tr>
+  <tr><td><code>SpeedBonusGrant.bonus</code>, <code>SpeedPenaltyGrant.amount</code></td><td>metros</td><td><code>&quot;bonus&quot;: 3</code> = +3 m</td></tr>
+  <tr><td><code>WeaponRange</code>, <code>LightSourceGrant</code>, <code>Measure</code></td><td>según <code>unit</code> (default m)</td><td><code>{ &quot;normal&quot;: 24, &quot;unit&quot;: &quot;m&quot; }</code></td></tr>
+  <tr><td><code>BeastDef.speed/swim/fly/climb</code></td><td>metros</td><td><code>&quot;speed&quot;: 12</code> = 12 m</td></tr>
+</table>
+<h3 id="compatibilidad-con-packs-antiguos-en-pies">Compatibilidad con packs antiguos (en pies)</h3>
+<p>Los packs exportados <strong>antes</strong> de esta unificación guardaban velocidad y sentidos de especie en pies (<code>&quot;speed&quot;: 30</code>, <code>&quot;darkvision&quot;: 60</code>, <code>SENSES</code> con <code>darkvisionFeet</code>/<code>blindsightFeet</code>/…). Esos packs <strong>se importan igual</strong>: al cargarlos, la app detecta que no declaran metros y convierte esos valores a metros automáticamente (<code>m = pies × 0,3</code>), renombrando las claves <code>*Feet</code>.</p>
+<p>El marcador es la clave <code>distanceUnit</code> en la raíz del pack:</p>
+<ul>
+<li><code>&quot;distanceUnit&quot;: &quot;m&quot;</code> → el pack ya está en metros; se usa tal cual.</li>
+<li>sin <code>distanceUnit</code> → se asume que especie y sentidos están en pies y se convierten al cargar.</li>
+</ul>
+<p>Los packs que genera la app y el SRD base declaran <code>&quot;distanceUnit&quot;: &quot;m&quot;</code>. Si creas un pack nuevo a mano, escribe las distancias en metros y añade <code>&quot;distanceUnit&quot;: &quot;m&quot;</code> para evitar cualquier conversión. (Las bestias nunca se convierten: su <code>speed</code> ya estaba en metros.)</p>
+<hr />
+  </div>
+</body>
+</html>

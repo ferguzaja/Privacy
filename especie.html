@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Especie — Crear contenido · SENDA 5.5</title>
+  <style>
+    :root {
+      --forest: #0E1F24; --mountain: #2E4A46; --gold: #D4B278;
+      --parchment: #F4E6C8; --sunset: #A4472D; --storm: #5A6B7A;
+      --shadow: #1F2A32; --earth: #8C5E3C; --red: #C7302B; --green: #4E7A52;
+    }
+    * { box-sizing: border-box; }
+    body { font-family: Georgia, "Times New Roman", serif; line-height: 1.65;
+      margin: 0; color: var(--parchment); background: var(--forest); }
+    .wrap { max-width: 820px; margin: 0 auto; padding: 0 20px 72px; }
+    header.banner { width: 100%; max-width: 1024px; margin: 0 auto; display: block; }
+    header.banner img { width: 100%; height: auto; display: block; }
+    nav.pagenav { max-width: 820px; margin: 10px auto 0; padding: 10px 20px;
+      display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 0.86rem;
+      border-bottom: 1px solid rgba(212,178,120,0.25); }
+    nav.pagenav a { color: var(--storm); text-decoration: none; }
+    nav.pagenav a:hover { color: var(--gold); }
+    nav.pagenav a.active { color: var(--gold); font-weight: bold; }
+    h1 { color: var(--gold); font-size: 2rem; margin: 32px 0 0.3rem; letter-spacing: 0.5px; }
+    h2 { color: var(--gold); font-size: 1.4rem; margin-top: 2.4rem;
+      padding-bottom: 0.35rem; border-bottom: 1px solid rgba(212,178,120,0.4); }
+    h3 { color: var(--gold); font-size: 1.12rem; margin-top: 1.7rem; }
+    .updated { color: var(--storm); font-size: 0.9rem; margin-top: 0; }
+    a { color: var(--gold); }
+    strong { color: #fff0d4; }
+    code { background: var(--shadow); color: var(--gold); padding: 1px 6px;
+      border-radius: 4px; font-size: 0.88em;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    pre { background: var(--shadow); border: 1px solid rgba(212,178,120,0.25);
+      border-radius: 10px; padding: 14px 16px; overflow-x: auto; font-size: 0.84em; line-height: 1.5; }
+    pre code { background: none; color: var(--parchment); padding: 0; font-size: 1em; }
+    table { border-collapse: collapse; width: 100%; margin: 1.1rem 0; font-size: 0.9em; }
+    th, td { border: 1px solid rgba(212,178,120,0.25); padding: 7px 11px;
+      text-align: left; vertical-align: top; }
+    th { background: var(--mountain); color: var(--gold); }
+    tr:nth-child(even) td { background: rgba(31,42,50,0.5); }
+    blockquote { margin: 1.1rem 0; padding: 0.6rem 1.1rem; border-left: 4px solid var(--gold);
+      background: rgba(46,74,70,0.35); border-radius: 0 8px 8px 0; color: var(--parchment); }
+    hr { border: none; border-top: 1px solid rgba(212,178,120,0.3); margin: 2.6rem 0; }
+    ul, ol { padding-left: 1.4rem; }
+    li { margin: 0.2rem 0; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 14px; margin: 24px 0; }
+    .card { background: var(--shadow); border: 1px solid rgba(212,178,120,0.3);
+      border-radius: 12px; padding: 16px 18px; text-decoration: none; display: block; }
+    .card:hover { border-color: var(--gold); }
+    .card h3 { margin: 0 0 6px; color: var(--gold); }
+    .card p { margin: 0; color: var(--parchment); font-size: 0.9em; }
+    .idxletter { color: var(--gold); font-size: 1.2rem; margin: 1.4rem 0 0.3rem;
+      border-bottom: 1px solid rgba(212,178,120,0.3); }
+  </style>
+</head>
+<body>
+  <header class="banner">
+    <img src="senda_banner.png" alt="SENDA 5.5" />
+  </header>
+<nav class="pagenav">
+  <a href="crear-contenido.html">Guía</a>
+  <a href="indice.html">Índice</a>
+  <a href="empezar.html">Primeros pasos</a>
+  <a href="clase.html">Clase</a>
+  <a href="mecanicas.html">Mecánicas (grants)</a>
+  <a href="trasfondo.html">Trasfondo</a>
+  <a href="especie.html" class="active">Especie</a>
+  <a href="dote.html">Dote</a>
+  <a href="conjuros-invocaciones.html">Conjuros e invocaciones</a>
+  <a href="equipo.html">Equipo</a>
+  <a href="bestias.html">Bestias</a>
+</nav>
+  <div class="wrap">
+<h1>Especie</h1>
+<h2 id="11-especie-raza-speciesdef-lista-species">11. Especie / raza (<code>SpeciesDef</code>) → lista <code>species</code></h2>
+<table>
+  <tr><th>Campo</th><th>Tipo</th><th>Obligatorio</th><th>Notas</th></tr>
+  <tr><td><code>id</code></td><td>string</td><td>Sí</td><td></td></tr>
+  <tr><td><code>display</code></td><td>DisplayInfo</td><td>Sí</td><td></td></tr>
+  <tr><td><code>creatureType</code></td><td>string?</td><td>No</td><td>Tipo de criatura (código en mayúsculas: <code>HUMANOID</code>, <code>FEY</code>, <code>UNDEAD</code>, <code>CONSTRUCT</code>, <code>DRAGON</code>, <code>ELEMENTAL</code>, …). <code>null</code> → la app asume <code>HUMANOID</code>.</td></tr>
+  <tr><td><code>speed</code></td><td>double?</td><td>No</td><td>Velocidad base <strong>en metros</strong> (p. ej. <code>9</code> = 9 m; goliat <code>10.5</code>).</td></tr>
+  <tr><td><code>size</code></td><td>string?</td><td>No</td><td>Tamaño por defecto (código: <code>TINY</code>, <code>SMALL</code>, <code>MEDIUM</code>, <code>LARGE</code>, <code>HUGE</code>, <code>GARGANTUAN</code>).</td></tr>
+  <tr><td><code>darkvision</code></td><td>double?</td><td>No</td><td>Radio de visión en la oscuridad <strong>en metros</strong> (0 = no tiene).</td></tr>
+  <tr><td><code>traits</code></td><td>[FeatureDef]</td><td>No</td><td>Rasgos raciales (mismo <code>FeatureDef</code> que las clases).</td></tr>
+  <tr><td><code>mechanics</code></td><td>[Grant]</td><td>No</td><td>Grants que aplican a nivel de especie.</td></tr>
+</table>
+<p>Hay dos sitios para poner mecánicas: dentro de un <code>trait</code> (<code>FeatureDef.mechanics</code>) cuando forman parte de un rasgo con nombre propio, o directamente en <code>mechanics</code> de la especie para efectos globales. Preferir <code>traits</code> cuando el rasgo tiene su propio nombre y texto.</p>
+<h3 id="tamano-a-eleccion-choice-kind-size">Tamaño a elección (<code>CHOICE kind=SIZE</code>)</h3>
+<p>Si la especie permite <strong>elegir</strong> tamaño (p. ej. el aasimar: Pequeño o Mediano), <code>size</code> guarda el tamaño por defecto y se añade un grant <code>CHOICE</code> de <code>kind: &quot;SIZE&quot;</code> en <code>mechanics</code>. El jugador elige al crear el personaje; sus opciones son exactamente las de la lista (no hay rango automático):</p>
+<pre><code>{
+  &quot;type&quot;: &quot;CHOICE&quot;,
+  &quot;id&quot;: &quot;aasimar_size&quot;,
+  &quot;title&quot;: &quot;Tamaño de la especie&quot;,
+  &quot;kind&quot;: &quot;SIZE&quot;,
+  &quot;level&quot;: 1,
+  &quot;options&quot;: [
+    { &quot;id&quot;: &quot;SMALL&quot;,  &quot;display&quot;: { &quot;name&quot;: &quot;Pequeño&quot; } },
+    { &quot;id&quot;: &quot;MEDIUM&quot;, &quot;display&quot;: { &quot;name&quot;: &quot;Mediano&quot; } }
+  ]
+}</code></pre>
+<p>Con un solo tamaño posible, omite el <code>CHOICE</code> y usa solo <code>size</code>.</p>
+<pre><code>{
+  &quot;id&quot;: &quot;elf&quot;,
+  &quot;display&quot;: { &quot;name&quot;: &quot;Elfo&quot;, &quot;flavorText&quot;: &quot;…&quot;, &quot;description&quot;: &quot;…&quot; },
+  &quot;speed&quot;: 9,
+  &quot;size&quot;: &quot;MEDIUM&quot;,
+  &quot;darkvision&quot;: 18,
+  &quot;traits&quot;: [
+    {
+      &quot;id&quot;: &quot;elf_keen_senses&quot;,
+      &quot;display&quot;: { &quot;name&quot;: &quot;Sentidos agudos&quot;, &quot;description&quot;: &quot;Competencia en Percepción.&quot;, &quot;icon&quot;: &quot;👁️&quot; },
+      &quot;mechanics&quot;: [ { &quot;type&quot;: &quot;PROFICIENCY&quot;, &quot;kind&quot;: &quot;SKILL&quot;, &quot;items&quot;: [&quot;Percepción&quot;] } ]
+    },
+    {
+      &quot;id&quot;: &quot;elf_fey_ancestry&quot;,
+      &quot;display&quot;: { &quot;name&quot;: &quot;Linaje feérico&quot;, &quot;description&quot;: &quot;Ventaja contra el estado hechizado.&quot; },
+      &quot;mechanics&quot;: [ { &quot;type&quot;: &quot;ADVANTAGE&quot;, &quot;appliesTo&quot;: &quot;SAVING_THROW&quot;, &quot;condition&quot;: &quot;VS_CHARMED&quot; } ]
+    },
+    {
+      &quot;id&quot;: &quot;elf_darkvision_trait&quot;,
+      &quot;display&quot;: { &quot;name&quot;: &quot;Visión en la oscuridad&quot; },
+      &quot;mechanics&quot;: [ { &quot;type&quot;: &quot;SENSES&quot;, &quot;darkvision&quot;: 18 } ]
+    }
+  ],
+  &quot;mechanics&quot;: []
+}</code></pre>
+<blockquote>El campo <code>darkvision</code> de la especie y un grant <code>SENSES</code> (<code>darkvision</code>) cumplen roles parecidos y <strong>ambos van en metros</strong>. El motor toma el máximo entre el <code>darkvision</code> de la especie y todos los <code>SENSES</code> activos (invocaciones, rasgos). Usa el campo para el dato base de la especie y el grant cuando el sentido lo aporta otra fuente. Ver §18 para unidades.</blockquote>
+<hr />
+<hr />
+<h2 id="ejemplo-especie-con-tamano-a-eleccion-y-tipo-de-criatura">Ejemplo — Especie — con tamaño a elección y tipo de criatura</h2>
+<p>Especie con visión en la oscuridad, un rasgo con nombre y elección de tamaño Pequeño/Mediano.</p>
+<pre><code>{
+  &quot;id&quot;: &quot;ejemplo_feerico&quot;,
+  &quot;display&quot;: { &quot;name&quot;: &quot;Trasgo feérico&quot;, &quot;description&quot;: &quot;Linaje menudo tocado por el Feywild.&quot; },
+  &quot;creatureType&quot;: &quot;FEY&quot;,
+  &quot;speed&quot;: 9,
+  &quot;size&quot;: &quot;SMALL&quot;,
+  &quot;darkvision&quot;: 18,
+  &quot;traits&quot;: [
+    {
+      &quot;id&quot;: &quot;ejemplo_feerico_suerte&quot;,
+      &quot;level&quot;: 1,
+      &quot;display&quot;: { &quot;name&quot;: &quot;Suerte feérica&quot;, &quot;description&quot;: &quot;Ventaja contra el estado hechizado.&quot; },
+      &quot;mechanics&quot;: [ { &quot;type&quot;: &quot;ADVANTAGE&quot;, &quot;appliesTo&quot;: &quot;SAVING_THROW&quot;, &quot;condition&quot;: &quot;VS_CHARMED&quot; } ]
+    }
+  ],
+  &quot;mechanics&quot;: [
+    {
+      &quot;type&quot;: &quot;CHOICE&quot;,
+      &quot;id&quot;: &quot;ejemplo_feerico_size&quot;,
+      &quot;title&quot;: &quot;Tamaño de la especie&quot;,
+      &quot;kind&quot;: &quot;SIZE&quot;,
+      &quot;level&quot;: 1,
+      &quot;options&quot;: [
+        { &quot;id&quot;: &quot;SMALL&quot;,  &quot;display&quot;: { &quot;name&quot;: &quot;Pequeño&quot; } },
+        { &quot;id&quot;: &quot;MEDIUM&quot;, &quot;display&quot;: { &quot;name&quot;: &quot;Mediano&quot; } }
+      ]
+    }
+  ]
+}</code></pre>
+  </div>
+</body>
+</html>

@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Clase — Crear contenido · SENDA 5.5</title>
+  <style>
+    :root {
+      --forest: #0E1F24; --mountain: #2E4A46; --gold: #D4B278;
+      --parchment: #F4E6C8; --sunset: #A4472D; --storm: #5A6B7A;
+      --shadow: #1F2A32; --earth: #8C5E3C; --red: #C7302B; --green: #4E7A52;
+    }
+    * { box-sizing: border-box; }
+    body { font-family: Georgia, "Times New Roman", serif; line-height: 1.65;
+      margin: 0; color: var(--parchment); background: var(--forest); }
+    .wrap { max-width: 820px; margin: 0 auto; padding: 0 20px 72px; }
+    header.banner { width: 100%; max-width: 1024px; margin: 0 auto; display: block; }
+    header.banner img { width: 100%; height: auto; display: block; }
+    nav.pagenav { max-width: 820px; margin: 10px auto 0; padding: 10px 20px;
+      display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 0.86rem;
+      border-bottom: 1px solid rgba(212,178,120,0.25); }
+    nav.pagenav a { color: var(--storm); text-decoration: none; }
+    nav.pagenav a:hover { color: var(--gold); }
+    nav.pagenav a.active { color: var(--gold); font-weight: bold; }
+    h1 { color: var(--gold); font-size: 2rem; margin: 32px 0 0.3rem; letter-spacing: 0.5px; }
+    h2 { color: var(--gold); font-size: 1.4rem; margin-top: 2.4rem;
+      padding-bottom: 0.35rem; border-bottom: 1px solid rgba(212,178,120,0.4); }
+    h3 { color: var(--gold); font-size: 1.12rem; margin-top: 1.7rem; }
+    .updated { color: var(--storm); font-size: 0.9rem; margin-top: 0; }
+    a { color: var(--gold); }
+    strong { color: #fff0d4; }
+    code { background: var(--shadow); color: var(--gold); padding: 1px 6px;
+      border-radius: 4px; font-size: 0.88em;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    pre { background: var(--shadow); border: 1px solid rgba(212,178,120,0.25);
+      border-radius: 10px; padding: 14px 16px; overflow-x: auto; font-size: 0.84em; line-height: 1.5; }
+    pre code { background: none; color: var(--parchment); padding: 0; font-size: 1em; }
+    table { border-collapse: collapse; width: 100%; margin: 1.1rem 0; font-size: 0.9em; }
+    th, td { border: 1px solid rgba(212,178,120,0.25); padding: 7px 11px;
+      text-align: left; vertical-align: top; }
+    th { background: var(--mountain); color: var(--gold); }
+    tr:nth-child(even) td { background: rgba(31,42,50,0.5); }
+    blockquote { margin: 1.1rem 0; padding: 0.6rem 1.1rem; border-left: 4px solid var(--gold);
+      background: rgba(46,74,70,0.35); border-radius: 0 8px 8px 0; color: var(--parchment); }
+    hr { border: none; border-top: 1px solid rgba(212,178,120,0.3); margin: 2.6rem 0; }
+    ul, ol { padding-left: 1.4rem; }
+    li { margin: 0.2rem 0; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 14px; margin: 24px 0; }
+    .card { background: var(--shadow); border: 1px solid rgba(212,178,120,0.3);
+      border-radius: 12px; padding: 16px 18px; text-decoration: none; display: block; }
+    .card:hover { border-color: var(--gold); }
+    .card h3 { margin: 0 0 6px; color: var(--gold); }
+    .card p { margin: 0; color: var(--parchment); font-size: 0.9em; }
+    .idxletter { color: var(--gold); font-size: 1.2rem; margin: 1.4rem 0 0.3rem;
+      border-bottom: 1px solid rgba(212,178,120,0.3); }
+  </style>
+</head>
+<body>
+  <header class="banner">
+    <img src="senda_banner.png" alt="SENDA 5.5" />
+  </header>
+<nav class="pagenav">
+  <a href="crear-contenido.html">Guía</a>
+  <a href="indice.html">Índice</a>
+  <a href="empezar.html">Primeros pasos</a>
+  <a href="clase.html" class="active">Clase</a>
+  <a href="mecanicas.html">Mecánicas (grants)</a>
+  <a href="trasfondo.html">Trasfondo</a>
+  <a href="especie.html">Especie</a>
+  <a href="dote.html">Dote</a>
+  <a href="conjuros-invocaciones.html">Conjuros e invocaciones</a>
+  <a href="equipo.html">Equipo</a>
+  <a href="bestias.html">Bestias</a>
+</nav>
+  <div class="wrap">
+<h1>Clase</h1>
+<h2 id="2-anatomia-de-una-clase-classdef">2. Anatomía de una clase (<code>ClassDef</code>)</h2>
+<table>
+  <tr><th>Campo</th><th>Tipo</th><th>Obligatorio</th><th>Notas</th></tr>
+  <tr><td><code>id</code></td><td>string</td><td>Sí</td><td>Identificador único (p. ej. <code>&quot;barbarian&quot;</code>). Se referencia desde otros objetos.</td></tr>
+  <tr><td><code>display</code></td><td>DisplayInfo</td><td>Sí</td><td>Bloque de presentación. Solo <code>name</code> es obligatorio.</td></tr>
+  <tr><td><code>hitDie</code></td><td>int</td><td>Sí</td><td>Dado de golpe (6, 8, 10, 12).</td></tr>
+  <tr><td><code>primaryAbility</code></td><td>[string]</td><td>No</td><td>Características primarias (p. ej. <code>[&quot;STR&quot;]</code>).</td></tr>
+  <tr><td><code>recommendedAbilityOrder</code></td><td>[string]</td><td>No</td><td>Orden de prioridad para el array estándar (15,14,13,12,10,8). Vacío = STR..CHA.</td></tr>
+  <tr><td><code>savingThrows</code></td><td>[string]</td><td>No</td><td>Salvaciones con competencia (p. ej. <code>[&quot;STR&quot;,&quot;CON&quot;]</code>).</td></tr>
+  <tr><td><code>proficiencies</code></td><td>ClassProficiencies</td><td>No</td><td>Competencias de armadura/armas/habilidades.</td></tr>
+  <tr><td><code>startingEquipment</code></td><td>[EquipmentItem]</td><td>No</td><td>Equipo inicial. Cada ítem lleva <code>display</code> y, opcionalmente, <code>id</code> del objeto del catálogo (ver §2.1).</td></tr>
+  <tr><td><code>goldAlternative</code></td><td>int?</td><td>No</td><td>Oro alternativo al equipo inicial.</td></tr>
+  <tr><td><code>subclassUnlockLevel</code></td><td>int?</td><td>No</td><td>Nivel al que se elige subclase (p. ej. 3).</td></tr>
+  <tr><td><code>progression</code></td><td>[LevelRow]</td><td>No</td><td>Tabla nivel a nivel (1–20).</td></tr>
+  <tr><td><code>features</code></td><td>[FeatureDef]</td><td>No</td><td>Rasgos de la clase.</td></tr>
+  <tr><td><code>subclasses</code></td><td>[SubclassDef]</td><td>No</td><td>Subclases disponibles.</td></tr>
+</table>
+<h3 id="displayinfo">DisplayInfo</h3>
+<p>Presente en clases, rasgos, subclases y opciones. <code>name</code> es lo único obligatorio.</p>
+<pre><code>{
+  &quot;name&quot;: &quot;Bárbaro&quot;,
+  &quot;description&quot;: &quot;Texto largo opcional.&quot;,
+  &quot;icon&quot;: &quot;🔥&quot;,
+  &quot;flavorText&quot;: &quot;Cita ambiental opcional.&quot;
+}</code></pre>
+<h3 id="classproficiencies">ClassProficiencies</h3>
+<pre><code>{
+  &quot;armor&quot;:  [&quot;light&quot;, &quot;medium&quot;, &quot;shields&quot;],
+  &quot;weapon&quot;: [&quot;simple&quot;, &quot;martial&quot;],
+  &quot;skills&quot;: [&quot;Atletismo&quot;, &quot;Percepción&quot;],
+  &quot;tools&quot;:  [],
+  &quot;numSkillChoices&quot;: 2
+}</code></pre>
+<p><code>numSkillChoices</code> = cuántas habilidades elige el jugador de la lista <code>skills</code>.</p>
+<h3 id="startingequipment">startingEquipment</h3>
+<p>Cada ítem tiene un <code>display</code> (nombre) y, opcionalmente, un <code>id</code> que lo enlaza a un objeto del catálogo (<code>EquipmentDef</code>). Cuando el <code>id</code> está presente, el motor mete ese objeto directo en el inventario del personaje al crearlo (enlace fiable). Sin <code>id</code>, intenta resolver el objeto por nombre (heurístico; puede fallar si el nombre no casa). <strong>Recomendado: usar <code>id</code>.</strong></p>
+<pre><code>&quot;startingEquipment&quot;: [
+  { &quot;display&quot;: { &quot;name&quot;: &quot;Espada larga&quot; }, &quot;id&quot;: &quot;longsword&quot; },
+  { &quot;display&quot;: { &quot;name&quot;: &quot;Paquete de explorador&quot; }, &quot;id&quot;: &quot;explorers_pack&quot; },
+  { &quot;display&quot;: { &quot;name&quot;: &quot;15 po&quot; } }
+]</code></pre>
+<blockquote>El oro suelto (<code>&quot;15 po&quot;</code>) va sin <code>id</code>: el motor lo detecta por el patrón &quot;N po&quot; y lo suma al oro inicial en vez de meterlo como objeto.</blockquote>
+<hr />
+<hr />
+<h2 id="3-la-tabla-de-progresion-progression">3. La tabla de progresión (<code>progression</code>)</h2>
+<p>Es una lista de filas (<code>LevelRow</code>), una por nivel:</p>
+<pre><code>{ &quot;level&quot;: 1, &quot;proficiencyBonus&quot;: 2, &quot;features&quot;: [&quot;rage&quot;,&quot;unarmored_defense&quot;], &quot;table&quot;: { &quot;rage_uses&quot;: 2, &quot;rage_damage&quot;: 2 } }</code></pre>
+<table>
+  <tr><th>Campo</th><th>Tipo</th><th>Notas</th></tr>
+  <tr><td><code>level</code></td><td>int</td><td>Nivel de clase (1–20).</td></tr>
+  <tr><td><code>proficiencyBonus</code></td><td>int?</td><td>Bono de competencia en ese nivel.</td></tr>
+  <tr><td><code>features</code></td><td>[string]</td><td><strong>IDs</strong> de rasgos que se desbloquean en ese nivel. Deben coincidir con <code>features[].id</code>.</td></tr>
+  <tr><td><code>table</code></td><td>map&lt;string,int&gt;</td><td>Mapa libre clave→entero.</td></tr>
+</table>
+<p><strong><code>table</code> es la clave de las mecánicas que escalan.</strong> Un <code>RESOURCE</code> (u otros grants) con <code>scaling.rule = &quot;FROM_TABLE&quot;</code> y <code>tableKey = &quot;rage_uses&quot;</code> lee el valor de <code>table[&quot;rage_uses&quot;]</code> en el nivel actual. Así defines &quot;cuántas furias por nivel&quot; sin escribir código.</p>
+<blockquote>Los <code>features</code> de la fila de progresión enlazan por <strong>id</strong> con el <code>features</code> de la clase. El texto del rasgo vive una sola vez en <code>features</code>; la tabla solo lo referencia.</blockquote>
+<hr />
+<hr />
+<h2 id="4-rasgos-featuredef">4. Rasgos (<code>FeatureDef</code>)</h2>
+<p>Un rasgo es una unidad de contenido con presentación (<code>display</code>) y cero o más mecánicas (<code>mechanics</code>).</p>
+<pre><code>{
+  &quot;id&quot;: &quot;rage&quot;,
+  &quot;level&quot;: 1,
+  &quot;display&quot;: { &quot;name&quot;: &quot;Furia&quot;, &quot;description&quot;: &quot;…&quot;, &quot;icon&quot;: &quot;🔥&quot; },
+  &quot;mechanics&quot;: [ /* grants */ ]
+}</code></pre>
+<ul>
+<li><code>id</code> (obligatorio): único dentro de la clase; es lo que referencia <code>progression</code>.</li>
+<li><code>level</code> (opcional): nivel al que aparece.</li>
+<li><code>display</code> (obligatorio).</li>
+<li><code>mechanics</code> (opcional): lista de grants. <strong>Puede ir vacía</strong> → el rasgo es solo texto.</li>
+</ul>
+<p>Un rasgo puramente narrativo:</p>
+<pre><code>{
+  &quot;id&quot;: &quot;danger_sense&quot;,
+  &quot;level&quot;: 2,
+  &quot;display&quot;: { &quot;name&quot;: &quot;Sentir el peligro&quot;, &quot;description&quot;: &quot;Ventaja en TS de Destreza…&quot;, &quot;icon&quot;: &quot;👁️&quot; },
+  &quot;mechanics&quot;: []
+}</code></pre>
+<hr />
+<hr />
+<h2 id="6-subclases-subclassdef">6. Subclases (<code>SubclassDef</code>)</h2>
+<p>Una subclase reutiliza el mismo <code>FeatureDef</code> que la clase. Sus rasgos suelen llevar el <code>level</code> correspondiente, y si un grant debe aplicar solo a esa subclase, se marca con <code>subclassId</code>.</p>
+<pre><code>{
+  &quot;id&quot;: &quot;berserker&quot;,
+  &quot;display&quot;: { &quot;name&quot;: &quot;Senda del Berserker&quot;, &quot;flavorText&quot;: &quot;…&quot;, &quot;description&quot;: &quot;…&quot; },
+  &quot;features&quot;: [
+    {
+      &quot;id&quot;: &quot;berserker_intimidating_presence&quot;,
+      &quot;level&quot;: 14,
+      &quot;display&quot;: { &quot;name&quot;: &quot;Presencia intimidante&quot;, &quot;description&quot;: &quot;…&quot;, &quot;icon&quot;: &quot;😈&quot; },
+      &quot;mechanics&quot;: [
+        {
+          &quot;type&quot;: &quot;RESOURCE&quot;,
+          &quot;id&quot;: &quot;intimidating_presence_use&quot;,
+          &quot;label&quot;: &quot;Presencia intimidante&quot;,
+          &quot;recovery&quot;: &quot;LONG_REST&quot;,
+          &quot;scaling&quot;: { &quot;rule&quot;: &quot;FIXED&quot;, &quot;value&quot;: 1 },
+          &quot;minLevel&quot;: 14,
+          &quot;subclassId&quot;: &quot;berserker&quot;
+        }
+      ]
+    }
+  ]
+}</code></pre>
+<p>En la clase, la elección de subclase se modela con un <code>CHOICE</code> de <code>kind: &quot;SUBCLASS&quot;</code> en el rasgo del nivel indicado por <code>subclassUnlockLevel</code>.</p>
+<h3 id="6-1-subclase-lanzadora-1-3-caballero-arcano-embaucador-arcano">6.1 Subclase lanzadora 1/3 (Caballero Arcano / Embaucador Arcano)</h3>
+<p>Una subclase puede convertir a su clase (no lanzadora de base) en lanzadora parcial. Es el caso del Caballero Arcano (Guerrero) y el Embaucador Arcano (Pícaro): lanzan 1/3 de la progresión. Se declara poniendo un <code>SPELLCASTING</code> con <code>casterType: &quot;THIRD&quot;</code> dentro de una feature de la <strong>subclase</strong>, marcado con <code>subclassId</code> para que solo aplique a quien la elija.</p>
+<pre><code>{
+  &quot;id&quot;: &quot;eldritch_knight&quot;,
+  &quot;display&quot;: { &quot;name&quot;: &quot;Caballero Arcano&quot;, &quot;description&quot;: &quot;…&quot; },
+  &quot;features&quot;: [
+    {
+      &quot;id&quot;: &quot;eldritch_knight_lanzamiento_de_conjuros&quot;,
+      &quot;level&quot;: 3,
+      &quot;display&quot;: { &quot;name&quot;: &quot;Lanzamiento de conjuros&quot;, &quot;description&quot;: &quot;…&quot; },
+      &quot;mechanics&quot;: [
+        {
+          &quot;type&quot;: &quot;SPELLCASTING&quot;,
+          &quot;casterType&quot;: &quot;THIRD&quot;,
+          &quot;ability&quot;: &quot;INT&quot;,
+          &quot;spellListClassId&quot;: &quot;wizard&quot;,
+          &quot;subclassId&quot;: &quot;eldritch_knight&quot;
+        }
+      ]
+    }
+  ]
+}</code></pre>
+<p>Valores de <code>casterType</code> y cómo cuentan para el nivel de lanzador (incluido el multiclase):</p>
+<table>
+  <tr><th><code>casterType</code></th><th>Clases</th><th>Aporta al nivel de lanzador combinado</th></tr>
+  <tr><td><code>FULL</code></td><td>Bardo, Clérigo, Druida, Hechicero, Mago</td><td>nivel completo</td></tr>
+  <tr><td><code>HALF</code></td><td>Explorador, Paladín</td><td>la mitad (↑ si es tu única clase lanzadora; ↓ al multiclasear)</td></tr>
+  <tr><td><code>THIRD</code></td><td>Caballero Arcano, Embaucador Arcano</td><td>un tercio (redondeo hacia abajo)</td></tr>
+  <tr><td><code>WARLOCK</code></td><td>Brujo</td><td>no cuenta aquí: usa su propia tabla de Pacto</td></tr>
+</table>
+<p>Notas de la implementación actual (fase 1):</p>
+<ul>
+<li>El motor ya suma el <code>THIRD</code> al nivel de lanzador combinado y calcula espacios y CD de salvación correctamente a partir del <code>ability</code> indicado.</li>
+<li>Los <strong>límites por tabla de subclase</strong> (cuántos trucos/conjuros preparados concretos permite la subclase a cada nivel) y la <strong>restricción de escuela</strong> del PHB (Caballero Arcano: Abjuración/Evocación; Embaucador Arcano: Encantamiento/Ilusión) aún no se modelan: el jugador aprende de la lista de <code>spellListClassId</code> sin ese filtro. Son refinamientos futuros.</li>
+</ul>
+<hr />
+<hr />
+<h2 id="7-como-encajan-las-piezas-flujo-mental">7. Cómo encajan las piezas (flujo mental)</h2>
+<ol>
+<li>Defines la clase con su <code>display</code>, <code>hitDie</code>, competencias y equipo.</li>
+<li>Rellenas <code>progression</code> nivel a nivel: en cada fila listas los <strong>ids</strong> de los rasgos que se desbloquean y los valores de <code>table</code> que escalan.</li>
+<li>Defines esos rasgos en <code>features</code>, cada uno con su <code>display</code> y sus <code>mechanics</code>.</li>
+<li>Las mecánicas que crecen con el nivel leen de <code>table</code> vía <code>scaling.rule = &quot;FROM_TABLE&quot;</code>.</li>
+<li>Añades <code>subclasses</code>, cada una con sus propios rasgos y grants marcados con <code>subclassId</code>.</li>
+</ol>
+<p>Regla de oro: <strong>el texto vive una vez</strong> (en <code>features</code> / <code>subclasses[].features</code>); la tabla de progresión solo referencia por id.</p>
+<hr />
+<hr />
+<h2 id="8-ejemplo-minimo-y-completo">8. Ejemplo mínimo y completo</h2>
+<p>Una clase de 1 nivel con un recurso que escala por tabla y un toggle que suma CA:</p>
+<pre><code>{
+  &quot;id&quot;: &quot;guardian&quot;,
+  &quot;display&quot;: { &quot;name&quot;: &quot;Guardián&quot;, &quot;description&quot;: &quot;Combatiente resistente.&quot;, &quot;icon&quot;: &quot;🛡️&quot; },
+  &quot;hitDie&quot;: 10,
+  &quot;primaryAbility&quot;: [&quot;STR&quot;],
+  &quot;recommendedAbilityOrder&quot;: [&quot;STR&quot;, &quot;CON&quot;, &quot;DEX&quot;, &quot;WIS&quot;, &quot;CHA&quot;, &quot;INT&quot;],
+  &quot;savingThrows&quot;: [&quot;STR&quot;, &quot;CON&quot;],
+  &quot;proficiencies&quot;: {
+    &quot;armor&quot;:  [&quot;light&quot;, &quot;medium&quot;, &quot;heavy&quot;, &quot;shields&quot;],
+    &quot;weapon&quot;: [&quot;simple&quot;, &quot;martial&quot;],
+    &quot;skills&quot;: [&quot;Atletismo&quot;, &quot;Percepción&quot;, &quot;Intimidación&quot;],
+    &quot;numSkillChoices&quot;: 2
+  },
+  &quot;startingEquipment&quot;: [
+    { &quot;display&quot;: { &quot;name&quot;: &quot;Cota de mallas&quot; } },
+    { &quot;display&quot;: { &quot;name&quot;: &quot;Escudo&quot; } },
+    { &quot;display&quot;: { &quot;name&quot;: &quot;Espada larga&quot; } }
+  ],
+  &quot;goldAlternative&quot;: 100,
+  &quot;subclassUnlockLevel&quot;: 3,
+  &quot;progression&quot;: [
+    { &quot;level&quot;: 1, &quot;proficiencyBonus&quot;: 2, &quot;features&quot;: [&quot;guardian_stance&quot;], &quot;table&quot;: { &quot;stance_uses&quot;: 2 } }
+  ],
+  &quot;features&quot;: [
+    {
+      &quot;id&quot;: &quot;guardian_stance&quot;,
+      &quot;level&quot;: 1,
+      &quot;display&quot;: { &quot;name&quot;: &quot;Postura defensiva&quot;, &quot;description&quot;: &quot;Como acción adicional ganas +1 a la CA.&quot;, &quot;icon&quot;: &quot;🛡️&quot; },
+      &quot;mechanics&quot;: [
+        {
+          &quot;type&quot;: &quot;RESOURCE&quot;,
+          &quot;id&quot;: &quot;stance_uses&quot;,
+          &quot;label&quot;: &quot;Posturas&quot;,
+          &quot;icon&quot;: &quot;🛡️&quot;,
+          &quot;recovery&quot;: &quot;SHORT_REST&quot;,
+          &quot;scaling&quot;: { &quot;rule&quot;: &quot;FROM_TABLE&quot;, &quot;tableKey&quot;: &quot;stance_uses&quot; }
+        },
+        {
+          &quot;type&quot;: &quot;COMBAT_TOGGLE&quot;,
+          &quot;id&quot;: &quot;stance_active&quot;,
+          &quot;label&quot;: &quot;Activar postura&quot;,
+          &quot;costResource&quot;: &quot;stance_uses&quot;,
+          &quot;costAmount&quot;: 1,
+          &quot;onActivate&quot;: [
+            { &quot;type&quot;: &quot;AC_BONUS&quot;, &quot;amount&quot;: 1, &quot;condition&quot;: &quot;WHILE_EQUIPPED&quot; }
+          ]
+        }
+      ]
+    }
+  ],
+  &quot;subclasses&quot;: []
+}</code></pre>
+<hr />
+<hr />
+<h2 id="9-checklist-antes-de-dar-por-buena-una-clase">9. Checklist antes de dar por buena una clase</h2>
+<ul>
+<li>[ ] <code>id</code>, <code>display.name</code> y <code>hitDie</code> presentes.</li>
+<li>[ ] Todo id en <code>progression[].features</code> existe en <code>features[].id</code>.</li>
+<li>[ ] Cada <code>costResource</code> apunta a un <code>RESOURCE.id</code> que existe.</li>
+<li>[ ] Cada <code>scaling.tableKey</code> (<code>FROM_TABLE</code>) tiene su clave en <code>table</code> de cada nivel relevante.</li>
+<li>[ ] Los grants de subclase que deban aislarse llevan <code>subclassId</code>.</li>
+<li>[ ] Los <code>type</code> de grant coinciden con el catálogo (§5); un typo se degrada a <code>UNKNOWN</code>.</li>
+<li>[ ] Valida el JSON: importarlo como pack usa <code>ContentPackSerializer.parseOrNull</code>, que devuelve <code>Result</code> en vez de lanzar.</li>
+</ul>
+<blockquote>Referencia viva: compara siempre con <code>barbarian_example.json</code>, que ejercita casi todos los grants (RESOURCE, COMBAT_TOGGLE, COMBAT_ACTION, CHOICE, AC_FORMULA, DAMAGE_RESISTANCE, DAMAGE_BONUS, EXTRA_ATTACK, SPEED_BONUS, ABILITY_BOOST y subclases con <code>subclassId</code>).</blockquote>
+<hr />
+<h1>Otros tipos de contenido</h1>
+<p>Todos los objetos de un pack comparten dos bloques ya vistos en la clase:</p>
+<ul>
+<li><strong><code>display</code></strong> (<code>DisplayInfo</code>): <code>name</code> obligatorio; <code>description</code>, <code>icon</code>, <code>flavorText</code> opcionales.</li>
+<li><strong><code>mechanics</code> / <code>grants</code></strong> (lista de *grants*): las mismas mecánicas del catálogo de §5. Un grant con <code>type</code> desconocido degrada a <code>UNKNOWN</code> sin romper el parseo.</li>
+</ul>
+<p>Cada tipo vive en su lista dentro del <code>ContentPack</code>: <code>species</code>, <code>backgrounds</code>, <code>feats</code>, <code>spells</code>, <code>invocations</code>, <code>equipment</code>, <code>beasts</code>.</p>
+<hr />
+<hr />
+<h2 id="ejemplo-clase-minima-y-funcional">Ejemplo — Clase — mínima y funcional</h2>
+<p>Guerrero reducido: d10, FUE/DES primarias, salvaciones FUE/CON, un rasgo de nivel 1 (recurso + toggle) y la elección de subclase a nivel 3. La <code>progression</code> estándar se completa sola al importar.</p>
+<pre><code>{
+  &quot;id&quot;: &quot;guardian_simple&quot;,
+  &quot;display&quot;: { &quot;name&quot;: &quot;Guardián&quot;, &quot;description&quot;: &quot;Combatiente resistente.&quot; },
+  &quot;hitDie&quot;: 10,
+  &quot;primaryAbility&quot;: [&quot;STR&quot;, &quot;DEX&quot;],
+  &quot;savingThrows&quot;: [&quot;STR&quot;, &quot;CON&quot;],
+  &quot;proficiencies&quot;: {
+    &quot;armor&quot;: [&quot;light&quot;, &quot;medium&quot;, &quot;heavy&quot;, &quot;shields&quot;],
+    &quot;weapon&quot;: [&quot;simple&quot;, &quot;martial&quot;],
+    &quot;skills&quot;: [&quot;Atletismo&quot;, &quot;Percepción&quot;, &quot;Intimidación&quot;, &quot;Supervivencia&quot;],
+    &quot;numSkillChoices&quot;: 2
+  },
+  &quot;startingEquipment&quot;: [
+    { &quot;display&quot;: { &quot;name&quot;: &quot;Cota de malla&quot; }, &quot;id&quot;: &quot;chain_mail&quot; },
+    { &quot;display&quot;: { &quot;name&quot;: &quot;Escudo&quot; }, &quot;id&quot;: &quot;shield&quot; }
+  ],
+  &quot;goldAlternative&quot;: 100,
+  &quot;subclassUnlockLevel&quot;: 3,
+  &quot;features&quot;: [
+    {
+      &quot;id&quot;: &quot;guardian_simple_stance&quot;,
+      &quot;level&quot;: 1,
+      &quot;display&quot;: { &quot;name&quot;: &quot;Postura defensiva&quot;, &quot;description&quot;: &quot;Como acción adicional, +1 a la CA.&quot; },
+      &quot;mechanics&quot;: [
+        {
+          &quot;type&quot;: &quot;RESOURCE&quot;,
+          &quot;id&quot;: &quot;stance_uses&quot;,
+          &quot;label&quot;: &quot;Posturas&quot;,
+          &quot;recovery&quot;: &quot;SHORT_REST&quot;,
+          &quot;scaling&quot;: { &quot;rule&quot;: &quot;LEVEL&quot; }
+        },
+        {
+          &quot;type&quot;: &quot;COMBAT_TOGGLE&quot;,
+          &quot;id&quot;: &quot;stance_active&quot;,
+          &quot;label&quot;: &quot;Activar postura&quot;,
+          &quot;costResource&quot;: &quot;stance_uses&quot;,
+          &quot;costAmount&quot;: 1,
+          &quot;onActivate&quot;: [ { &quot;type&quot;: &quot;AC_BONUS&quot;, &quot;amount&quot;: 1, &quot;condition&quot;: &quot;WHILE_EQUIPPED&quot; } ]
+        }
+      ]
+    },
+    {
+      &quot;id&quot;: &quot;guardian_simple_subclass&quot;,
+      &quot;level&quot;: 3,
+      &quot;display&quot;: { &quot;name&quot;: &quot;Subclase&quot; },
+      &quot;mechanics&quot;: [
+        { &quot;type&quot;: &quot;CHOICE&quot;, &quot;id&quot;: &quot;guardian_simple_subclass_choice&quot;, &quot;title&quot;: &quot;Elige tu subclase&quot;, &quot;kind&quot;: &quot;SUBCLASS&quot;, &quot;level&quot;: 3 }
+      ]
+    }
+  ],
+  &quot;subclasses&quot;: [
+    {
+      &quot;id&quot;: &quot;guardian_simple_sentinel&quot;,
+      &quot;display&quot;: { &quot;name&quot;: &quot;Centinela&quot;, &quot;description&quot;: &quot;El guardián que no deja pasar a nadie.&quot; },
+      &quot;features&quot;: [
+        {
+          &quot;id&quot;: &quot;guardian_simple_sentinel_watch&quot;,
+          &quot;level&quot;: 3,
+          &quot;display&quot;: { &quot;name&quot;: &quot;Vigilancia&quot;, &quot;description&quot;: &quot;Competencia en Percepción.&quot; },
+          &quot;mechanics&quot;: [ { &quot;type&quot;: &quot;PROFICIENCY&quot;, &quot;kind&quot;: &quot;SKILL&quot;, &quot;items&quot;: [&quot;Percepción&quot;] } ]
+        }
+      ]
+    }
+  ]
+}</code></pre>
+  </div>
+</body>
+</html>

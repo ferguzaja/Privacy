@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Índice por conceptos — Crear contenido · SENDA 5.5</title>
+  <style>
+    :root {
+      --forest: #0E1F24; --mountain: #2E4A46; --gold: #D4B278;
+      --parchment: #F4E6C8; --sunset: #A4472D; --storm: #5A6B7A;
+      --shadow: #1F2A32; --earth: #8C5E3C; --red: #C7302B; --green: #4E7A52;
+    }
+    * { box-sizing: border-box; }
+    body { font-family: Georgia, "Times New Roman", serif; line-height: 1.65;
+      margin: 0; color: var(--parchment); background: var(--forest); }
+    .wrap { max-width: 820px; margin: 0 auto; padding: 0 20px 72px; }
+    header.banner { width: 100%; max-width: 1024px; margin: 0 auto; display: block; }
+    header.banner img { width: 100%; height: auto; display: block; }
+    nav.pagenav { max-width: 820px; margin: 10px auto 0; padding: 10px 20px;
+      display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 0.86rem;
+      border-bottom: 1px solid rgba(212,178,120,0.25); }
+    nav.pagenav a { color: var(--storm); text-decoration: none; }
+    nav.pagenav a:hover { color: var(--gold); }
+    nav.pagenav a.active { color: var(--gold); font-weight: bold; }
+    h1 { color: var(--gold); font-size: 2rem; margin: 32px 0 0.3rem; letter-spacing: 0.5px; }
+    h2 { color: var(--gold); font-size: 1.4rem; margin-top: 2.4rem;
+      padding-bottom: 0.35rem; border-bottom: 1px solid rgba(212,178,120,0.4); }
+    h3 { color: var(--gold); font-size: 1.12rem; margin-top: 1.7rem; }
+    .updated { color: var(--storm); font-size: 0.9rem; margin-top: 0; }
+    a { color: var(--gold); }
+    strong { color: #fff0d4; }
+    code { background: var(--shadow); color: var(--gold); padding: 1px 6px;
+      border-radius: 4px; font-size: 0.88em;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    pre { background: var(--shadow); border: 1px solid rgba(212,178,120,0.25);
+      border-radius: 10px; padding: 14px 16px; overflow-x: auto; font-size: 0.84em; line-height: 1.5; }
+    pre code { background: none; color: var(--parchment); padding: 0; font-size: 1em; }
+    table { border-collapse: collapse; width: 100%; margin: 1.1rem 0; font-size: 0.9em; }
+    th, td { border: 1px solid rgba(212,178,120,0.25); padding: 7px 11px;
+      text-align: left; vertical-align: top; }
+    th { background: var(--mountain); color: var(--gold); }
+    tr:nth-child(even) td { background: rgba(31,42,50,0.5); }
+    blockquote { margin: 1.1rem 0; padding: 0.6rem 1.1rem; border-left: 4px solid var(--gold);
+      background: rgba(46,74,70,0.35); border-radius: 0 8px 8px 0; color: var(--parchment); }
+    hr { border: none; border-top: 1px solid rgba(212,178,120,0.3); margin: 2.6rem 0; }
+    ul, ol { padding-left: 1.4rem; }
+    li { margin: 0.2rem 0; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 14px; margin: 24px 0; }
+    .card { background: var(--shadow); border: 1px solid rgba(212,178,120,0.3);
+      border-radius: 12px; padding: 16px 18px; text-decoration: none; display: block; }
+    .card:hover { border-color: var(--gold); }
+    .card h3 { margin: 0 0 6px; color: var(--gold); }
+    .card p { margin: 0; color: var(--parchment); font-size: 0.9em; }
+    .idxletter { color: var(--gold); font-size: 1.2rem; margin: 1.4rem 0 0.3rem;
+      border-bottom: 1px solid rgba(212,178,120,0.3); }
+  </style>
+</head>
+<body>
+  <header class="banner">
+    <img src="senda_banner.png" alt="SENDA 5.5" />
+  </header>
+<nav class="pagenav">
+  <a href="crear-contenido.html">Guía</a>
+  <a href="indice.html">Índice</a>
+  <a href="empezar.html">Primeros pasos</a>
+  <a href="clase.html">Clase</a>
+  <a href="mecanicas.html">Mecánicas (grants)</a>
+  <a href="trasfondo.html">Trasfondo</a>
+  <a href="especie.html">Especie</a>
+  <a href="dote.html">Dote</a>
+  <a href="conjuros-invocaciones.html">Conjuros e invocaciones</a>
+  <a href="equipo.html">Equipo</a>
+  <a href="bestias.html">Bestias</a>
+</nav>
+  <div class="wrap">
+
+<h1>Índice por conceptos</h1>
+<p class="updated">Busca un término y salta a donde se explica.</p>
+<div class="idxletter">A</div>
+<ul>
+  <li><a href="mecanicas.html#5-mecanicas-grants-el-catalogo-type">ABILITY_BOOST (mejora de característica)</a></li>
+  <li><a href="mecanicas.html#5-mecanicas-grants-el-catalogo-type">AC_BONUS (bono de CA)</a> — <em>Objetos mágicos, escudos</em></li>
+  <li><a href="mecanicas.html#5-mecanicas-grants-el-catalogo-type">AC_FORMULA (defensa sin armadura)</a> — <em>Bárbaro, Monje</em></li>
+  <li><a href="equipo.html#15-equipo-equipmentdef-lista-equipment">Arma (WeaponData)</a> — <em>dado, tipo de daño, propiedades</em></li>
+  <li><a href="equipo.html#15-equipo-equipmentdef-lista-equipment">Armadura (ArmorData)</a> — <em>baseAc, categoría, tope DES</em></li>
+</ul>
+<div class="idxletter">B</div>
+<ul>
+  <li><a href="bestias.html#16-bestia-beastdef-lista-beasts">Bestia</a> — <em>Forma Salvaje</em></li>
+</ul>
+<div class="idxletter">C</div>
+<ul>
+  <li><a href="mecanicas.html#5-mecanicas-grants-el-catalogo-type">CHOICE (elección del jugador)</a> — <em>SKILL, FEAT, SUBCLASS, SIZE…</em></li>
+  <li><a href="mecanicas.html#5-mecanicas-grants-el-catalogo-type">COMBAT_ACTION</a> — <em>Acción que gasta recurso</em></li>
+  <li><a href="mecanicas.html#5-mecanicas-grants-el-catalogo-type">COMBAT_TOGGLE (estado on/off)</a> — <em>Furia</em></li>
+  <li><a href="especie.html#11-especie-raza-speciesdef-lista-species">creatureType (tipo de criatura)</a> — <em>HUMANOID, FEY, UNDEAD…</em></li>
+</ul>
+<div class="idxletter">D</div>
+<ul>
+  <li><a href="mecanicas.html#5-mecanicas-grants-el-catalogo-type">DAMAGE_RESISTANCE</a></li>
+  <li><a href="especie.html#11-especie-raza-speciesdef-lista-species">darkvision (visión en la oscuridad)</a> — <em>en metros</em></li>
+  <li><a href="trasfondo.html#10-trasfondo-backgrounddef-lista-backgrounds">Dote de origen</a> — <em>CHOICE kind=FEAT</em></li>
+</ul>
+<div class="idxletter">E</div>
+<ul>
+  <li><a href="equipo.html#15-equipo-equipmentdef-lista-equipment">EXPAND_BUNDLE (paquete de objetos)</a></li>
+  <li><a href="mecanicas.html#5-mecanicas-grants-el-catalogo-type">EXTRA_ATTACK (ataque adicional)</a></li>
+</ul>
+<div class="idxletter">G</div>
+<ul>
+  <li><a href="trasfondo.html#10-trasfondo-backgrounddef-lista-backgrounds">goldAlternative (oro alternativo)</a></li>
+</ul>
+<div class="idxletter">I</div>
+<ul>
+  <li><a href="empezar.html#19-importar-contenido-en-la-app-pack-completo-vs-objeto-individual">Importar pack vs objeto</a></li>
+  <li><a href="mecanicas.html#5-mecanicas-grants-el-catalogo-type">INNATE_SPELL (conjuro innato)</a></li>
+  <li><a href="conjuros-invocaciones.html#14-invocacion-sobrenatural-invocationdef-lista-invocations">INVOCATIONS</a> — <em>Brujo</em></li>
+</ul>
+<div class="idxletter">M</div>
+<ul>
+  <li><a href="mecanicas.html#5-mecanicas-grants-el-catalogo-type">MAX_HP_BONUS</a> — <em>Dote Duro</em></li>
+</ul>
+<div class="idxletter">P</div>
+<ul>
+  <li><a href="dote.html#12-dote-featdef-lista-feats">prerequisite (prerequisitos de dote)</a></li>
+  <li><a href="mecanicas.html#5-mecanicas-grants-el-catalogo-type">PROFICIENCY (competencia)</a></li>
+  <li><a href="clase.html#3-la-tabla-de-progresion-progression">progression (tabla de niveles)</a></li>
+</ul>
+<div class="idxletter">R</div>
+<ul>
+  <li><a href="dote.html#12-dote-featdef-lista-feats">repeatable (dote repetible)</a></li>
+  <li><a href="mecanicas.html#5-mecanicas-grants-el-catalogo-type">RESOURCE (recurso gastable)</a> — <em>Furias, Ki</em></li>
+</ul>
+<div class="idxletter">S</div>
+<ul>
+  <li><a href="mecanicas.html#5-mecanicas-grants-el-catalogo-type">SENSES (sentidos)</a> — <em>en metros</em></li>
+  <li><a href="mecanicas.html#5-mecanicas-grants-el-catalogo-type">SPELLCASTING (lanzador)</a> — <em>FULL/HALF/THIRD</em></li>
+  <li><a href="clase.html#2-anatomia-de-una-clase-classdef">startingEquipment (equipo inicial)</a> — <em>enlace por id</em></li>
+  <li><a href="clase.html#6-subclases-subclassdef">Subclase (SubclassDef)</a></li>
+</ul>
+<div class="idxletter">T</div>
+<ul>
+  <li><a href="especie.html#11-especie-raza-speciesdef-lista-species">Tamaño (size)</a> — <em>TINY…GARGANTUAN</em></li>
+  <li><a href="especie.html#11-especie-raza-speciesdef-lista-species">Tamaño a elección (CHOICE kind=SIZE)</a> — <em>aasimar</em></li>
+</ul>
+<div class="idxletter">U</div>
+<ul>
+  <li><a href="mecanicas.html#18-unidades-de-distancia-importante">Unidades de distancia (metros)</a></li>
+</ul>
+  </div>
+</body>
+</html>

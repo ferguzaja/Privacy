@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Equipo — Crear contenido · SENDA 5.5</title>
+  <style>
+    :root {
+      --forest: #0E1F24; --mountain: #2E4A46; --gold: #D4B278;
+      --parchment: #F4E6C8; --sunset: #A4472D; --storm: #5A6B7A;
+      --shadow: #1F2A32; --earth: #8C5E3C; --red: #C7302B; --green: #4E7A52;
+    }
+    * { box-sizing: border-box; }
+    body { font-family: Georgia, "Times New Roman", serif; line-height: 1.65;
+      margin: 0; color: var(--parchment); background: var(--forest); }
+    .wrap { max-width: 820px; margin: 0 auto; padding: 0 20px 72px; }
+    header.banner { width: 100%; max-width: 1024px; margin: 0 auto; display: block; }
+    header.banner img { width: 100%; height: auto; display: block; }
+    nav.pagenav { max-width: 820px; margin: 10px auto 0; padding: 10px 20px;
+      display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 0.86rem;
+      border-bottom: 1px solid rgba(212,178,120,0.25); }
+    nav.pagenav a { color: var(--storm); text-decoration: none; }
+    nav.pagenav a:hover { color: var(--gold); }
+    nav.pagenav a.active { color: var(--gold); font-weight: bold; }
+    h1 { color: var(--gold); font-size: 2rem; margin: 32px 0 0.3rem; letter-spacing: 0.5px; }
+    h2 { color: var(--gold); font-size: 1.4rem; margin-top: 2.4rem;
+      padding-bottom: 0.35rem; border-bottom: 1px solid rgba(212,178,120,0.4); }
+    h3 { color: var(--gold); font-size: 1.12rem; margin-top: 1.7rem; }
+    .updated { color: var(--storm); font-size: 0.9rem; margin-top: 0; }
+    a { color: var(--gold); }
+    strong { color: #fff0d4; }
+    code { background: var(--shadow); color: var(--gold); padding: 1px 6px;
+      border-radius: 4px; font-size: 0.88em;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    pre { background: var(--shadow); border: 1px solid rgba(212,178,120,0.25);
+      border-radius: 10px; padding: 14px 16px; overflow-x: auto; font-size: 0.84em; line-height: 1.5; }
+    pre code { background: none; color: var(--parchment); padding: 0; font-size: 1em; }
+    table { border-collapse: collapse; width: 100%; margin: 1.1rem 0; font-size: 0.9em; }
+    th, td { border: 1px solid rgba(212,178,120,0.25); padding: 7px 11px;
+      text-align: left; vertical-align: top; }
+    th { background: var(--mountain); color: var(--gold); }
+    tr:nth-child(even) td { background: rgba(31,42,50,0.5); }
+    blockquote { margin: 1.1rem 0; padding: 0.6rem 1.1rem; border-left: 4px solid var(--gold);
+      background: rgba(46,74,70,0.35); border-radius: 0 8px 8px 0; color: var(--parchment); }
+    hr { border: none; border-top: 1px solid rgba(212,178,120,0.3); margin: 2.6rem 0; }
+    ul, ol { padding-left: 1.4rem; }
+    li { margin: 0.2rem 0; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 14px; margin: 24px 0; }
+    .card { background: var(--shadow); border: 1px solid rgba(212,178,120,0.3);
+      border-radius: 12px; padding: 16px 18px; text-decoration: none; display: block; }
+    .card:hover { border-color: var(--gold); }
+    .card h3 { margin: 0 0 6px; color: var(--gold); }
+    .card p { margin: 0; color: var(--parchment); font-size: 0.9em; }
+    .idxletter { color: var(--gold); font-size: 1.2rem; margin: 1.4rem 0 0.3rem;
+      border-bottom: 1px solid rgba(212,178,120,0.3); }
+  </style>
+</head>
+<body>
+  <header class="banner">
+    <img src="senda_banner.png" alt="SENDA 5.5" />
+  </header>
+<nav class="pagenav">
+  <a href="crear-contenido.html">Guía</a>
+  <a href="indice.html">Índice</a>
+  <a href="empezar.html">Primeros pasos</a>
+  <a href="clase.html">Clase</a>
+  <a href="mecanicas.html">Mecánicas (grants)</a>
+  <a href="trasfondo.html">Trasfondo</a>
+  <a href="especie.html">Especie</a>
+  <a href="dote.html">Dote</a>
+  <a href="conjuros-invocaciones.html">Conjuros e invocaciones</a>
+  <a href="equipo.html" class="active">Equipo</a>
+  <a href="bestias.html">Bestias</a>
+</nav>
+  <div class="wrap">
+<h1>Equipo</h1>
+<h2 id="15-equipo-equipmentdef-lista-equipment">15. Equipo (<code>EquipmentDef</code>) → lista <code>equipment</code></h2>
+<p>El objeto más rico en datos. Tiene <code>display</code>, una <code>category</code>, bloques tipados opcionales según el tipo, y <code>grants</code> para efectos mecánicos.</p>
+<table>
+  <tr><th>Campo</th><th>Tipo</th><th>Obligatorio</th><th>Notas</th></tr>
+  <tr><td><code>id</code></td><td>string</td><td>Sí</td><td></td></tr>
+  <tr><td><code>display</code></td><td>DisplayInfo</td><td>Sí</td><td></td></tr>
+  <tr><td><code>category</code></td><td>string</td><td>Sí</td><td><code>WEAPON</code>, <code>ARMOR</code>, <code>SHIELD</code>, <code>TOOL</code>, <code>ADVENTURING_GEAR</code>, <code>CONTAINER</code>, <code>CONSUMABLE</code>, <code>FOCUS</code>, <code>WONDROUS</code>, <code>AMMUNITION</code>…</td></tr>
+  <tr><td><code>subtype</code></td><td>string?</td><td>No</td><td>Solo útil en algunas categorías. Arma: <code>simple_melee</code>/<code>simple_ranged</code>/<code>martial_melee</code>/<code>martial_ranged</code>. Armadura: <code>light</code>/<code>medium</code>/<code>heavy</code>. Herramienta: <code>artisan</code>/<code>musical_instrument</code>/<code>game</code>/<code>other</code>.</td></tr>
+  <tr><td><code>cost</code></td><td>Cost?</td><td>No</td><td><code>{ &quot;amount&quot;: 15, &quot;unit&quot;: &quot;gp&quot; }</code>.</td></tr>
+  <tr><td><code>weight</code></td><td>double?</td><td>No</td><td>En kg.</td></tr>
+  <tr><td><code>rarity</code></td><td>string?</td><td>No</td><td><code>common</code>, <code>uncommon</code>, <code>rare</code>, <code>very_rare</code>, <code>legendary</code>, <code>artifact</code>.</td></tr>
+  <tr><td><code>requiresAttunement</code></td><td>bool</td><td>No</td><td>Default <code>false</code>.</td></tr>
+  <tr><td>bloques tipados</td><td>—</td><td>No</td><td><code>weapon</code>, <code>armor</code>, <code>shield</code>, <code>tool</code>, <code>container</code>, <code>focus</code>, <code>ammunition</code>.</td></tr>
+  <tr><td><code>grants</code></td><td>[Grant]</td><td>No</td><td>Efectos mecánicos. Vacío = objeto descriptivo.</td></tr>
+</table>
+<p>Bloques tipados más usados:</p>
+<ul>
+<li><strong><code>weapon</code></strong> (<code>WeaponData</code>): <code>damageDice</code>, <code>damageType</code>, <code>versatileDice</code>, <code>properties</code>, <code>masteryProperty</code>, <code>attackAbilities</code>, <code>range { normal, long, unit }</code>, <code>fixedDamage</code>.</li>
+<li><strong><code>armor</code></strong> (<code>ArmorData</code>): <code>baseAc</code>, <code>category</code> (<code>LIGHT</code>/<code>MEDIUM</code>/<code>HEAVY</code>), <code>maxDex</code> o <code>dexterityCap</code>, <code>strengthRequirement</code>, <code>stealthDisadvantage</code>.</li>
+<li><strong><code>shield</code></strong> (<code>ShieldData</code>): <code>acBonus</code> (default 2). Un escudo mágico se modela como escudo normal (bono base 2) <strong>más</strong> un grant <code>AC_BONUS</code> para el extra mágico, en vez de inflar <code>acBonus</code>.</li>
+<li><strong><code>tool</code></strong>, <strong><code>container</code></strong>, <strong><code>focus</code></strong>, <strong><code>ammunition</code></strong>: ver <code>EquipmentDef.kt</code>.</li>
+</ul>
+<p><strong>Paquetes de objetos (<code>EXPAND_BUNDLE</code>):</strong> un objeto que contiene otros (p. ej. &quot;paquete de explorador&quot;) lleva un grant <code>EXPAND_BUNDLE</code> con <code>contents</code> (mapa <code>id</code>→cantidad). Al obtenerlo, el personaje recibe su contenido:</p>
+<pre><code>{
+  &quot;id&quot;: &quot;explorers_pack&quot;,
+  &quot;display&quot;: { &quot;name&quot;: &quot;Paquete de explorador&quot; },
+  &quot;category&quot;: &quot;ADVENTURING_GEAR&quot;,
+  &quot;grants&quot;: [
+    { &quot;type&quot;: &quot;EXPAND_BUNDLE&quot;, &quot;contents&quot;: { &quot;backpack&quot;: 1, &quot;bedroll&quot;: 1, &quot;rations&quot;: 10, &quot;torch&quot;: 10 } }
+  ]
+}</code></pre>
+<p>Arma:</p>
+<pre><code>{
+  &quot;id&quot;: &quot;longsword&quot;,
+  &quot;display&quot;: { &quot;name&quot;: &quot;Espada larga&quot; },
+  &quot;category&quot;: &quot;WEAPON&quot;,
+  &quot;subtype&quot;: &quot;martial_melee&quot;,
+  &quot;cost&quot;: { &quot;amount&quot;: 15, &quot;unit&quot;: &quot;gp&quot; },
+  &quot;weight&quot;: 1.5,
+  &quot;weapon&quot;: {
+    &quot;damageDice&quot;: &quot;1d8&quot;,
+    &quot;damageType&quot;: &quot;slashing&quot;,
+    &quot;versatileDice&quot;: &quot;1d10&quot;,
+    &quot;properties&quot;: [&quot;versatile&quot;],
+    &quot;masteryProperty&quot;: &quot;sap&quot;,
+    &quot;attackAbilities&quot;: [&quot;STR&quot;]
+  }
+}</code></pre>
+<p>Objeto mágico con sintonización (los grants condicionados aplican al sintonizar/equipar):</p>
+<pre><code>{
+  &quot;id&quot;: &quot;cloak_of_protection&quot;,
+  &quot;display&quot;: { &quot;name&quot;: &quot;Capa de protección&quot; },
+  &quot;category&quot;: &quot;ADVENTURING_GEAR&quot;,
+  &quot;rarity&quot;: &quot;uncommon&quot;,
+  &quot;requiresAttunement&quot;: true,
+  &quot;grants&quot;: [
+    { &quot;type&quot;: &quot;AC_BONUS&quot;, &quot;amount&quot;: 1, &quot;condition&quot;: &quot;WHILE_ATTUNED&quot; }
+  ]
+}</code></pre>
+<hr />
+<hr />
+<h2 id="ejemplo-equipo-arma-armadura-y-objeto-magico">Ejemplo — Equipo — arma, armadura y objeto mágico</h2>
+<p>Arma marcial:</p>
+<pre><code>{
+  &quot;id&quot;: &quot;ejemplo_espada&quot;,
+  &quot;display&quot;: { &quot;name&quot;: &quot;Espada rúnica&quot; },
+  &quot;category&quot;: &quot;WEAPON&quot;,
+  &quot;subtype&quot;: &quot;martial_melee&quot;,
+  &quot;cost&quot;: { &quot;amount&quot;: 15, &quot;unit&quot;: &quot;gp&quot; },
+  &quot;weight&quot;: 1.5,
+  &quot;weapon&quot;: {
+    &quot;damageDice&quot;: &quot;1d8&quot;,
+    &quot;damageType&quot;: &quot;slashing&quot;,
+    &quot;versatileDice&quot;: &quot;1d10&quot;,
+    &quot;properties&quot;: [&quot;versatile&quot;],
+    &quot;attackAbilities&quot;: [&quot;STR&quot;]
+  }
+}</code></pre>
+<p>Armadura media:</p>
+<pre><code>{
+  &quot;id&quot;: &quot;ejemplo_coraza&quot;,
+  &quot;display&quot;: { &quot;name&quot;: &quot;Coraza élfica&quot; },
+  &quot;category&quot;: &quot;ARMOR&quot;,
+  &quot;subtype&quot;: &quot;medium&quot;,
+  &quot;cost&quot;: { &quot;amount&quot;: 400, &quot;unit&quot;: &quot;gp&quot; },
+  &quot;weight&quot;: 9,
+  &quot;armor&quot;: { &quot;baseAc&quot;: 14, &quot;category&quot;: &quot;MEDIUM&quot;, &quot;addDex&quot;: true, &quot;dexterityCap&quot;: 2 }
+}</code></pre>
+<p>Escudo mágico (bono base 2 + extra mágico por grant, requiere sintonización):</p>
+<pre><code>{
+  &quot;id&quot;: &quot;ejemplo_escudo_magnificencia&quot;,
+  &quot;display&quot;: { &quot;name&quot;: &quot;Escudo de la Magnificencia&quot; },
+  &quot;category&quot;: &quot;SHIELD&quot;,
+  &quot;rarity&quot;: &quot;rare&quot;,
+  &quot;requiresAttunement&quot;: true,
+  &quot;shield&quot;: { &quot;acBonus&quot;: 2 },
+  &quot;grants&quot;: [ { &quot;type&quot;: &quot;AC_BONUS&quot;, &quot;amount&quot;: 3, &quot;condition&quot;: &quot;WHILE_ATTUNED&quot; } ]
+}</code></pre>
+  </div>
+</body>
+</html>

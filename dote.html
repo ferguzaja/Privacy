@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dote — Crear contenido · SENDA 5.5</title>
+  <style>
+    :root {
+      --forest: #0E1F24; --mountain: #2E4A46; --gold: #D4B278;
+      --parchment: #F4E6C8; --sunset: #A4472D; --storm: #5A6B7A;
+      --shadow: #1F2A32; --earth: #8C5E3C; --red: #C7302B; --green: #4E7A52;
+    }
+    * { box-sizing: border-box; }
+    body { font-family: Georgia, "Times New Roman", serif; line-height: 1.65;
+      margin: 0; color: var(--parchment); background: var(--forest); }
+    .wrap { max-width: 820px; margin: 0 auto; padding: 0 20px 72px; }
+    header.banner { width: 100%; max-width: 1024px; margin: 0 auto; display: block; }
+    header.banner img { width: 100%; height: auto; display: block; }
+    nav.pagenav { max-width: 820px; margin: 10px auto 0; padding: 10px 20px;
+      display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 0.86rem;
+      border-bottom: 1px solid rgba(212,178,120,0.25); }
+    nav.pagenav a { color: var(--storm); text-decoration: none; }
+    nav.pagenav a:hover { color: var(--gold); }
+    nav.pagenav a.active { color: var(--gold); font-weight: bold; }
+    h1 { color: var(--gold); font-size: 2rem; margin: 32px 0 0.3rem; letter-spacing: 0.5px; }
+    h2 { color: var(--gold); font-size: 1.4rem; margin-top: 2.4rem;
+      padding-bottom: 0.35rem; border-bottom: 1px solid rgba(212,178,120,0.4); }
+    h3 { color: var(--gold); font-size: 1.12rem; margin-top: 1.7rem; }
+    .updated { color: var(--storm); font-size: 0.9rem; margin-top: 0; }
+    a { color: var(--gold); }
+    strong { color: #fff0d4; }
+    code { background: var(--shadow); color: var(--gold); padding: 1px 6px;
+      border-radius: 4px; font-size: 0.88em;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    pre { background: var(--shadow); border: 1px solid rgba(212,178,120,0.25);
+      border-radius: 10px; padding: 14px 16px; overflow-x: auto; font-size: 0.84em; line-height: 1.5; }
+    pre code { background: none; color: var(--parchment); padding: 0; font-size: 1em; }
+    table { border-collapse: collapse; width: 100%; margin: 1.1rem 0; font-size: 0.9em; }
+    th, td { border: 1px solid rgba(212,178,120,0.25); padding: 7px 11px;
+      text-align: left; vertical-align: top; }
+    th { background: var(--mountain); color: var(--gold); }
+    tr:nth-child(even) td { background: rgba(31,42,50,0.5); }
+    blockquote { margin: 1.1rem 0; padding: 0.6rem 1.1rem; border-left: 4px solid var(--gold);
+      background: rgba(46,74,70,0.35); border-radius: 0 8px 8px 0; color: var(--parchment); }
+    hr { border: none; border-top: 1px solid rgba(212,178,120,0.3); margin: 2.6rem 0; }
+    ul, ol { padding-left: 1.4rem; }
+    li { margin: 0.2rem 0; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 14px; margin: 24px 0; }
+    .card { background: var(--shadow); border: 1px solid rgba(212,178,120,0.3);
+      border-radius: 12px; padding: 16px 18px; text-decoration: none; display: block; }
+    .card:hover { border-color: var(--gold); }
+    .card h3 { margin: 0 0 6px; color: var(--gold); }
+    .card p { margin: 0; color: var(--parchment); font-size: 0.9em; }
+    .idxletter { color: var(--gold); font-size: 1.2rem; margin: 1.4rem 0 0.3rem;
+      border-bottom: 1px solid rgba(212,178,120,0.3); }
+  </style>
+</head>
+<body>
+  <header class="banner">
+    <img src="senda_banner.png" alt="SENDA 5.5" />
+  </header>
+<nav class="pagenav">
+  <a href="crear-contenido.html">Guía</a>
+  <a href="indice.html">Índice</a>
+  <a href="empezar.html">Primeros pasos</a>
+  <a href="clase.html">Clase</a>
+  <a href="mecanicas.html">Mecánicas (grants)</a>
+  <a href="trasfondo.html">Trasfondo</a>
+  <a href="especie.html">Especie</a>
+  <a href="dote.html" class="active">Dote</a>
+  <a href="conjuros-invocaciones.html">Conjuros e invocaciones</a>
+  <a href="equipo.html">Equipo</a>
+  <a href="bestias.html">Bestias</a>
+</nav>
+  <div class="wrap">
+<h1>Dote</h1>
+<h2 id="12-dote-featdef-lista-feats">12. Dote (<code>FeatDef</code>) → lista <code>feats</code></h2>
+<p>Las dotes se referencian desde los <code>CHOICE</code> de <code>kind: &quot;FEAT&quot;</code> (en clases y trasfondos).</p>
+<table>
+  <tr><th>Campo</th><th>Tipo</th><th>Obligatorio</th><th>Notas</th></tr>
+  <tr><td><code>id</code></td><td>string</td><td>Sí</td><td></td></tr>
+  <tr><td><code>category</code></td><td>string?</td><td>No</td><td><code>ORIGIN</code>, <code>GENERAL</code>, <code>FIGHTING_STYLE</code>, <code>EPIC</code>. Filtra qué CHOICE la ofrece.</td></tr>
+  <tr><td><code>display</code></td><td>DisplayInfo</td><td>Sí</td><td></td></tr>
+  <tr><td><code>prerequisite</code></td><td>Prerequisite?</td><td>No</td><td>Requisitos para poder elegirla.</td></tr>
+  <tr><td><code>repeatable</code></td><td>bool</td><td>No</td><td><code>true</code> = se puede tomar varias veces (p. ej. Mejora de característica). Default <code>false</code>.</td></tr>
+  <tr><td><code>mechanics</code></td><td>[Grant]</td><td>No</td><td>Efectos de la dote.</td></tr>
+</table>
+<p><strong>Prerequisite</strong> (todos los campos opcionales):</p>
+<pre><code>{
+  &quot;minLevel&quot;: 4,
+  &quot;ability&quot;: &quot;STR&quot;,
+  &quot;abilityOptions&quot;: [&quot;STR&quot;, &quot;DEX&quot;],
+  &quot;minScore&quot;: 13,
+  &quot;requiresSpellcasting&quot;: true
+}</code></pre>
+<p>Usa <code>ability</code> + <code>minScore</code> para una característica única, o <code>abilityOptions</code> + <code>minScore</code> cuando basta con cumplir una de varias.</p>
+<pre><code>{
+  &quot;id&quot;: &quot;tough&quot;,
+  &quot;category&quot;: &quot;ORIGIN&quot;,
+  &quot;display&quot;: { &quot;name&quot;: &quot;Duro&quot;, &quot;description&quot;: &quot;Tus PG máximos aumentan en 2 por nivel.&quot;, &quot;icon&quot;: &quot;❤️&quot; },
+  &quot;repeatable&quot;: false,
+  &quot;mechanics&quot;: [
+    { &quot;type&quot;: &quot;MAX_HP_BONUS&quot;, &quot;source&quot;: &quot;PER_LEVEL&quot;, &quot;perLevel&quot;: 2 }
+  ]
+}</code></pre>
+<p>La mayoría de las dotes del PHB 2024 combinan una <strong>mejora de característica</strong> (un <code>CHOICE</code> de <code>kind: &quot;ABILITY_SCORE_IMPROVEMENT&quot;</code>) con uno o más grants de efecto. Patrones útiles:</p>
+<ul>
+<li><strong>Resiliente</strong> — mejora que además da competencia en la salvación de la característica elegida (<code>grantsSavingThrowProficiency: true</code>). Lleva <code>repeatable: true</code> porque puede tomarse para distintas características.</li>
+<li><strong>Lanzador ritual</strong> — mejora + un <code>CHOICE</code> de conjuros con <code>ritual: true</code> y <code>pickFromStat: &quot;PROFICIENCY_BONUS&quot;</code> (eliges tantos como tu bonif. de competencia).</li>
+<li><strong>Influencia feérica / sombría</strong> — mejora + <code>INNATE_SPELL</code> fijo + un <code>CHOICE</code> de conjuro filtrado por <code>schools</code>.</li>
+<li><strong>Moderadamente acorazado</strong> — mejora + <code>PROFICIENCY</code> (<code>kind: &quot;ARMOR&quot;</code>). Para topes numéricos (p. ej. el máximo de DES de armadura media) usa <code>COMPUTED_STAT</code>.</li>
+<li><strong>Dones épicos</strong> (<code>category: &quot;EPIC&quot;</code>, <code>prerequisite.minLevel: 19</code>) — mejora hasta 30 + grants como <code>SENSES</code> (Don de la visión verdadera: <code>truesightFeet</code>) o un <code>CHOICE</code> de <code>kind: &quot;CUSTOM&quot;</code> cuyas <code>options[].grants</code> otorgan <code>DAMAGE_RESISTANCE</code> (Don de la resistencia a energías).</li>
+</ul>
+<pre><code>{
+  &quot;id&quot;: &quot;resilient&quot;,
+  &quot;category&quot;: &quot;GENERAL&quot;,
+  &quot;display&quot;: { &quot;name&quot;: &quot;Resiliente&quot;, &quot;description&quot;: &quot;+1 a una característica y competencia en sus salvaciones.&quot;, &quot;icon&quot;: &quot;🛡️&quot; },
+  &quot;prerequisite&quot;: { &quot;minLevel&quot;: 4 },
+  &quot;repeatable&quot;: true,
+  &quot;mechanics&quot;: [
+    {
+      &quot;type&quot;: &quot;CHOICE&quot;,
+      &quot;id&quot;: &quot;resilient_boost&quot;,
+      &quot;title&quot;: &quot;Mejora de Resiliente&quot;,
+      &quot;kind&quot;: &quot;ABILITY_SCORE_IMPROVEMENT&quot;,
+      &quot;pool&quot;: [&quot;STR&quot;, &quot;DEX&quot;, &quot;CON&quot;, &quot;INT&quot;, &quot;WIS&quot;, &quot;CHA&quot;],
+      &quot;points&quot;: 1,
+      &quot;grantsSavingThrowProficiency&quot;: true
+    }
+  ]
+}</code></pre>
+<hr />
+<hr />
+<h2 id="ejemplo-dote-habilidoso-origen-repetible">Ejemplo — Dote — Habilidoso (origen, repetible)</h2>
+<pre><code>{
+  &quot;id&quot;: &quot;skilled&quot;,
+  &quot;category&quot;: &quot;ORIGIN&quot;,
+  &quot;display&quot;: {
+    &quot;name&quot;: &quot;Habilidoso&quot;,
+    &quot;description&quot;: &quot;Ganas competencia en tres habilidades o herramientas a elegir.&quot;,
+    &quot;shortDescription&quot;: &quot;Competencia en 3 habilidades o herramientas.&quot;
+  },
+  &quot;repeatable&quot;: true,
+  &quot;mechanics&quot;: [
+    {
+      &quot;type&quot;: &quot;CHOICE&quot;,
+      &quot;id&quot;: &quot;skilled_choices&quot;,
+      &quot;title&quot;: &quot;Habilidoso: elige 3 competencias&quot;,
+      &quot;kind&quot;: &quot;SKILL&quot;,
+      &quot;pick&quot;: 3
+    }
+  ]
+}</code></pre>
+  </div>
+</body>
+</html>

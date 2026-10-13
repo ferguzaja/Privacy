@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Primeros pasos — Crear contenido · SENDA 5.5</title>
+  <style>
+    :root {
+      --forest: #0E1F24; --mountain: #2E4A46; --gold: #D4B278;
+      --parchment: #F4E6C8; --sunset: #A4472D; --storm: #5A6B7A;
+      --shadow: #1F2A32; --earth: #8C5E3C; --red: #C7302B; --green: #4E7A52;
+    }
+    * { box-sizing: border-box; }
+    body { font-family: Georgia, "Times New Roman", serif; line-height: 1.65;
+      margin: 0; color: var(--parchment); background: var(--forest); }
+    .wrap { max-width: 820px; margin: 0 auto; padding: 0 20px 72px; }
+    header.banner { width: 100%; max-width: 1024px; margin: 0 auto; display: block; }
+    header.banner img { width: 100%; height: auto; display: block; }
+    nav.pagenav { max-width: 820px; margin: 10px auto 0; padding: 10px 20px;
+      display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 0.86rem;
+      border-bottom: 1px solid rgba(212,178,120,0.25); }
+    nav.pagenav a { color: var(--storm); text-decoration: none; }
+    nav.pagenav a:hover { color: var(--gold); }
+    nav.pagenav a.active { color: var(--gold); font-weight: bold; }
+    h1 { color: var(--gold); font-size: 2rem; margin: 32px 0 0.3rem; letter-spacing: 0.5px; }
+    h2 { color: var(--gold); font-size: 1.4rem; margin-top: 2.4rem;
+      padding-bottom: 0.35rem; border-bottom: 1px solid rgba(212,178,120,0.4); }
+    h3 { color: var(--gold); font-size: 1.12rem; margin-top: 1.7rem; }
+    .updated { color: var(--storm); font-size: 0.9rem; margin-top: 0; }
+    a { color: var(--gold); }
+    strong { color: #fff0d4; }
+    code { background: var(--shadow); color: var(--gold); padding: 1px 6px;
+      border-radius: 4px; font-size: 0.88em;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    pre { background: var(--shadow); border: 1px solid rgba(212,178,120,0.25);
+      border-radius: 10px; padding: 14px 16px; overflow-x: auto; font-size: 0.84em; line-height: 1.5; }
+    pre code { background: none; color: var(--parchment); padding: 0; font-size: 1em; }
+    table { border-collapse: collapse; width: 100%; margin: 1.1rem 0; font-size: 0.9em; }
+    th, td { border: 1px solid rgba(212,178,120,0.25); padding: 7px 11px;
+      text-align: left; vertical-align: top; }
+    th { background: var(--mountain); color: var(--gold); }
+    tr:nth-child(even) td { background: rgba(31,42,50,0.5); }
+    blockquote { margin: 1.1rem 0; padding: 0.6rem 1.1rem; border-left: 4px solid var(--gold);
+      background: rgba(46,74,70,0.35); border-radius: 0 8px 8px 0; color: var(--parchment); }
+    hr { border: none; border-top: 1px solid rgba(212,178,120,0.3); margin: 2.6rem 0; }
+    ul, ol { padding-left: 1.4rem; }
+    li { margin: 0.2rem 0; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 14px; margin: 24px 0; }
+    .card { background: var(--shadow); border: 1px solid rgba(212,178,120,0.3);
+      border-radius: 12px; padding: 16px 18px; text-decoration: none; display: block; }
+    .card:hover { border-color: var(--gold); }
+    .card h3 { margin: 0 0 6px; color: var(--gold); }
+    .card p { margin: 0; color: var(--parchment); font-size: 0.9em; }
+    .idxletter { color: var(--gold); font-size: 1.2rem; margin: 1.4rem 0 0.3rem;
+      border-bottom: 1px solid rgba(212,178,120,0.3); }
+  </style>
+</head>
+<body>
+  <header class="banner">
+    <img src="senda_banner.png" alt="SENDA 5.5" />
+  </header>
+<nav class="pagenav">
+  <a href="crear-contenido.html">Guía</a>
+  <a href="indice.html">Índice</a>
+  <a href="empezar.html" class="active">Primeros pasos</a>
+  <a href="clase.html">Clase</a>
+  <a href="mecanicas.html">Mecánicas (grants)</a>
+  <a href="trasfondo.html">Trasfondo</a>
+  <a href="especie.html">Especie</a>
+  <a href="dote.html">Dote</a>
+  <a href="conjuros-invocaciones.html">Conjuros e invocaciones</a>
+  <a href="equipo.html">Equipo</a>
+  <a href="bestias.html">Bestias</a>
+</nav>
+  <div class="wrap">
+<h1>Primeros pasos</h1>
+<p>Esta guía explica cómo definir el contenido de la app en el formato JSON que deserializa: <strong>clases</strong> (y subclases), <strong>trasfondos</strong>, <strong>especies</strong>, <strong>dotes</strong>, <strong>conjuros</strong>, <strong>invocaciones</strong>, <strong>equipo</strong> y <strong>bestias</strong>. Todo el contenido es *data-driven*: no hay lógica hardcodeada. Cada objeto vive en un <strong>content pack</strong> y el motor lo interpreta a partir de sus mecánicas (<code>mechanics</code> / <code>grants</code>, llamadas *grants*).</p>
+<p>La guía arranca por la <strong>clase</strong> (el objeto más grande y completo, §1–§9) y luego cubre el resto de tipos (§10–§17), las unidades de distancia (§18), cómo importar (§19) y <strong>ejemplos completos listos para copiar de cada tipo (§20)</strong>.</p>
+<p>Modelo de referencia en código: <code>shared/src/commonMain/kotlin/com/dnd/shared/content/</code> (<code>ClassDef.kt</code>, <code>FeatureDef.kt</code>, <code>Grant.kt</code>, <code>LevelRow.kt</code>, <code>Scaling.kt</code>, <code>BackgroundDef.kt</code>, <code>SpeciesDef.kt</code>, <code>FeatDef.kt</code>, <code>SpellDef.kt</code>, <code>InvocationDef.kt</code>, <code>EquipmentDef.kt</code>, <code>BeastDef.kt</code>, etc.)</p>
+<p>Ejemplo real completo de una clase en el repo: <code>.kiro/specs/modelo-data-driven/barbarian_example.json</code></p>
+<hr />
+<hr />
+<h2 id="1-donde-vive-una-clase-el-content-pack">1. Dónde vive una clase: el content pack</h2>
+<p>Una clase nunca va suelta. Va dentro de un <code>ContentPack</code>, en la lista <code>classes</code>:</p>
+<pre><code>{
+  &quot;version&quot;: &quot;2&quot;,
+  &quot;id&quot;: &quot;mi_pack&quot;,
+  &quot;name&quot;: &quot;Mi pack de clases&quot;,
+  &quot;author&quot;: &quot;Tu nombre&quot;,
+  &quot;license&quot;: &quot;…&quot;,
+
+  &quot;classes&quot;: [ /* aquí van una o más clases (ClassDef) */ ],
+  &quot;species&quot;: [],
+  &quot;backgrounds&quot;: [],
+  &quot;feats&quot;: [],
+  &quot;spells&quot;: [],
+  &quot;invocations&quot;: [],
+  &quot;equipment&quot;: [],
+  &quot;beasts&quot;: []
+}</code></pre>
+<p>Solo <code>id</code> es obligatorio en el pack; todas las listas son opcionales (un pack puede aportar solo clases).</p>
+<h3 id="reglas-de-parseo-que-conviene-conocer">Reglas de parseo que conviene conocer</h3>
+<p>El deserializador (<code>ContentPackSerializer</code>) está configurado así:</p>
+<ul>
+<li><strong>Discriminador <code>&quot;type&quot;</code></strong>: dentro de <code>mechanics</code>, el campo <code>type</code> decide qué grant es.</li>
+<li><strong><code>ignoreUnknownKeys = true</code></strong>: campos extra en el JSON no rompen el parseo.</li>
+<li><strong>Degradación elegante</strong>: un <code>type</code> de grant que el motor no conoce se convierte en <code>UNKNOWN</code> en vez de fallar. El <code>display</code> del rasgo se sigue mostrando.</li>
+<li><strong><code>explicitNulls = false</code></strong>: puedes omitir los campos opcionales en lugar de ponerlos a <code>null</code>.</li>
+</ul>
+<hr />
+<hr />
+<h2 id="17-resumen-que-lleva-grants-y-que-no">17. Resumen: qué lleva grants y qué no</h2>
+<table>
+  <tr><th>Tipo</th><th>Lista</th><th>¿Grants?</th><th>Bloque de datos propio</th></tr>
+  <tr><td>Clase</td><td><code>classes</code></td><td>Sí (en <code>features[].mechanics</code>)</td><td><code>progression</code> + <code>proficiencies</code></td></tr>
+  <tr><td>Subclase</td><td>dentro de la clase</td><td>Sí (en <code>features[].mechanics</code>, con <code>subclassId</code>)</td><td>—</td></tr>
+  <tr><td>Trasfondo</td><td><code>backgrounds</code></td><td>Sí (<code>mechanics</code>)</td><td><code>startingEquipment</code></td></tr>
+  <tr><td>Especie</td><td><code>species</code></td><td>Sí (<code>traits[].mechanics</code> y/o <code>mechanics</code>)</td><td><code>speed</code>, <code>size</code>, <code>darkvision</code></td></tr>
+  <tr><td>Dote</td><td><code>feats</code></td><td>Sí (<code>mechanics</code>)</td><td><code>prerequisite</code>, <code>category</code>, <code>repeatable</code></td></tr>
+  <tr><td>Conjuro</td><td><code>spells</code></td><td><strong>No</strong></td><td>datos estáticos + <code>classes</code></td></tr>
+  <tr><td>Invocación</td><td><code>invocations</code></td><td>Sí (<code>mechanics</code>)</td><td><code>minLevel</code>, <code>prerequisiteIds</code>, <code>pactRequired</code></td></tr>
+  <tr><td>Equipo</td><td><code>equipment</code></td><td>Sí (<code>grants</code>)</td><td>bloques <code>weapon</code>/<code>armor</code>/<code>shield</code>/…</td></tr>
+  <tr><td>Bestia</td><td><code>beasts</code></td><td><strong>No</strong></td><td>stats de criatura</td></tr>
+</table>
+<p>Checklist transversal: valida siempre con <code>ContentPackSerializer.parseOrNull</code> (devuelve <code>Result</code>), revisa que los ids referenciados existan (dotes desde <code>CHOICE</code>, <code>costResource</code> hacia un <code>RESOURCE</code>, <code>classes</code> de conjuro hacia el <code>spellListClassId</code> de la clase) y recuerda que cualquier <code>type</code> de grant no reconocido degrada a <code>UNKNOWN</code> sin romper el pack.</p>
+<hr />
+<hr />
+<h2 id="19-importar-contenido-en-la-app-pack-completo-vs-objeto-individual">19. Importar contenido en la app: pack completo vs. objeto individual</h2>
+<p>La app ofrece <strong>dos formas distintas</strong> de importar un JSON, y <strong>cada una espera una forma de JSON diferente</strong>. Este es un error común: un mismo archivo puede funcionar por una vía y fallar por la otra.</p>
+<h3 id="19-1-importar-como-pack-gestion-de-contenido-importar-pack">19.1 Importar como PACK (Gestión de contenido → Importar pack)</h3>
+<p>Espera un <strong><code>ContentPack</code> completo</strong>: el objeto raíz con <code>id</code> (obligatorio) y las listas (<code>classes</code>, <code>species</code>, <code>backgrounds</code>, <code>feats</code>, <code>equipment</code>, …). Es el formato que describe toda esta guía (§1). Un pack puede traer <strong>varios objetos y de varios tipos a la vez</strong> (p. ej. una especie <strong>más</strong> su arma en <code>equipment</code>), y todos entran juntos.</p>
+<pre><code>{
+  &quot;version&quot;: &quot;2&quot;,
+  &quot;id&quot;: &quot;senda_dhampir_test&quot;,
+  &quot;name&quot;: &quot;Dhampir 5.5 — Pack de prueba&quot;,
+  &quot;species&quot;: [ { &quot;id&quot;: &quot;dhampir_55&quot;, &quot;display&quot;: { &quot;name&quot;: &quot;Dhampir&quot; }, &quot;speed&quot;: 35, &quot;...&quot;: &quot;...&quot; } ],
+  &quot;equipment&quot;: [ { &quot;id&quot;: &quot;dhampir_vampiric_bite_weapon&quot;, &quot;...&quot;: &quot;...&quot; } ]
+}</code></pre>
+<blockquote>Si tu contenido tiene <strong>más de un objeto</strong> o mezcla tipos (una especie + un arma, una clase + sus conjuros, etc.), <strong>importa como pack</strong>. Es la única vía que trae todo junto.</blockquote>
+<h3 id="19-2-importar-un-objeto-individual-importar-especie-dote-clase-trasfondo">19.2 Importar un OBJETO INDIVIDUAL (Importar especie / dote / clase / trasfondo)</h3>
+<p>Cada botón de importación individual espera <strong>el objeto suelto</strong>, es decir, un único elemento del tipo correspondiente <strong>sin el envoltorio del pack</strong>. Al importar una especie, el JSON raíz debe ser un <code>SpeciesDef</code>, no un <code>ContentPack</code>.</p>
+<p><strong>Correcto</strong> para &quot;Importar especie&quot; (el objeto que iría *dentro* de <code>species: [ … ]</code>):</p>
+<pre><code>{
+  &quot;id&quot;: &quot;dhampir_55&quot;,
+  &quot;display&quot;: {
+    &quot;name&quot;: &quot;Dhampir&quot;,
+    &quot;description&quot;: &quot;Un linaje tocado por una naturaleza vampírica…&quot;,
+    &quot;icon&quot;: &quot;🩸&quot;,
+    &quot;flavorText&quot;: &quot;Entre la vida y la muerte, el hambre permanece.&quot;
+  },
+  &quot;creatureType&quot;: &quot;HUMANOID&quot;,
+  &quot;speed&quot;: 10.5,
+  &quot;size&quot;: &quot;MEDIUM&quot;,
+  &quot;darkvision&quot;: 18,
+  &quot;traits&quot;: [ /* … los mismos traits … */ ],
+  &quot;mechanics&quot;: []
+}</code></pre>
+<p><strong>Incorrecto</strong> para &quot;Importar especie&quot; (esto es un pack, da error): un objeto raíz con <code>version</code>, <code>id</code> de pack y listas <code>classes</code> / <code>species</code> / <code>equipment</code>. Ese formato solo lo acepta &quot;Importar pack&quot;.</p>
+<p>Campos que la app usa para reconocer cada tipo individual (deben estar presentes en la raíz):</p>
+<table>
+  <tr><th>Import individual</th><th>Campos que debe tener el objeto raíz</th></tr>
+  <tr><td>Especie</td><td><code>id</code>, <code>display</code>, <code>speed</code></td></tr>
+  <tr><td>Clase</td><td><code>id</code>, <code>display</code>, <code>hitDie</code>, <code>savingThrows</code></td></tr>
+  <tr><td>Dote</td><td><code>id</code>, <code>display</code>, <code>category</code></td></tr>
+  <tr><td>Trasfondo</td><td><code>id</code>, <code>display</code>, <code>goldAlternative</code>, <code>startingEquipment</code></td></tr>
+</table>
+<h3 id="19-3-regla-practica-y-limitacion">19.3 Regla práctica y limitación</h3>
+<ul>
+<li><strong>Un solo objeto de un solo tipo</strong> → puedes usar el import individual (objeto suelto) o un pack. Ambos sirven.</li>
+<li><strong>Varios objetos o varios tipos</strong> (p. ej. especie + arma) → <strong>usa pack</strong>. El import individual solo trae ese objeto: cualquier equipo, conjuro u otro objeto asociado que viva en otra lista del pack <strong>no se importa</strong> por la vía individual.</li>
+</ul>
+<p>Ejemplo concreto: el Dhampir de prueba define su &quot;Mordisco Vampírico&quot; como arma en <code>equipment</code>. Si lo importas como <strong>especie individual</strong>, la especie entra pero el arma <strong>no</strong>. Para que entren ambos, impórtalo como <strong>pack</strong>.</p>
+<hr />
+  </div>
+</body>
+</html>
