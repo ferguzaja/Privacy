@@ -109,6 +109,7 @@
   <tr><td><code>scaling</code></td><td><code>{ &quot;rule&quot;: &quot;CANTRIP_LEVEL&quot; \| &quot;SLOT_LEVEL&quot;, &quot;dicePerStep&quot;: &quot;1d6&quot; }</code>. <code>CANTRIP_LEVEL</code> añade esos dados a nivel de personaje 5, 11 y 17; <code>SLOT_LEVEL</code>, por cada nivel de espacio sobre el base. Sin <code>scaling</code> el daño es fijo.</td></tr>
   <tr><td><code>save</code></td><td>Característica de la salvación del objetivo (<code>&quot;DEX&quot;</code>). Ausente = <strong>ataque de conjuro</strong> (la ficha muestra la tirada de ataque).</td></tr>
   <tr><td><code>halfOnSave</code></td><td><code>true</code> = salvar reduce el daño a la mitad.</td></tr>
+  <tr><td><code>extra</code></td><td>Lista de <strong>daños adicionales de otro tipo</strong> que el conjuro inflige a la vez: <code>[{ &quot;dice&quot;: &quot;4d6&quot;, &quot;type&quot;: &quot;cold&quot;, &quot;scaling&quot;: { … } }]</code>. Cada uno tiene sus propios dados, tipo y escalado, y comparte <code>save</code>, <code>halfOnSave</code> y <code>count</code> del bloque principal. La ficha los tira juntos y desglosa el resultado por tipo (para aplicar resistencias). Ejemplo: Tormenta de hielo = <code>2d10</code> contundente + <code>4d6</code> frío.</td></tr>
   <tr><td><code>count</code></td><td>Para conjuros que escalan en <strong>cantidad</strong> de tiradas y no en dados: <code>{ &quot;rule&quot;: &quot;FIXED&quot; \| &quot;CANTRIP_LEVEL&quot; \| &quot;SLOT_LEVEL&quot;, &quot;base&quot;: 3, &quot;perStep&quot;: 1, &quot;label&quot;: &quot;dardos&quot; }</code> (Proyectil mágico, Rayo abrasador). La ficha muestra «×N dardos»; cada tirada la haces tú.</td></tr>
 </table>
 <p><strong><code>healing</code> (<code>SpellHealing</code>)</strong>: <code>dice</code> (dados base), <code>scaling</code> (igual que en el daño) y <code>addSpellMod</code> (default <code>true</code>: suma el modificador de aptitud mágica).</p>
@@ -144,6 +145,17 @@
   &quot;damage&quot;: {
     &quot;dice&quot;: &quot;8d6&quot;, &quot;type&quot;: &quot;fire&quot;, &quot;save&quot;: &quot;DEX&quot;, &quot;halfOnSave&quot;: true,
     &quot;scaling&quot;: { &quot;rule&quot;: &quot;SLOT_LEVEL&quot;, &quot;dicePerStep&quot;: &quot;1d6&quot; }
+  }
+}</code></pre>
+<p>Conjuro con dos tipos de daño a la vez (<code>extra</code>):</p>
+<pre><code>{
+  &quot;id&quot;: &quot;ice_storm&quot;,
+  &quot;display&quot;: { &quot;name&quot;: &quot;Tormenta de hielo&quot; },
+  &quot;level&quot;: 4, &quot;school&quot;: &quot;EVOCACION&quot;, &quot;classes&quot;: [&quot;druid&quot;, &quot;sorcerer&quot;, &quot;wizard&quot;],
+  &quot;damage&quot;: {
+    &quot;dice&quot;: &quot;2d10&quot;, &quot;type&quot;: &quot;bludgeoning&quot;, &quot;save&quot;: &quot;DEX&quot;, &quot;halfOnSave&quot;: true,
+    &quot;scaling&quot;: { &quot;rule&quot;: &quot;SLOT_LEVEL&quot;, &quot;dicePerStep&quot;: &quot;1d10&quot; },
+    &quot;extra&quot;: [ { &quot;dice&quot;: &quot;4d6&quot;, &quot;type&quot;: &quot;cold&quot; } ]
   }
 }</code></pre>
 <p>Conjuro con varias tiradas (escala en cantidad), y después uno que se activa:</p>
