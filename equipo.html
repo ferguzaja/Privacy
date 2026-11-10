@@ -42,6 +42,10 @@
     tr:nth-child(even) td { background: rgba(31,42,50,0.5); }
     blockquote { margin: 1.1rem 0; padding: 0.6rem 1.1rem; border-left: 4px solid var(--gold);
       background: rgba(46,74,70,0.35); border-radius: 0 8px 8px 0; color: var(--parchment); }
+    figure { margin: 1.4rem 0; text-align: center; }
+    figure img { width: 100%; max-width: 300px; height: auto; border-radius: 14px;
+      border: 1px solid rgba(212,178,120,0.35); }
+    figcaption { color: var(--storm); font-size: 0.85rem; margin-top: 6px; }
     hr { border: none; border-top: 1px solid rgba(212,178,120,0.3); margin: 2.6rem 0; }
     ul, ol { padding-left: 1.4rem; }
     li { margin: 0.2rem 0; }
@@ -72,6 +76,7 @@
   <a href="conjuros-invocaciones.html">Conjuros e invocaciones</a>
   <a href="equipo.html" class="active">Equipo</a>
   <a href="bestias.html">Bestias</a>
+  <a href="editor.html">Crear desde la app</a>
 </nav>
   <div class="wrap">
 <h1>Equipo</h1>
@@ -92,11 +97,28 @@
 </table>
 <p>Bloques tipados más usados:</p>
 <ul>
-<li><strong><code>weapon</code></strong> (<code>WeaponData</code>): <code>damageDice</code>, <code>damageType</code>, <code>versatileDice</code>, <code>properties</code>, <code>masteryProperty</code>, <code>attackAbilities</code>, <code>range { normal, long, unit }</code>, <code>fixedDamage</code>.</li>
+<li><strong><code>weapon</code></strong> (<code>WeaponData</code>): <code>damageDice</code>, <code>damageType</code>, <code>versatileDice</code>, <code>properties</code>, <code>masteryProperty</code>, <code>attackAbilities</code>, <code>range { normal, long, unit }</code>, <code>fixedDamage</code>, y para armas mágicas <code>magicBonus</code> y <code>bonusDamage</code> (ver abajo).</li>
 <li><strong><code>armor</code></strong> (<code>ArmorData</code>): <code>baseAc</code>, <code>category</code> (<code>LIGHT</code>/<code>MEDIUM</code>/<code>HEAVY</code>), <code>maxDex</code> o <code>dexterityCap</code>, <code>strengthRequirement</code>, <code>stealthDisadvantage</code>.</li>
 <li><strong><code>shield</code></strong> (<code>ShieldData</code>): <code>acBonus</code> (default 2). Un escudo mágico se modela como escudo normal (bono base 2) <strong>más</strong> un grant <code>AC_BONUS</code> para el extra mágico, en vez de inflar <code>acBonus</code>.</li>
 <li><strong><code>tool</code></strong>, <strong><code>container</code></strong>, <strong><code>focus</code></strong>, <strong><code>ammunition</code></strong>: ver <code>EquipmentDef.kt</code>.</li>
 </ul>
+<p><strong>Armas mágicas (<code>magicBonus</code> y <code>bonusDamage</code>).</strong> Se declaran en el bloque <code>weapon</code>, <strong>no</strong> con grants globales (un <code>DAMAGE_BONUS</code> sumaría a todas las armas que lleves):</p>
+<ul>
+<li><code>magicBonus</code> (int, default <code>0</code>): el +1/+2/+3 se suma a la tirada de ataque <strong>y</strong> al daño de ESA arma únicamente. Si el objeto requiere sintonización, solo aplica sintonizado.</li>
+<li><code>bonusDamage</code> (lista): daño extra tipado en cada golpe, con su propia tirada para poder aplicar resistencias. Cada elemento: <code>dice</code>, <code>type</code>, y opcionales <code>activeToggle</code> + <code>toggleLabel</code> (el daño solo cuenta mientras ese interruptor esté encendido; la convención es <code>&quot;weapon_active::&lt;id del objeto&gt;&quot;</code>, y la ficha muestra el botón con <code>toggleLabel</code>) y <code>perCantripTier</code> (los dados se repiten en los niveles 5, 11 y 17; sin daño extra antes del 5).</li>
+</ul>
+<pre><code>{
+  &quot;id&quot;: &quot;flame_tongue&quot;,
+  &quot;display&quot;: { &quot;name&quot;: &quot;Lengua de fuego&quot; },
+  &quot;category&quot;: &quot;WEAPON&quot;, &quot;subtype&quot;: &quot;martial_melee&quot;, &quot;rarity&quot;: &quot;rare&quot;, &quot;requiresAttunement&quot;: true,
+  &quot;weapon&quot;: {
+    &quot;damageDice&quot;: &quot;1d8&quot;, &quot;damageType&quot;: &quot;slashing&quot;, &quot;attackAbilities&quot;: [&quot;STR&quot;],
+    &quot;bonusDamage&quot;: [
+      { &quot;dice&quot;: &quot;2d6&quot;, &quot;type&quot;: &quot;fire&quot;, &quot;activeToggle&quot;: &quot;weapon_active::flame_tongue&quot;, &quot;toggleLabel&quot;: &quot;Encender&quot; }
+    ]
+  }
+}</code></pre>
+<p><strong>Arma empuñada.</strong> Los <code>grants</code> de un arma que lleves en la mano principal o secundaria cuentan igual que los de cualquier objeto equipado (respetando <code>requiresAttunement</code>). No hace falta equiparla además en otro sitio.</p>
 <p><strong>Paquetes de objetos (<code>EXPAND_BUNDLE</code>):</strong> un objeto que contiene otros (p. ej. &quot;paquete de explorador&quot;) lleva un grant <code>EXPAND_BUNDLE</code> con <code>contents</code> (mapa <code>id</code>→cantidad). Al obtenerlo, el personaje recibe su contenido:</p>
 <pre><code>{
   &quot;id&quot;: &quot;explorers_pack&quot;,
@@ -173,6 +195,7 @@
   &quot;shield&quot;: { &quot;acBonus&quot;: 2 },
   &quot;grants&quot;: [ { &quot;type&quot;: &quot;AC_BONUS&quot;, &quot;amount&quot;: 3, &quot;condition&quot;: &quot;WHILE_ATTUNED&quot; } ]
 }</code></pre>
+<hr />
   </div>
 </body>
 </html>

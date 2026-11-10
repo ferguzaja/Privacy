@@ -42,6 +42,10 @@
     tr:nth-child(even) td { background: rgba(31,42,50,0.5); }
     blockquote { margin: 1.1rem 0; padding: 0.6rem 1.1rem; border-left: 4px solid var(--gold);
       background: rgba(46,74,70,0.35); border-radius: 0 8px 8px 0; color: var(--parchment); }
+    figure { margin: 1.4rem 0; text-align: center; }
+    figure img { width: 100%; max-width: 300px; height: auto; border-radius: 14px;
+      border: 1px solid rgba(212,178,120,0.35); }
+    figcaption { color: var(--storm); font-size: 0.85rem; margin-top: 6px; }
     hr { border: none; border-top: 1px solid rgba(212,178,120,0.3); margin: 2.6rem 0; }
     ul, ol { padding-left: 1.4rem; }
     li { margin: 0.2rem 0; }
@@ -72,6 +76,7 @@
   <a href="conjuros-invocaciones.html">Conjuros e invocaciones</a>
   <a href="equipo.html">Equipo</a>
   <a href="bestias.html">Bestias</a>
+  <a href="editor.html">Crear desde la app</a>
 </nav>
   <div class="wrap">
 <h1>Primeros pasos</h1>
@@ -79,6 +84,7 @@
 <p>La guía arranca por la <strong>clase</strong> (el objeto más grande y completo, §1–§9) y luego cubre el resto de tipos (§10–§17), las unidades de distancia (§18), cómo importar (§19) y <strong>ejemplos completos listos para copiar de cada tipo (§20)</strong>.</p>
 <p>Modelo de referencia en código: <code>shared/src/commonMain/kotlin/com/dnd/shared/content/</code> (<code>ClassDef.kt</code>, <code>FeatureDef.kt</code>, <code>Grant.kt</code>, <code>LevelRow.kt</code>, <code>Scaling.kt</code>, <code>BackgroundDef.kt</code>, <code>SpeciesDef.kt</code>, <code>FeatDef.kt</code>, <code>SpellDef.kt</code>, <code>InvocationDef.kt</code>, <code>EquipmentDef.kt</code>, <code>BeastDef.kt</code>, etc.)</p>
 <p>Ejemplo real completo de una clase en el repo: <code>.kiro/specs/modelo-data-driven/barbarian_example.json</code></p>
+<p><strong>Punto de partida recomendado:</strong> <a href="plantilla-pack.json">plantilla-pack.json</a> es un pack mínimo y válido con un objeto de cada tipo (clase con subclase, especie, trasfondo, dote, conjuro, invocación, equipo y bestia), incluidos los grants que más suelen fallar (<code>AC_FORMULA</code>, <code>SPEED_BONUS</code>, <code>EXTRA_ATTACK</code>). Cópiala, cambia los ids (conviene usar un prefijo propio para no pisar objetos del SRD) y borra lo que no uses. Antes de importar, pásala por <strong>Validar un pack sin importarlo</strong> en Gestión de contenido.</p>
 <hr />
 <hr />
 <h2 id="1-donde-vive-una-clase-el-content-pack">1. Dónde vive una clase: el content pack</h2>
@@ -118,7 +124,7 @@
   <tr><td>Trasfondo</td><td><code>backgrounds</code></td><td>Sí (<code>mechanics</code>)</td><td><code>startingEquipment</code></td></tr>
   <tr><td>Especie</td><td><code>species</code></td><td>Sí (<code>traits[].mechanics</code> y/o <code>mechanics</code>)</td><td><code>speed</code>, <code>size</code>, <code>darkvision</code></td></tr>
   <tr><td>Dote</td><td><code>feats</code></td><td>Sí (<code>mechanics</code>)</td><td><code>prerequisite</code>, <code>category</code>, <code>repeatable</code></td></tr>
-  <tr><td>Conjuro</td><td><code>spells</code></td><td><strong>No</strong></td><td>datos estáticos + <code>classes</code></td></tr>
+  <tr><td>Conjuro</td><td><code>spells</code></td><td><strong>No</strong></td><td>datos estáticos + <code>classes</code>, <code>damage</code>, <code>healing</code>, <code>activeEffect</code></td></tr>
   <tr><td>Invocación</td><td><code>invocations</code></td><td>Sí (<code>mechanics</code>)</td><td><code>minLevel</code>, <code>prerequisiteIds</code>, <code>pactRequired</code></td></tr>
   <tr><td>Equipo</td><td><code>equipment</code></td><td>Sí (<code>grants</code>)</td><td>bloques <code>weapon</code>/<code>armor</code>/<code>shield</code>/…</td></tr>
   <tr><td>Bestia</td><td><code>beasts</code></td><td><strong>No</strong></td><td>stats de criatura</td></tr>
@@ -138,6 +144,8 @@
   &quot;equipment&quot;: [ { &quot;id&quot;: &quot;dhampir_vampiric_bite_weapon&quot;, &quot;...&quot;: &quot;...&quot; } ]
 }</code></pre>
 <blockquote>Si tu contenido tiene <strong>más de un objeto</strong> o mezcla tipos (una especie + un arma, una clase + sus conjuros, etc.), <strong>importa como pack</strong>. Es la única vía que trae todo junto.</blockquote>
+<p><strong>Validar antes de importar.</strong> El botón <strong>Validar un pack sin importarlo</strong> (Gestión de contenido) lee el JSON y muestra todos los errores y avisos con su ruta, sin instalar nada. Si un import falla, la app muestra ese mismo informe.</p>
+<p><strong>Dónde se guarda y cómo recuperarlo.</strong> Al importar, la app guarda su <strong>propia copia</strong> del pack (Android: <code>filesDir/packs/&lt;id&gt;.json</code>; iOS: <code>Documents/packs/&lt;id&gt;.json</code>). Borrar el archivo original no afecta al pack instalado. Se identifica por el <code>id</code> del pack: importar otro con el mismo <code>id</code> lo <strong>reemplaza</strong> (la app conserva un respaldo <code>.bak</code> del anterior). Para recuperar un pack instalado, usa <strong>Exportar pack</strong> en su tarjeta de Gestión de contenido.</p>
 <h3 id="19-2-importar-un-objeto-individual-importar-especie-dote-clase-trasfondo">19.2 Importar un OBJETO INDIVIDUAL (Importar especie / dote / clase / trasfondo)</h3>
 <p>Cada botón de importación individual espera <strong>el objeto suelto</strong>, es decir, un único elemento del tipo correspondiente <strong>sin el envoltorio del pack</strong>. Al importar una especie, el JSON raíz debe ser un <code>SpeciesDef</code>, no un <code>ContentPack</code>.</p>
 <p><strong>Correcto</strong> para &quot;Importar especie&quot; (el objeto que iría *dentro* de <code>species: [ … ]</code>):</p>

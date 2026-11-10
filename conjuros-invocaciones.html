@@ -42,6 +42,10 @@
     tr:nth-child(even) td { background: rgba(31,42,50,0.5); }
     blockquote { margin: 1.1rem 0; padding: 0.6rem 1.1rem; border-left: 4px solid var(--gold);
       background: rgba(46,74,70,0.35); border-radius: 0 8px 8px 0; color: var(--parchment); }
+    figure { margin: 1.4rem 0; text-align: center; }
+    figure img { width: 100%; max-width: 300px; height: auto; border-radius: 14px;
+      border: 1px solid rgba(212,178,120,0.35); }
+    figcaption { color: var(--storm); font-size: 0.85rem; margin-top: 6px; }
     hr { border: none; border-top: 1px solid rgba(212,178,120,0.3); margin: 2.6rem 0; }
     ul, ol { padding-left: 1.4rem; }
     li { margin: 0.2rem 0; }
@@ -72,6 +76,7 @@
   <a href="conjuros-invocaciones.html" class="active">Conjuros e invocaciones</a>
   <a href="equipo.html">Equipo</a>
   <a href="bestias.html">Bestias</a>
+  <a href="editor.html">Crear desde la app</a>
 </nav>
   <div class="wrap">
 <h1>Conjuros e invocaciones</h1>
@@ -91,7 +96,31 @@
   <tr><td><code>ritual</code></td><td>bool</td><td>No</td><td>Default <code>false</code>.</td></tr>
   <tr><td><code>higherLevel</code></td><td>string?</td><td>No</td><td>Efecto a niveles superiores.</td></tr>
   <tr><td><code>classes</code></td><td>[string]</td><td>No</td><td>IDs de clases con acceso. Cruza con <code>SPELLCASTING.spellListClassId</code>.</td></tr>
+  <tr><td><code>damage</code></td><td>SpellDamage?</td><td>No</td><td>Daño estructurado: la tarjeta del conjuro ofrece una celda para tirarlo. Ver abajo.</td></tr>
+  <tr><td><code>healing</code></td><td>SpellHealing?</td><td>No</td><td>Curación estructurada (celda verde de tirada). Ver abajo.</td></tr>
+  <tr><td><code>activeEffect</code></td><td>SpellActiveEffect?</td><td>No</td><td>Efecto que el conjuro mantiene mientras está activo (interruptor «Activar»). Ver abajo.</td></tr>
 </table>
+<p><strong>Códigos de escuela.</strong> <code>school</code> es texto libre, pero el catálogo y los filtros (<code>schools</code> en un <code>CHOICE</code>, <code>SPELL_DAMAGE_BONUS</code>) usan: <code>ABJURACION</code>, <code>ADIVINACION</code>, <code>CONJURACION</code>, <code>ENCANTAMIENTO</code>, <code>EVOCACION</code>, <code>ILUSION</code>, <code>NIGROMANCIA</code>, <code>TRANSMUTACION</code>.</p>
+<p><strong><code>damage</code> (<code>SpellDamage</code>)</strong> — todos los campos salvo <code>dice</code> y <code>type</code> son opcionales:</p>
+<table>
+  <tr><th>Campo</th><th>Notas</th></tr>
+  <tr><td><code>dice</code></td><td>Dados al nivel más bajo: <code>&quot;8d6&quot;</code> (Bola de fuego) o <code>&quot;1d10&quot;</code> (truco a nivel 1).</td></tr>
+  <tr><td><code>type</code></td><td>Tipo de daño (<code>fire</code>, <code>radiant</code>…; mismos 13 tipos de §5.2).</td></tr>
+  <tr><td><code>scaling</code></td><td><code>{ &quot;rule&quot;: &quot;CANTRIP_LEVEL&quot; \| &quot;SLOT_LEVEL&quot;, &quot;dicePerStep&quot;: &quot;1d6&quot; }</code>. <code>CANTRIP_LEVEL</code> añade esos dados a nivel de personaje 5, 11 y 17; <code>SLOT_LEVEL</code>, por cada nivel de espacio sobre el base. Sin <code>scaling</code> el daño es fijo.</td></tr>
+  <tr><td><code>save</code></td><td>Característica de la salvación del objetivo (<code>&quot;DEX&quot;</code>). Ausente = <strong>ataque de conjuro</strong> (la ficha muestra la tirada de ataque).</td></tr>
+  <tr><td><code>halfOnSave</code></td><td><code>true</code> = salvar reduce el daño a la mitad.</td></tr>
+  <tr><td><code>count</code></td><td>Para conjuros que escalan en <strong>cantidad</strong> de tiradas y no en dados: <code>{ &quot;rule&quot;: &quot;FIXED&quot; \| &quot;CANTRIP_LEVEL&quot; \| &quot;SLOT_LEVEL&quot;, &quot;base&quot;: 3, &quot;perStep&quot;: 1, &quot;label&quot;: &quot;dardos&quot; }</code> (Proyectil mágico, Rayo abrasador). La ficha muestra «×N dardos»; cada tirada la haces tú.</td></tr>
+</table>
+<p><strong><code>healing</code> (<code>SpellHealing</code>)</strong>: <code>dice</code> (dados base), <code>scaling</code> (igual que en el daño) y <code>addSpellMod</code> (default <code>true</code>: suma el modificador de aptitud mágica).</p>
+<p><strong>Gasto del espacio.</strong> La ficha tira los dados, pero <strong>no gasta el espacio de conjuro por ti</strong>: el jugador lo marca a mano. El selector de nivel de lanzamiento sí ofrece los niveles de espacio que tienes (los de pacto del Brujo incluidos) para calcular el escalado.</p>
+<p><strong><code>activeEffect</code> (<code>SpellActiveEffect</code>)</strong> — conjuros que se encienden y se apagan mientras duran:</p>
+<table>
+  <tr><th>Campo</th><th>Para qué</th></tr>
+  <tr><td><code>weaponBonusDamage</code></td><td>Lista de <code>{ &quot;dice&quot;, &quot;type&quot; }</code> que se suma a cada ataque con arma mientras está activo (Favor divino 1d4 radiante, Maleficio 1d6 necrótico, Marca del cazador).</td></tr>
+  <tr><td><code>attack</code> / <code>attacks</code></td><td>Ataque(s) que el conjuro crea: <code>{ &quot;damage&quot;: SpellDamage, &quot;addSpellMod&quot;: true, &quot;name&quot;: &quot;Puño cerrado&quot; }</code>. Añaden una fila en Combate (Arma espiritual, Mano de Bigby). Si el <code>damage</code> lleva <code>save</code>, la fila muestra la CD en vez del d20.</td></tr>
+  <tr><td><code>weaponAbility</code></td><td>Tus ataques con arma usan tu aptitud mágica (Impacto certero, Shillelagh): <code>weaponIds</code>, <code>meleeOnly</code>, <code>damageDiceByTier</code> (dado del arma en <code>[nv.1, nv.5, nv.11, nv.17]</code>), <code>grantsProficiency</code>.</td></tr>
+</table>
+<p>Encender un conjuro de concentración apaga el anterior; un descanso apaga todos. No hay temporizador: el jugador lo apaga cuando termina.</p>
 <pre><code>{
   &quot;id&quot;: &quot;fire_bolt&quot;,
   &quot;display&quot;: { &quot;name&quot;: &quot;Rayo de fuego&quot;, &quot;description&quot;: &quot;Lanzas una mota de fuego…&quot; },
@@ -102,7 +131,34 @@
   &quot;components&quot;: &quot;V, S&quot;,
   &quot;duration&quot;: &quot;Instantánea&quot;,
   &quot;higherLevel&quot;: &quot;El daño aumenta a niveles 5, 11 y 17.&quot;,
-  &quot;classes&quot;: [&quot;sorcerer&quot;, &quot;wizard&quot;]
+  &quot;classes&quot;: [&quot;sorcerer&quot;, &quot;wizard&quot;],
+  &quot;damage&quot;: { &quot;dice&quot;: &quot;1d10&quot;, &quot;type&quot;: &quot;fire&quot;, &quot;scaling&quot;: { &quot;rule&quot;: &quot;CANTRIP_LEVEL&quot;, &quot;dicePerStep&quot;: &quot;1d10&quot; } }
+}</code></pre>
+<p>Conjuro de área con salvación y escalado por nivel de espacio:</p>
+<pre><code>{
+  &quot;id&quot;: &quot;fireball&quot;,
+  &quot;display&quot;: { &quot;name&quot;: &quot;Bola de fuego&quot; },
+  &quot;level&quot;: 3,
+  &quot;school&quot;: &quot;EVOCACION&quot;,
+  &quot;classes&quot;: [&quot;sorcerer&quot;, &quot;wizard&quot;],
+  &quot;damage&quot;: {
+    &quot;dice&quot;: &quot;8d6&quot;, &quot;type&quot;: &quot;fire&quot;, &quot;save&quot;: &quot;DEX&quot;, &quot;halfOnSave&quot;: true,
+    &quot;scaling&quot;: { &quot;rule&quot;: &quot;SLOT_LEVEL&quot;, &quot;dicePerStep&quot;: &quot;1d6&quot; }
+  }
+}</code></pre>
+<p>Conjuro con varias tiradas (escala en cantidad), y después uno que se activa:</p>
+<pre><code>{
+  &quot;id&quot;: &quot;magic_missile&quot;,
+  &quot;display&quot;: { &quot;name&quot;: &quot;Proyectil mágico&quot; },
+  &quot;level&quot;: 1, &quot;school&quot;: &quot;EVOCACION&quot;, &quot;classes&quot;: [&quot;sorcerer&quot;, &quot;wizard&quot;],
+  &quot;damage&quot;: { &quot;dice&quot;: &quot;1d4+1&quot;, &quot;type&quot;: &quot;force&quot;,
+              &quot;count&quot;: { &quot;rule&quot;: &quot;SLOT_LEVEL&quot;, &quot;base&quot;: 3, &quot;perStep&quot;: 1, &quot;label&quot;: &quot;dardos&quot; } }
+}</code></pre>
+<pre><code>{
+  &quot;id&quot;: &quot;divine_favor&quot;,
+  &quot;display&quot;: { &quot;name&quot;: &quot;Favor divino&quot; },
+  &quot;level&quot;: 1, &quot;school&quot;: &quot;EVOCACION&quot;, &quot;concentration&quot;: true, &quot;classes&quot;: [&quot;paladin&quot;],
+  &quot;activeEffect&quot;: { &quot;weaponBonusDamage&quot;: [ { &quot;dice&quot;: &quot;1d4&quot;, &quot;type&quot;: &quot;radiant&quot; } ] }
 }</code></pre>
 <hr />
 <hr />

@@ -1,0 +1,203 @@
+{
+  "version": "1",
+  "distanceUnit": "m",
+  "id": "plantilla_pack",
+  "name": "Plantilla de pack",
+  "author": "Tu nombre",
+  "license": "Indica aquí la licencia o el libro del que adaptas el contenido",
+
+  "classes": [
+    {
+      "id": "plantilla_guerrero",
+      "display": { "name": "Guerrero de plantilla", "description": "Clase mínima: un recurso, una fórmula de CA, un bono de velocidad, ataque adicional y una subclase.", "icon": "🛡️" },
+      "hitDie": 10,
+      "primaryAbility": ["STR"],
+      "recommendedAbilityOrder": ["STR", "CON", "DEX", "WIS", "CHA", "INT"],
+      "savingThrows": ["STR", "CON"],
+      "proficiencies": {
+        "armor": ["light", "medium", "heavy", "shields"],
+        "weapon": ["simple", "martial"],
+        "skills": ["Atletismo", "Percepción", "Intimidación"],
+        "numSkillChoices": 2
+      },
+      "startingEquipment": [
+        { "display": { "name": "Espada larga" }, "id": "longsword" },
+        { "display": { "name": "15 po" } }
+      ],
+      "goldAlternative": 100,
+      "subclassUnlockLevel": 3,
+      "progression": [
+        { "level": 1, "proficiencyBonus": 2, "features": ["plantilla_guerrero_postura", "plantilla_guerrero_defensa"], "table": { "postura_usos": 2 } },
+        { "level": 3, "proficiencyBonus": 2, "features": ["plantilla_guerrero_subclase"], "table": { "postura_usos": 3 } },
+        { "level": 5, "proficiencyBonus": 3, "features": ["plantilla_guerrero_ataque_adicional", "plantilla_guerrero_movimiento"], "table": { "postura_usos": 3 } }
+      ],
+      "features": [
+        {
+          "id": "plantilla_guerrero_postura",
+          "level": 1,
+          "display": { "name": "Postura defensiva", "description": "Como acción adicional ganas +1 a la CA.", "icon": "🛡️" },
+          "mechanics": [
+            {
+              "type": "RESOURCE",
+              "id": "postura_usos",
+              "label": "Posturas",
+              "recovery": "SHORT_REST",
+              "scaling": { "rule": "FROM_TABLE", "tableKey": "postura_usos" }
+            },
+            {
+              "type": "COMBAT_TOGGLE",
+              "id": "postura_activa",
+              "label": "Activar postura",
+              "costResource": "postura_usos",
+              "costAmount": 1,
+              "onActivate": [ { "type": "AC_BONUS", "amount": 1, "condition": "WHILE_EQUIPPED" } ]
+            }
+          ]
+        },
+        {
+          "id": "plantilla_guerrero_defensa",
+          "level": 1,
+          "display": { "name": "Defensa sin armadura", "description": "Sin armadura, tu CA es 10 + mod. de DES + mod. de CON." },
+          "mechanics": [ { "type": "AC_FORMULA", "base": 10, "abilities": ["DEX", "CON"] } ]
+        },
+        {
+          "id": "plantilla_guerrero_subclase",
+          "level": 3,
+          "display": { "name": "Subclase" },
+          "mechanics": [
+            { "type": "CHOICE", "id": "plantilla_guerrero_subclase_eleccion", "title": "Elige tu subclase", "kind": "SUBCLASS", "level": 3 }
+          ]
+        },
+        {
+          "id": "plantilla_guerrero_ataque_adicional",
+          "level": 5,
+          "display": { "name": "Ataque adicional", "description": "Atacas dos veces al realizar la acción de Atacar." },
+          "mechanics": [ { "type": "EXTRA_ATTACK", "totalAttacks": 2 } ]
+        },
+        {
+          "id": "plantilla_guerrero_movimiento",
+          "level": 5,
+          "display": { "name": "Movimiento rápido", "description": "Tu velocidad aumenta 3 m (en metros y entero, sin decimales)." },
+          "mechanics": [ { "type": "SPEED_BONUS", "bonus": 3 } ]
+        }
+      ],
+      "subclasses": [
+        {
+          "id": "plantilla_guerrero_centinela",
+          "display": { "name": "Centinela", "description": "El guerrero que no deja pasar a nadie." },
+          "features": [
+            {
+              "id": "plantilla_guerrero_centinela_vigilancia",
+              "level": 3,
+              "display": { "name": "Vigilancia", "description": "Competencia en Percepción." },
+              "mechanics": [ { "type": "PROFICIENCY", "kind": "SKILL", "items": ["Percepción"], "subclassId": "plantilla_guerrero_centinela" } ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+
+  "species": [
+    {
+      "id": "plantilla_especie",
+      "display": { "name": "Especie de plantilla", "description": "Velocidad y visión en la oscuridad van en metros." },
+      "creatureType": "HUMANOID",
+      "speed": 9,
+      "size": "MEDIUM",
+      "darkvision": 18,
+      "traits": [
+        {
+          "id": "plantilla_especie_sentidos",
+          "display": { "name": "Sentidos agudos", "description": "Competencia en Percepción." },
+          "mechanics": [ { "type": "PROFICIENCY", "kind": "SKILL", "items": ["Percepción"] } ]
+        }
+      ],
+      "mechanics": []
+    }
+  ],
+
+  "backgrounds": [
+    {
+      "id": "plantilla_trasfondo",
+      "display": { "name": "Trasfondo de plantilla", "description": "Competencias y una dote de origen." },
+      "mechanics": [
+        { "type": "PROFICIENCY", "kind": "SKILL", "items": ["Historia", "Perspicacia"] },
+        { "type": "CHOICE", "id": "plantilla_trasfondo_dote", "title": "Dote de origen", "kind": "FEAT", "level": 1, "category": "ORIGIN" }
+      ],
+      "startingEquipment": [ { "display": { "name": "10 po" } } ],
+      "goldAlternative": 50
+    }
+  ],
+
+  "feats": [
+    {
+      "id": "plantilla_dote",
+      "category": "ORIGIN",
+      "display": { "name": "Dote de plantilla", "description": "Tus PG máximos aumentan en 2 por nivel." },
+      "repeatable": false,
+      "mechanics": [ { "type": "MAX_HP_BONUS", "source": "PER_LEVEL", "perLevel": 2 } ]
+    }
+  ],
+
+  "spells": [
+    {
+      "id": "plantilla_conjuro",
+      "display": { "name": "Conjuro de plantilla", "description": "Una chispa de luz que ilumina un objeto." },
+      "level": 0,
+      "school": "Evocación",
+      "castingTime": "1 acción",
+      "range": "18 m",
+      "components": "V, S",
+      "duration": "1 hora",
+      "classes": ["plantilla_guerrero"]
+    }
+  ],
+
+  "invocations": [
+    {
+      "id": "plantilla_invocacion",
+      "display": { "name": "Invocación de plantilla", "description": "Suma tu mod. de Carisma al daño." },
+      "minLevel": 1,
+      "prerequisiteIds": [],
+      "mechanics": [ { "type": "DAMAGE_BONUS", "source": "ABILITY_MOD", "ability": "CHA" } ]
+    }
+  ],
+
+  "equipment": [
+    {
+      "id": "plantilla_espada",
+      "display": { "name": "Espada de plantilla" },
+      "category": "WEAPON",
+      "subtype": "martial_melee",
+      "cost": { "amount": 15, "unit": "gp" },
+      "weight": 1.5,
+      "weapon": {
+        "damageDice": "1d8",
+        "damageType": "slashing",
+        "versatileDice": "1d10",
+        "properties": ["versatile"],
+        "attackAbilities": ["STR"]
+      }
+    }
+  ],
+
+  "beasts": [
+    {
+      "id": "plantilla_bestia",
+      "display": { "name": "Bestia de plantilla" },
+      "cr": "1/4",
+      "crValue": 0.25,
+      "size": "Mediana",
+      "ac": 13,
+      "hp": 11,
+      "speed": 12,
+      "strength": 12,
+      "dexterity": 15,
+      "constitution": 12,
+      "senses": "percepción pasiva 13",
+      "attacks": "Mordisco: +4 al golpe, 2d4+2 perforante.",
+      "notes": "Tácticas de manada."
+    }
+  ]
+}

@@ -42,6 +42,10 @@
     tr:nth-child(even) td { background: rgba(31,42,50,0.5); }
     blockquote { margin: 1.1rem 0; padding: 0.6rem 1.1rem; border-left: 4px solid var(--gold);
       background: rgba(46,74,70,0.35); border-radius: 0 8px 8px 0; color: var(--parchment); }
+    figure { margin: 1.4rem 0; text-align: center; }
+    figure img { width: 100%; max-width: 300px; height: auto; border-radius: 14px;
+      border: 1px solid rgba(212,178,120,0.35); }
+    figcaption { color: var(--storm); font-size: 0.85rem; margin-top: 6px; }
     hr { border: none; border-top: 1px solid rgba(212,178,120,0.3); margin: 2.6rem 0; }
     ul, ol { padding-left: 1.4rem; }
     li { margin: 0.2rem 0; }
@@ -72,6 +76,7 @@
   <a href="conjuros-invocaciones.html">Conjuros e invocaciones</a>
   <a href="equipo.html">Equipo</a>
   <a href="bestias.html">Bestias</a>
+  <a href="editor.html">Crear desde la app</a>
 </nav>
   <div class="wrap">
 <h1>Clase</h1>
@@ -293,6 +298,9 @@
 <li>[ ] Cada <code>scaling.tableKey</code> (<code>FROM_TABLE</code>) tiene su clave en <code>table</code> de cada nivel relevante.</li>
 <li>[ ] Los grants de subclase que deban aislarse llevan <code>subclassId</code>.</li>
 <li>[ ] Los <code>type</code> de grant coinciden con el catálogo (§5); un typo se degrada a <code>UNKNOWN</code>.</li>
+<li>[ ] Cada grant lleva sus campos <strong>obligatorios</strong> (en negrita en §5.2): p. ej. <code>AC_FORMULA.base</code>, <code>SPEED_BONUS.bonus</code>, <code>EXTRA_ATTACK.totalAttacks</code>. Si falta uno, el import falla.</li>
+<li>[ ] Los campos enteros no llevan decimales (<code>3</code>, no <code>3.0</code>).</li>
+<li>[ ] Si vienes de 5e.tools, repasa la caja de advertencia al inicio de §5.</li>
 <li>[ ] Valida el JSON: importarlo como pack usa <code>ContentPackSerializer.parseOrNull</code>, que devuelve <code>Result</code> en vez de lanzar.</li>
 </ul>
 <blockquote>Referencia viva: compara siempre con <code>barbarian_example.json</code>, que ejercita casi todos los grants (RESOURCE, COMBAT_TOGGLE, COMBAT_ACTION, CHOICE, AC_FORMULA, DAMAGE_RESISTANCE, DAMAGE_BONUS, EXTRA_ATTACK, SPEED_BONUS, ABILITY_BOOST y subclases con <code>subclassId</code>).</blockquote>

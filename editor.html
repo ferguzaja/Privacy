@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crear desde la app — Crear contenido · SENDA 5.5</title>
+  <style>
+    :root {
+      --forest: #0E1F24; --mountain: #2E4A46; --gold: #D4B278;
+      --parchment: #F4E6C8; --sunset: #A4472D; --storm: #5A6B7A;
+      --shadow: #1F2A32; --earth: #8C5E3C; --red: #C7302B; --green: #4E7A52;
+    }
+    * { box-sizing: border-box; }
+    body { font-family: Georgia, "Times New Roman", serif; line-height: 1.65;
+      margin: 0; color: var(--parchment); background: var(--forest); }
+    .wrap { max-width: 820px; margin: 0 auto; padding: 0 20px 72px; }
+    header.banner { width: 100%; max-width: 1024px; margin: 0 auto; display: block; }
+    header.banner img { width: 100%; height: auto; display: block; }
+    nav.pagenav { max-width: 820px; margin: 10px auto 0; padding: 10px 20px;
+      display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 0.86rem;
+      border-bottom: 1px solid rgba(212,178,120,0.25); }
+    nav.pagenav a { color: var(--storm); text-decoration: none; }
+    nav.pagenav a:hover { color: var(--gold); }
+    nav.pagenav a.active { color: var(--gold); font-weight: bold; }
+    h1 { color: var(--gold); font-size: 2rem; margin: 32px 0 0.3rem; letter-spacing: 0.5px; }
+    h2 { color: var(--gold); font-size: 1.4rem; margin-top: 2.4rem;
+      padding-bottom: 0.35rem; border-bottom: 1px solid rgba(212,178,120,0.4); }
+    h3 { color: var(--gold); font-size: 1.12rem; margin-top: 1.7rem; }
+    .updated { color: var(--storm); font-size: 0.9rem; margin-top: 0; }
+    a { color: var(--gold); }
+    strong { color: #fff0d4; }
+    code { background: var(--shadow); color: var(--gold); padding: 1px 6px;
+      border-radius: 4px; font-size: 0.88em;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    pre { background: var(--shadow); border: 1px solid rgba(212,178,120,0.25);
+      border-radius: 10px; padding: 14px 16px; overflow-x: auto; font-size: 0.84em; line-height: 1.5; }
+    pre code { background: none; color: var(--parchment); padding: 0; font-size: 1em; }
+    table { border-collapse: collapse; width: 100%; margin: 1.1rem 0; font-size: 0.9em; }
+    th, td { border: 1px solid rgba(212,178,120,0.25); padding: 7px 11px;
+      text-align: left; vertical-align: top; }
+    th { background: var(--mountain); color: var(--gold); }
+    tr:nth-child(even) td { background: rgba(31,42,50,0.5); }
+    blockquote { margin: 1.1rem 0; padding: 0.6rem 1.1rem; border-left: 4px solid var(--gold);
+      background: rgba(46,74,70,0.35); border-radius: 0 8px 8px 0; color: var(--parchment); }
+    figure { margin: 1.4rem 0; text-align: center; }
+    figure img { width: 100%; max-width: 300px; height: auto; border-radius: 14px;
+      border: 1px solid rgba(212,178,120,0.35); }
+    figcaption { color: var(--storm); font-size: 0.85rem; margin-top: 6px; }
+    hr { border: none; border-top: 1px solid rgba(212,178,120,0.3); margin: 2.6rem 0; }
+    ul, ol { padding-left: 1.4rem; }
+    li { margin: 0.2rem 0; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 14px; margin: 24px 0; }
+    .card { background: var(--shadow); border: 1px solid rgba(212,178,120,0.3);
+      border-radius: 12px; padding: 16px 18px; text-decoration: none; display: block; }
+    .card:hover { border-color: var(--gold); }
+    .card h3 { margin: 0 0 6px; color: var(--gold); }
+    .card p { margin: 0; color: var(--parchment); font-size: 0.9em; }
+    .idxletter { color: var(--gold); font-size: 1.2rem; margin: 1.4rem 0 0.3rem;
+      border-bottom: 1px solid rgba(212,178,120,0.3); }
+  </style>
+</head>
+<body>
+  <header class="banner">
+    <img src="senda_banner.png" alt="SENDA 5.5" />
+  </header>
+<nav class="pagenav">
+  <a href="crear-contenido.html">Guía</a>
+  <a href="indice.html">Índice</a>
+  <a href="empezar.html">Primeros pasos</a>
+  <a href="clase.html">Clase</a>
+  <a href="mecanicas.html">Mecánicas (grants)</a>
+  <a href="trasfondo.html">Trasfondo</a>
+  <a href="especie.html">Especie</a>
+  <a href="dote.html">Dote</a>
+  <a href="conjuros-invocaciones.html">Conjuros e invocaciones</a>
+  <a href="equipo.html">Equipo</a>
+  <a href="bestias.html">Bestias</a>
+  <a href="editor.html" class="active">Crear desde la app</a>
+</nav>
+  <div class="wrap">
+<h1>Crear desde la app</h1>
+<h2 id="21-crear-desde-la-app-sin-escribir-json">21. Crear desde la app (sin escribir JSON)</h2>
+<p>Todo lo anterior describe el formato JSON, pero no hace falta escribirlo a mano: la app trae un editor gráfico en <strong>Ajustes → Contenido personalizado</strong>. Lo que creas ahí se guarda en un pack local (<code>user_custom</code>) y el motor lo usa igual que el contenido del SRD. Las capturas son de la versión Android; en iOS es la misma pantalla.</p>
+<h3 id="21-1-donde-esta">21.1 Dónde está</h3>
+<p>En <strong>Ajustes</strong> toca <strong>Contenido personalizado</strong>. La pantalla tiene una sección por tipo: <strong>Dotes, Trasfondos, Especies, Clases, Equipo y Conjuros</strong>. Cada una tiene un botón <strong>+</strong> para crear, y cada objeto creado muestra <strong>Editar</strong> y <strong>Eliminar</strong>. Todas menos Conjuros tienen además un botón para importar un JSON suelto.</p>
+<figure><img src="img/contenido-personalizado.png" alt="Pantalla Contenido personalizado, con una sección por tipo" loading="lazy" /><figcaption>Pantalla Contenido personalizado, con una sección por tipo</figcaption></figure>
+<h3 id="21-2-crear-un-conjuro">21.2 Crear un conjuro</h3>
+<ol>
+<li>En la sección <strong>Conjuros</strong> toca <strong>+</strong>.</li>
+<li>En <strong>Identidad</strong> escribe el nombre y, si quieres, la descripción.</li>
+<li>En <strong>Conjuro</strong> elige el nivel (<code>Truco</code> o 1 a 9) y la escuela, y rellena tiempo de lanzamiento, alcance, componentes y duración. Marca <strong>Concentración</strong> o <strong>Ritual</strong> si aplica, y las <strong>listas de clase</strong> que pueden usarlo (así aparece al elegir conjuros de esa clase).</li>
+</ol>
+<figure><img src="img/conjuro-nuevo.png" alt="Formulario de conjuro nuevo: nivel, escuela y datos de lanzamiento" loading="lazy" /><figcaption>Formulario de conjuro nuevo: nivel, escuela y datos de lanzamiento</figcaption></figure>
+<ol>
+<li>Si el conjuro hace daño, activa <strong>Inflige daño</strong> y completa:
+<ul>
+<li><strong>Dados al nivel base</strong> (por ejemplo <code>8d6</code>).</li>
+<li><strong>Tipo de daño</strong>.</li>
+<li><strong>Salvación del objetivo</strong>: elige la característica, o «Ataque (sin salvación)» si es un ataque de conjuro. Con salvación puedes marcar que salvar reduce el daño a la mitad.</li>
+</ul>
+</li>
+</ol>
+<figure><img src="img/conjuro-dano.png" alt="Sección Daño: dados, tipo y salvación" loading="lazy" /><figcaption>Sección Daño: dados, tipo y salvación</figcaption></figure>
+<ol>
+<li>En <strong>Escalado</strong> elige cómo crece el daño: <strong>por nivel de personaje</strong> (trucos: niveles 5, 11 y 17) o <strong>por nivel de espacio</strong> (conjuros nivelados), e indica los dados extra por escalón. Si el conjuro cura, usa la sección <strong>Curación</strong> de la misma forma.</li>
+</ol>
+<figure><img src="img/conjuro-escalado.png" alt="Escalado del daño por nivel de personaje" loading="lazy" /><figcaption>Escalado del daño por nivel de personaje</figcaption></figure>
+<ol>
+<li>Toca <strong>Guardar</strong>. El conjuro ya está en el catálogo y se puede aprender, preparar y lanzar como cualquier otro; su celda de daño se tira desde la tarjeta del conjuro.</li>
+</ol>
+<blockquote>El editor conserva los datos que no muestra (por ejemplo, un conjuro que se activa o que lanza varios dardos): si editas uno importado desde un pack, esos campos no se pierden.</blockquote>
+<h3 id="21-3-crear-un-arma-magica">21.3 Crear un arma mágica</h3>
+<ol>
+<li>En la sección <strong>Equipo</strong> toca <strong>+</strong>, escribe el nombre y en <strong>Categoría</strong> elige <strong>Arma</strong>.</li>
+<li>En <strong>Datos del arma</strong> completa dado, tipo de daño, características de ataque y propiedades.</li>
+<li>Elige el <strong>Bono mágico</strong> (<code>+1</code>, <code>+2</code> o <code>+3</code>): se suma al ataque y al daño de esa arma.</li>
+<li>Con <strong>Añadir daño extra</strong> agrega una tirada aparte, por ejemplo <code>2d6</code> de fuego. Si el daño solo debe contar cuando el arma «está encendida» (como la Lengua de fuego), marca <strong>Solo mientras esté encendida</strong>: la ficha mostrará un botón para encenderla y apagarla.</li>
+<li>En <strong>Detalles</strong> puedes indicar la rareza y si <strong>requiere sintonización</strong>.</li>
+</ol>
+<figure><img src="img/arma-magica.png" alt="Datos del arma: bono mágico y daño extra" loading="lazy" /><figcaption>Datos del arma: bono mágico y daño extra</figcaption></figure>
+<h3 id="21-4-agregar-efectos-grants">21.4 Agregar efectos (grants)</h3>
+<p>El formulario de equipo tiene la sección <strong>Efectos mecánicos</strong> con <strong>Añadir efecto mecánico</strong>; los de dotes, especies, trasfondos y clases usan el mismo constructor en su apartado de efectos. Al tocar «Selecciona el tipo de efecto…» se abre la lista de tipos; cada uno trae una descripción corta.</p>
+<figure><img src="img/efectos-tipos.png" alt="Lista de tipos de efecto, con los de magia al final" loading="lazy" /><figcaption>Lista de tipos de efecto, con los de magia al final</figcaption></figure>
+<p>Los tipos de magia más recientes son:</p>
+<ul>
+<li><strong>Bono al daño de conjuros</strong>: suma el modificador de una característica al daño de los conjuros que cumplan los filtros (escuela, tipo de daño, lista de clase, solo trucos…).</li>
+<li><strong>Característica del arma</strong>: ataca y hace daño con otra característica (Pacto de la hoja).</li>
+<li><strong>Elección del jugador → Conjuro</strong>: deja elegir un conjuro, con nivel, lista de clase, escuelas y, opcionalmente, <strong>usos gratis por descanso largo</strong> (Arcanum místico).</li>
+<li><strong>Resistencia, vulnerabilidad e inmunidad a daño</strong> e <strong>inmunidad a estados</strong>.</li>
+</ul>
+<p>Ejemplo: un objeto que suma Carisma al daño de tus conjuros de Evocación. Elige el tipo «Bono al daño de conjuros», marca <strong>Carisma</strong> y la escuela <strong>Evocación</strong>, y toca <strong>Añadir efecto</strong>.</p>
+<figure><img src="img/efecto-dano-conjuros.png" alt="Formulario Bono al daño de conjuros con Carisma y Evocación" loading="lazy" /><figcaption>Formulario Bono al daño de conjuros con Carisma y Evocación</figcaption></figure>
+<p>El efecto queda en la lista del objeto con un resumen; para quitarlo, toca el icono de eliminar. Para cambiarlo, elimínalo y créalo de nuevo.</p>
+<figure><img src="img/efecto-agregado.png" alt="Efecto agregado a la lista, con su resumen" loading="lazy" /><figcaption>Efecto agregado a la lista, con su resumen</figcaption></figure>
+<h3 id="21-5-que-se-puede-hacer-solo-con-json">21.5 Qué se puede hacer solo con JSON</h3>
+<p>El editor gráfico no cubre todo. Estas partes se hacen importando un pack JSON (§19):</p>
+<ul>
+<li>Conjuros que <strong>se activan</strong> (<code>activeEffect</code>: Favor divino, Arma espiritual…) y los que lanzan <strong>varios dardos o rayos</strong> (<code>count</code>).</li>
+<li>Los tipos de efecto que no aparecen en la lista del constructor (<code>DAMAGE_BONUS</code>, <code>ATTACK_BONUS</code>, <code>WEAPON_MASTERY</code>, <code>ROLL_TABLE</code>, <code>COMPUTED_STAT</code>, <code>ADVANTAGE</code>, etc.).</li>
+<li>Importar conjuros sueltos: solo se importan dentro de un pack completo.</li>
+<li>Los campos de arma <code>masteryProperty</code>, <code>range</code>, <code>ammunitionType</code> y <code>fixedDamage</code>.</li>
+</ul>
+<p>Si importas un objeto con esos datos y lo editas en la app, los campos que el formulario no muestra se conservan al guardar.</p>
+  </div>
+</body>
+</html>

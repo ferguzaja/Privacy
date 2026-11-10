@@ -42,6 +42,10 @@
     tr:nth-child(even) td { background: rgba(31,42,50,0.5); }
     blockquote { margin: 1.1rem 0; padding: 0.6rem 1.1rem; border-left: 4px solid var(--gold);
       background: rgba(46,74,70,0.35); border-radius: 0 8px 8px 0; color: var(--parchment); }
+    figure { margin: 1.4rem 0; text-align: center; }
+    figure img { width: 100%; max-width: 300px; height: auto; border-radius: 14px;
+      border: 1px solid rgba(212,178,120,0.35); }
+    figcaption { color: var(--storm); font-size: 0.85rem; margin-top: 6px; }
     hr { border: none; border-top: 1px solid rgba(212,178,120,0.3); margin: 2.6rem 0; }
     ul, ol { padding-left: 1.4rem; }
     li { margin: 0.2rem 0; }
@@ -72,6 +76,7 @@
   <a href="conjuros-invocaciones.html">Conjuros e invocaciones</a>
   <a href="equipo.html">Equipo</a>
   <a href="bestias.html">Bestias</a>
+  <a href="editor.html">Crear desde la app</a>
 </nav>
   <div class="wrap">
 
@@ -82,7 +87,9 @@
   <li><a href="mecanicas.html#5-mecanicas-grants-el-catalogo-type">ABILITY_BOOST (mejora de característica)</a></li>
   <li><a href="mecanicas.html#5-mecanicas-grants-el-catalogo-type">AC_BONUS (bono de CA)</a> — <em>Objetos mágicos, escudos</em></li>
   <li><a href="mecanicas.html#5-mecanicas-grants-el-catalogo-type">AC_FORMULA (defensa sin armadura)</a> — <em>Bárbaro, Monje</em></li>
+  <li><a href="mecanicas.html#si-adaptas-contenido-desde-5e-tools-u-otra-fuente-externa">Adaptar contenido de 5e.tools (errores típicos)</a> — <em>campos obligatorios, decimales, nombres de campo</em></li>
   <li><a href="equipo.html#15-equipo-equipmentdef-lista-equipment">Arma (WeaponData)</a> — <em>dado, tipo de daño, propiedades</em></li>
+  <li><a href="equipo.html#15-equipo-equipmentdef-lista-equipment">Arma mágica (magicBonus, bonusDamage)</a> — <em>+1 a +3, daño extra</em></li>
   <li><a href="equipo.html#15-equipo-equipmentdef-lista-equipment">Armadura (ArmorData)</a> — <em>baseAc, categoría, tope DES</em></li>
 </ul>
 <div class="idxletter">B</div>
@@ -94,17 +101,22 @@
   <li><a href="mecanicas.html#5-mecanicas-grants-el-catalogo-type">CHOICE (elección del jugador)</a> — <em>SKILL, FEAT, SUBCLASS, SIZE…</em></li>
   <li><a href="mecanicas.html#5-mecanicas-grants-el-catalogo-type">COMBAT_ACTION</a> — <em>Acción que gasta recurso</em></li>
   <li><a href="mecanicas.html#5-mecanicas-grants-el-catalogo-type">COMBAT_TOGGLE (estado on/off)</a> — <em>Furia</em></li>
+  <li><a href="mecanicas.html#5-mecanicas-grants-el-catalogo-type">CONDITION_IMMUNITY (inmunidad a estados)</a> — <em>Asustado, hechizado</em></li>
+  <li><a href="conjuros-invocaciones.html#13-conjuro-spelldef-lista-spells">Conjuro activo (activeEffect)</a> — <em>Favor divino, Arma espiritual</em></li>
   <li><a href="especie.html#11-especie-raza-speciesdef-lista-species">creatureType (tipo de criatura)</a> — <em>HUMANOID, FEY, UNDEAD…</em></li>
 </ul>
 <div class="idxletter">D</div>
 <ul>
   <li><a href="mecanicas.html#5-mecanicas-grants-el-catalogo-type">DAMAGE_RESISTANCE</a></li>
+  <li><a href="mecanicas.html#5-mecanicas-grants-el-catalogo-type">DAMAGE_VULNERABILITY / DAMAGE_IMMUNITY</a> — <em>Defensas de daño</em></li>
   <li><a href="especie.html#11-especie-raza-speciesdef-lista-species">darkvision (visión en la oscuridad)</a> — <em>en metros</em></li>
+  <li><a href="conjuros-invocaciones.html#13-conjuro-spelldef-lista-spells">Daño de conjuro (damage, healing, scaling)</a> — <em>dados, salvación, escalado</em></li>
   <li><a href="trasfondo.html#10-trasfondo-backgrounddef-lista-backgrounds">Dote de origen</a> — <em>CHOICE kind=FEAT</em></li>
 </ul>
 <div class="idxletter">E</div>
 <ul>
   <li><a href="equipo.html#15-equipo-equipmentdef-lista-equipment">EXPAND_BUNDLE (paquete de objetos)</a></li>
+  <li><a href="empezar.html#19-1-importar-como-pack-gestion-de-contenido-importar-pack">Exportar un pack instalado</a> — <em>dónde se guarda</em></li>
   <li><a href="mecanicas.html#5-mecanicas-grants-el-catalogo-type">EXTRA_ATTACK (ataque adicional)</a></li>
 </ul>
 <div class="idxletter">G</div>
@@ -135,6 +147,8 @@
 <div class="idxletter">S</div>
 <ul>
   <li><a href="mecanicas.html#5-mecanicas-grants-el-catalogo-type">SENSES (sentidos)</a> — <em>en metros</em></li>
+  <li><a href="mecanicas.html#5-2-combate-y-defensa">SPEED_BONUS / SPEED_PENALTY</a> — <em>bonus vs amount</em></li>
+  <li><a href="mecanicas.html#5-mecanicas-grants-el-catalogo-type">SPELL_DAMAGE_BONUS</a> — <em>Descarga agónica</em></li>
   <li><a href="mecanicas.html#5-mecanicas-grants-el-catalogo-type">SPELLCASTING (lanzador)</a> — <em>FULL/HALF/THIRD</em></li>
   <li><a href="clase.html#2-anatomia-de-una-clase-classdef">startingEquipment (equipo inicial)</a> — <em>enlace por id</em></li>
   <li><a href="clase.html#6-subclases-subclassdef">Subclase (SubclassDef)</a></li>
@@ -147,6 +161,15 @@
 <div class="idxletter">U</div>
 <ul>
   <li><a href="mecanicas.html#18-unidades-de-distancia-importante">Unidades de distancia (metros)</a></li>
+  <li><a href="mecanicas.html#5-mecanicas-grants-el-catalogo-type">usesPerRest en CHOICE de conjuro</a> — <em>Arcanum místico</em></li>
+</ul>
+<div class="idxletter">V</div>
+<ul>
+  <li><a href="empezar.html#19-1-importar-como-pack-gestion-de-contenido-importar-pack">Validar un pack antes de importar</a> — <em>botón en Gestión de contenido</em></li>
+</ul>
+<div class="idxletter">W</div>
+<ul>
+  <li><a href="mecanicas.html#5-mecanicas-grants-el-catalogo-type">WEAPON_ABILITY</a> — <em>Pacto de la hoja</em></li>
 </ul>
   </div>
 </body>

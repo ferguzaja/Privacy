@@ -42,6 +42,10 @@
     tr:nth-child(even) td { background: rgba(31,42,50,0.5); }
     blockquote { margin: 1.1rem 0; padding: 0.6rem 1.1rem; border-left: 4px solid var(--gold);
       background: rgba(46,74,70,0.35); border-radius: 0 8px 8px 0; color: var(--parchment); }
+    figure { margin: 1.4rem 0; text-align: center; }
+    figure img { width: 100%; max-width: 300px; height: auto; border-radius: 14px;
+      border: 1px solid rgba(212,178,120,0.35); }
+    figcaption { color: var(--storm); font-size: 0.85rem; margin-top: 6px; }
     hr { border: none; border-top: 1px solid rgba(212,178,120,0.3); margin: 2.6rem 0; }
     ul, ol { padding-left: 1.4rem; }
     li { margin: 0.2rem 0; }
@@ -72,6 +76,7 @@
   <a href="conjuros-invocaciones.html">Conjuros e invocaciones</a>
   <a href="equipo.html">Equipo</a>
   <a href="bestias.html">Bestias</a>
+  <a href="editor.html">Crear desde la app</a>
 </nav>
   <div class="wrap">
 <h1>Mecánicas (grants)</h1>
@@ -81,6 +86,29 @@
 <li><code>minLevel</code> (int?): nivel mínimo de clase para que aplique.</li>
 <li><code>subclassId</code> (string?): el grant solo aplica si el personaje tiene esa subclase.</li>
 </ul>
+<h3 id="si-adaptas-contenido-desde-5e-tools-u-otra-fuente-externa">⚠️ Si adaptas contenido desde 5e.tools u otra fuente externa</h3>
+<p>El formato de esta app <strong>no es</strong> el de 5e.tools. Copiar sus datos tal cual produce dos tipos de problema, y conviene distinguirlos:</p>
+<p><strong>Errores que rompen el import</strong> (el pack entero se rechaza):</p>
+<table>
+  <tr><th>Qué pasa</th><th>Ejemplo incorrecto</th><th>Correcto</th></tr>
+  <tr><td>Falta un campo <strong>obligatorio</strong> del grant. Error: <code>Field &#x27;base&#x27; is required for type with serial name &#x27;AC_FORMULA&#x27;</code>.</td><td><code>{ &quot;type&quot;: &quot;AC_FORMULA&quot;, &quot;formula&quot;: &quot;10 + DEX + CON&quot; }</code></td><td><code>{ &quot;type&quot;: &quot;AC_FORMULA&quot;, &quot;base&quot;: 10, &quot;abilities&quot;: [&quot;DEX&quot;,&quot;CON&quot;] }</code></td></tr>
+  <tr><td><strong>Decimal</strong> donde se espera un entero.</td><td><code>{ &quot;type&quot;: &quot;SPEED_BONUS&quot;, &quot;bonus&quot;: 3.0 }</code></td><td><code>{ &quot;type&quot;: &quot;SPEED_BONUS&quot;, &quot;bonus&quot;: 3 }</code></td></tr>
+  <tr><td>Nombre de campo de otro grant. Aquí <code>count</code> es de <code>WEAPON_MASTERY</code>, no de <code>EXTRA_ATTACK</code>.</td><td><code>{ &quot;type&quot;: &quot;EXTRA_ATTACK&quot;, &quot;count&quot;: 1 }</code></td><td><code>{ &quot;type&quot;: &quot;EXTRA_ATTACK&quot;, &quot;totalAttacks&quot;: 2 }</code></td></tr>
+  <tr><td>Nombre de campo equivocado en un grant con campo obligatorio. Aquí <code>amount</code> es de <code>SPEED_PENALTY</code>/<code>AC_BONUS</code>, no de <code>SPEED_BONUS</code>.</td><td><code>{ &quot;type&quot;: &quot;SPEED_BONUS&quot;, &quot;amount&quot;: 3 }</code></td><td><code>{ &quot;type&quot;: &quot;SPEED_BONUS&quot;, &quot;bonus&quot;: 3 }</code></td></tr>
+</table>
+<p><strong>Datos que se pierden en silencio</strong> (el import &quot;funciona&quot;, pero falta contenido): la app ignora las claves que no conoce (<code>ignoreUnknownKeys</code>), así que un nombre de campo o de lista equivocado no da error, simplemente <strong>no hace nada</strong>:</p>
+<ul>
+<li>Claves opcionales mal escritas, p. ej. <code>&quot;damageType&quot;</code> en vez de <code>&quot;damageTypes&quot;</code> en un <code>DAMAGE_RESISTANCE</code> (todos sus campos son opcionales) → la resistencia queda vacía.</li>
+<li><code>&quot;race&quot;: [...]</code> en la raíz del pack (la lista se llama <code>species</code>) → las especies no entran.</li>
+<li><code>&quot;formula&quot;: &quot;…&quot;</code> en cualquier grant → se descarta; usa los campos estructurados.</li>
+</ul>
+<p><strong>Antes de importar, comprueba:</strong></p>
+<ol>
+<li>Cada grant que uses tiene <strong>todos</strong> sus campos obligatorios (§5.1–§5.4, en negrita).</li>
+<li>Los campos numéricos son <strong>enteros</strong> salvo los que la guía marca como metros con decimales (<code>SpeciesDef.speed</code>, <code>SENSES</code>, etc.; ver §18).</li>
+<li>Las listas del pack usan los nombres exactos: <code>classes</code>, <code>species</code>, <code>backgrounds</code>, <code>feats</code>, <code>spells</code>, <code>invocations</code>, <code>equipment</code>, <code>beasts</code>.</li>
+<li>El <code>type</code> de cada grant está escrito exactamente como en el catálogo (un typo degrada a <code>UNKNOWN</code> y la mecánica se pierde sin aviso).</li>
+</ol>
 <h3 id="5-1-recursos-y-acciones">5.1 Recursos y acciones</h3>
 <p><strong><code>RESOURCE</code></strong> — recurso rastreable con botones +/−.</p>
 <pre><code>{
@@ -93,8 +121,16 @@
   &quot;hidden&quot;: false
 }</code></pre>
 <ul>
-<li><code>recovery</code>: <code>NONE</code> | <code>SHORT_REST</code> | <code>LONG_REST</code> | <code>DAWN</code>…</li>
-<li><code>scaling.rule</code>: <code>FIXED</code> (usa <code>value</code>) | <code>LEVEL</code> | <code>PROFICIENCY</code> | <code>ABILITY_MOD</code> (usa <code>ability</code>) | <code>FROM_TABLE</code> (usa <code>tableKey</code>). <code>multiplier</code> opcional multiplica el resultado.</li>
+<li><code>recovery</code>: <code>NONE</code> | <code>SHORT_REST</code> (recupera todos los usos) | <code>SHORT_REST_ONE</code> (corto = +1 uso, largo = todos; p. ej. Canalizar divinidad, Tomar aliento, Forma salvaje) | <code>LONG_REST</code> | <code>DAWN</code>…</li>
+<li><code>scaling.rule</code>: <code>FIXED</code> (usa <code>value</code>) | <code>LEVEL</code> | <code>PROFICIENCY</code> | <code>ABILITY_MOD</code> (usa <code>ability</code>) | <code>FROM_TABLE</code> (usa <code>tableKey</code>).</li>
+<li>Modificadores opcionales de <code>scaling</code>, aplicados en este orden: <code>(regla × multiplier) + bonus</code>, y al final el piso <code>minimum</code>:
+<ul>
+<li><code>multiplier</code> (int): multiplica el resultado de la regla (p. ej. <code>5</code> → Imposición de manos <code>5 × nivel</code>).</li>
+<li><code>bonus</code> (int): constante que se suma tras el multiplicador (p. ej. <code>1</code> → reserva <code>1 + nivel</code> de Luz sanadora del Brujo Celestial).</li>
+<li><code>minimum</code> (int): piso del resultado final. Modela el &quot;mínimo una vez&quot; del SRD en recursos que escalan con un modificador (p. ej. <code>{ &quot;rule&quot;: &quot;ABILITY_MOD&quot;, &quot;ability&quot;: &quot;WIS&quot;, &quot;minimum&quot;: 1 }</code>): si el modificador es ≤ 0, el recurso conserva al menos ese número de usos.</li>
+</ul>
+</li>
+<li>Si dos <code>RESOURCE</code> comparten <code>id</code>, el motor conserva el de mayor <code>max</code>. Permite escalar un pool por nivel declarando dos grants con <code>minLevel</code> distintos.</li>
 <li><code>hidden</code>: si es <code>true</code>, el pool existe pero no se dibuja como tracker propio (lo consume una acción).</li>
 </ul>
 <p><strong><code>COMBAT_TOGGLE</code></strong> — estado on/off; puede anidar más grants en <code>onActivate</code>.</p>
@@ -161,6 +197,7 @@
   &quot;ritual&quot;: true,
   &quot;pickFromStat&quot;: &quot;PROFICIENCY_BONUS&quot;
 }</code></pre>
+<p><strong><code>CHOICE kind=SPELL</code> dentro de un rasgo de clase/subclase:</strong> los conjuros elegidos así (p. ej. Arcanum místico del Brujo, Conjuros característicos o Maestría del Mago) se agrupan en la ficha, pestaña Magia, en la sección propia <strong>&quot;rasgo de clase&quot;</strong> (<code>SpellSource.CLASS_FEATURE</code>), separados de los aprendidos por la progresión normal (&quot;clase&quot;). Es automático, sin campos extra. Lo mismo aplica a los <code>INNATE_SPELL</code> declarados en rasgos de <strong>subclase</strong> (p. ej. &quot;Conjuros del infernal&quot;). Si <code>spellLevel</code> supera el nivel máximo de espacios del personaje (Arcanum), el catálogo de conjuros muestra ese nivel y la elección reemplaza el conjuro del slot de ese rasgo.</p>
 <pre><code>{
   &quot;type&quot;: &quot;CHOICE&quot;,
   &quot;id&quot;: &quot;resilient_boost&quot;,
@@ -183,16 +220,35 @@
   ]
 }</code></pre>
 <h3 id="5-2-combate-y-defensa">5.2 Combate y defensa</h3>
+<blockquote><strong>Campos obligatorios en negrita.</strong> El resto son opcionales (tienen valor por defecto y puedes omitirlos). Omitir un campo obligatorio <strong>rompe el import</strong> con un error tipo <code>Field &#x27;xxx&#x27; is required for type with serial name &#x27;YYY&#x27;</code>. Los números marcados como <code>int</code> son <strong>enteros</strong>: un decimal (<code>3.0</code>) también rompe el parseo; usa <code>3</code>.</blockquote>
 <table>
-  <tr><th><code>type</code></th><th>Para qué</th><th>Campos clave</th></tr>
-  <tr><td><code>AC_FORMULA</code></td><td>Fórmula de CA (defensa sin armadura). Compite como candidato al máximo.</td><td><code>base</code>, <code>abilities</code>, <code>maxDex?</code>, <code>condition</code> (default <code>NO_ARMOR</code>), <code>shieldAllowed</code></td></tr>
-  <tr><td><code>AC_BONUS</code></td><td>Bono plano que <strong>suma</strong> a la mejor CA.</td><td><code>amount</code>, <code>condition?</code> (<code>WHILE_EQUIPPED</code>, <code>WHILE_ATTUNED</code>)</td></tr>
-  <tr><td><code>SPEED_BONUS</code> / <code>SPEED_PENALTY</code></td><td>Modifica velocidad.</td><td><code>bonus</code>/<code>amount</code>, <code>condition?</code></td></tr>
-  <tr><td><code>DAMAGE_RESISTANCE</code></td><td>Resistencia a tipos de daño.</td><td><code>damageTypes</code>, <code>condition?</code></td></tr>
-  <tr><td><code>DAMAGE_REDUCTION</code></td><td>Reducción plana de daño.</td><td><code>source</code> (<code>PROFICIENCY</code>/<code>FIXED</code>/<code>DICE</code>), <code>flat</code>, <code>dice?</code></td></tr>
+  <tr><th><code>type</code></th><th>Para qué</th><th>Campos</th></tr>
+  <tr><td><code>AC_FORMULA</code></td><td>Fórmula de CA (defensa sin armadura). Compite como candidato al máximo.</td><td><strong><code>base</code></strong> (int), <code>abilities</code> (lista), <code>maxDex?</code> (int), <code>condition</code> (default <code>NO_ARMOR</code>), <code>shieldAllowed</code> (default <code>true</code>)</td></tr>
+  <tr><td><code>AC_BONUS</code></td><td>Bono plano que <strong>suma</strong> a la mejor CA.</td><td><strong><code>amount</code></strong> (int), <code>condition?</code> (<code>WHILE_EQUIPPED</code>, <code>WHILE_ATTUNED</code>)</td></tr>
+  <tr><td><code>SPEED_BONUS</code></td><td>Aumenta velocidad (metros).</td><td><strong><code>bonus</code></strong> (int), <code>condition?</code></td></tr>
+  <tr><td><code>SPEED_PENALTY</code></td><td>Reduce velocidad (metros).</td><td><strong><code>amount</code></strong> (int), <code>condition?</code></td></tr>
+  <tr><td><code>DAMAGE_RESISTANCE</code></td><td>Resistencia a tipos de daño (recibes la mitad, redondeado hacia abajo).</td><td><code>damageTypes</code> (lista), <code>condition?</code></td></tr>
+  <tr><td><code>DAMAGE_VULNERABILITY</code></td><td>Vulnerabilidad: recibes el doble de daño de esos tipos.</td><td><code>damageTypes</code> (lista), <code>condition?</code></td></tr>
+  <tr><td><code>DAMAGE_IMMUNITY</code></td><td>Inmunidad: no recibes daño de esos tipos.</td><td><code>damageTypes</code> (lista), <code>condition?</code></td></tr>
+  <tr><td><code>CONDITION_IMMUNITY</code></td><td>Inmunidad a estados (asustado, hechizado, envenenado…).</td><td><code>conditions</code> (lista), <code>condition?</code></td></tr>
+  <tr><td><code>DAMAGE_REDUCTION</code></td><td>Reducción plana de daño.</td><td><code>source</code> (<code>PROFICIENCY</code>/<code>FIXED</code>/<code>DICE</code>), <code>flat</code> (int), <code>dice?</code></td></tr>
   <tr><td><code>DAMAGE_BONUS</code></td><td>Bono al daño.</td><td><code>source</code> (<code>FIXED</code>/<code>PROFICIENCY</code>/<code>ABILITY_MOD</code>/<code>FROM_TABLE</code>), <code>attackTypes</code></td></tr>
   <tr><td><code>ATTACK_BONUS</code></td><td>Bono a la tirada de ataque (to-hit).</td><td>igual que <code>DAMAGE_BONUS</code></td></tr>
+  <tr><td><code>EXTRA_ATTACK</code></td><td>Nº total de ataques en la acción de Atacar.</td><td><strong><code>totalAttacks</code></strong> (int)</td></tr>
+  <tr><td><code>WEAPON_MASTERY</code></td><td>Marcador de maestría (suele modelarse como <code>CHOICE</code>).</td><td><code>count?</code> (int)</td></tr>
+  <tr><td><code>MAX_HP_BONUS</code></td><td>Bono a PG máximos.</td><td><code>source</code> (<code>PER_LEVEL</code>/<code>FIXED</code>), <code>perLevel</code> (int), <code>flat</code> (int)</td></tr>
+  <tr><td><code>INITIATIVE_BONUS</code></td><td>Bono a iniciativa.</td><td><code>source</code> (<code>PROFICIENCY</code>/<code>FIXED</code>), <code>flat</code> (int)</td></tr>
 </table>
+<blockquote>⚠️ <strong><code>SPEED_BONUS</code> usa <code>bonus</code>; <code>SPEED_PENALTY</code> usa <code>amount</code>. No son intercambiables.</strong> Poner <code>&quot;amount&quot;</code> en un <code>SPEED_BONUS</code> rompe el import (<code>Field &#x27;bonus&#x27; is required…</code>), porque <code>bonus</code> es obligatorio y <code>amount</code> se descarta por desconocido.</blockquote>
+<p>Ejemplos listos para copiar:</p>
+<pre><code>{ &quot;type&quot;: &quot;AC_FORMULA&quot;, &quot;base&quot;: 10, &quot;abilities&quot;: [&quot;DEX&quot;, &quot;CON&quot;] }</code></pre>
+<pre><code>{ &quot;type&quot;: &quot;AC_BONUS&quot;, &quot;amount&quot;: 1, &quot;condition&quot;: &quot;WHILE_ATTUNED&quot; }</code></pre>
+<pre><code>{ &quot;type&quot;: &quot;SPEED_BONUS&quot;, &quot;bonus&quot;: 3 }</code></pre>
+<pre><code>{ &quot;type&quot;: &quot;DAMAGE_RESISTANCE&quot;, &quot;damageTypes&quot;: [&quot;BLUDGEONING&quot;, &quot;PIERCING&quot;, &quot;SLASHING&quot;] }</code></pre>
+<pre><code>{ &quot;type&quot;: &quot;EXTRA_ATTACK&quot;, &quot;totalAttacks&quot;: 2 }</code></pre>
+<blockquote>La <code>AC_FORMULA</code> modela &quot;10 + modificadores&quot; como datos estructurados: <code>base</code> es el 10 y <code>abilities</code> son los modificadores que se suman (<code>[&quot;DEX&quot;,&quot;CON&quot;]</code> = + mod. DES + mod. CON). <strong>No</strong> existe un campo <code>formula</code> de texto: una cadena como <code>&quot;10 + DEX + CON&quot;</code> no se interpreta.</blockquote>
+<p><strong>Defensas de daño y de estados.</strong> Los tipos de <code>damageTypes</code> se comparan sin importar si van en inglés (<code>&quot;fire&quot;</code>) o en español (<code>&quot;Fuego&quot;</code>, con o sin tilde); los 13 tipos del juego son <code>acid</code>, <code>bludgeoning</code>, <code>cold</code>, <code>fire</code>, <code>force</code>, <code>lightning</code>, <code>necrotic</code>, <code>piercing</code>, <code>poison</code>, <code>psychic</code>, <code>radiant</code>, <code>slashing</code> y <code>thunder</code>. Si coinciden resistencia y vulnerabilidad sobre un tipo, el daño se divide entre 2 y luego se duplica (redondeando a la baja); la inmunidad gana a ambas. <code>condition</code> limita cuándo aplica (p. ej. <code>WHILE_RAGING</code>). En la ficha, el diálogo de daño recibido pide el tipo y aplica estas defensas. <code>CONDITION_IMMUNITY.conditions</code> usa los nombres de estado de la app (<code>ASUSTADO</code>, <code>HECHIZADO</code>, <code>ENVENENADO</code>, <code>CEGADO</code>, <code>ENSORDECIDO</code>, <code>PARALIZADO</code>, <code>EXHAUSTO</code>…; no distingue mayúsculas). Al cobrar efecto, la ficha quita el estado si ya lo tenías y no deja aplicarlo. Valores de <code>condition</code> útiles aquí: <code>WHILE_RAGING</code>, <code>WHILE_NOT_INCAPACITATED</code>.</p>
+<pre><code>{ &quot;type&quot;: &quot;CONDITION_IMMUNITY&quot;, &quot;conditions&quot;: [&quot;ASUSTADO&quot;, &quot;HECHIZADO&quot;], &quot;condition&quot;: &quot;WHILE_NOT_INCAPACITATED&quot; }</code></pre>
 <p><strong><code>attackTypes</code></strong> (en <code>DAMAGE_BONUS</code> y <code>ATTACK_BONUS</code>) filtra a qué ataques aplica el bono. Vacío = todos. El motor clasifica cada arma y le asigna estas etiquetas:</p>
 <table>
   <tr><th>Etiqueta</th><th>Aplica a</th></tr>
@@ -207,7 +263,6 @@
 </table>
 <p>Ejemplo — Maestro en armas pesadas (daño extra = bonif. de competencia al golpear con arma pesada):</p>
 <pre><code>{ &quot;type&quot;: &quot;DAMAGE_BONUS&quot;, &quot;source&quot;: &quot;PROFICIENCY&quot;, &quot;attackTypes&quot;: [&quot;melee_heavy&quot;] }</code></pre>
-<p>| <code>EXTRA_ATTACK</code> | Nº total de ataques. | <code>totalAttacks</code> | | <code>WEAPON_MASTERY</code> | Marcador de maestría (suele modelarse como <code>CHOICE</code>). | <code>count?</code> | | <code>MAX_HP_BONUS</code> | Bono a PG máximos. | <code>source</code> (<code>PER_LEVEL</code>/<code>FIXED</code>), <code>perLevel</code>, <code>flat</code> | | <code>INITIATIVE_BONUS</code> | Bono a iniciativa. | <code>source</code> (<code>PROFICIENCY</code>/<code>FIXED</code>), <code>flat</code> |</p>
 <h3 id="5-3-caracteristicas-competencias-y-magia">5.3 Características, competencias y magia</h3>
 <table>
   <tr><th><code>type</code></th><th>Para qué</th><th>Campos clave</th></tr>
@@ -216,6 +271,8 @@
   <tr><td><code>ABILITY_CHECK_BONUS</code></td><td>Bono a pruebas.</td><td><code>ability?</code>, <code>amount</code>, <code>skill?</code>, <code>condition?</code></td></tr>
   <tr><td><code>SPELLCASTING</code></td><td>Declara lanzador de conjuros.</td><td><code>casterType</code>, <code>ability</code>, <code>preparedFormula?</code>, <code>spellListClassId?</code></td></tr>
   <tr><td><code>INNATE_SPELL</code></td><td>Conjuro innato / siempre preparado.</td><td><code>spellId</code>, <code>usesPerRest?</code>, <code>restType?</code>, <code>alwaysPrepared?</code>, <code>ability?</code></td></tr>
+  <tr><td><code>SPELL_DAMAGE_BONUS</code></td><td>Suma un modificador de característica al daño de ciertos conjuros.</td><td><code>ability</code>, filtros (<code>schools</code>, <code>damageTypes</code>, <code>spellListClassIds</code>, <code>cantripsOnly</code>, <code>spellIds</code>, <code>spellsFromChoice</code>), <code>perRoll</code>, <code>label?</code>, <code>condition?</code></td></tr>
+  <tr><td><code>WEAPON_ABILITY</code></td><td>Ataca y hace daño con otra característica (Pacto de la hoja, Impacto certero).</td><td><code>ability</code>, <code>weaponIds</code>, <code>meleeOnly</code>, <code>grantsProficiency</code>, <code>condition?</code></td></tr>
   <tr><td><code>SENSES</code></td><td>Visión en la oscuridad, etc. (en <strong>metros</strong>)</td><td><code>darkvision?</code>, <code>blindsight?</code>, <code>tremorsense?</code>, <code>truesight?</code></td></tr>
   <tr><td><code>INVOCATIONS</code></td><td>Tabla nivel→count de invocaciones.</td><td><code>progression: [{ level, count }]</code></td></tr>
   <tr><td><code>ROLL_TABLE</code></td><td>Tabla aleatoria (tira dado y consulta).</td><td><code>dice</code>, <code>entries: [{ min, max, result }]</code></td></tr>
@@ -223,6 +280,14 @@
 </table>
 <p><strong><code>COMPUTED_STAT</code></strong> es el comodín para pasivas numéricas simples que no justifican un <code>type</code> propio. El motor emite <code>ComputedStat(key, value)</code> y lo propaga a <code>stats</code>; <code>mode: &quot;SUM&quot;</code> acumula con otros de la misma <code>key</code>, <code>mode: &quot;MAX&quot;</code> conserva el mayor. Ejemplo — <strong>Maestro en armaduras medias</strong>, que sube a 3 el tope de modificador de DES de la armadura media:</p>
 <pre><code>{ &quot;type&quot;: &quot;COMPUTED_STAT&quot;, &quot;key&quot;: &quot;MEDIUM_ARMOR_MAX_DEX&quot;, &quot;value&quot;: 3, &quot;mode&quot;: &quot;MAX&quot; }</code></pre>
+<p><strong><code>SPELL_DAMAGE_BONUS</code></strong> — los filtros se combinan con Y; un filtro vacío no restringe. <code>schools</code> usa los códigos de escuela del catálogo (<code>ABJURACION</code>, <code>ADIVINACION</code>, <code>CONJURACION</code>, <code>ENCANTAMIENTO</code>, <code>EVOCACION</code>, <code>ILUSION</code>, <code>NIGROMANCIA</code>, <code>TRANSMUTACION</code>); <code>damageTypes</code>, los tipos de daño del conjuro; <code>spellListClassIds</code>, ids de clase (<code>&quot;wizard&quot;</code>). <code>spellsFromChoice</code> es el <code>id</code> de un <code>CHOICE</code> cuyas selecciones son conjuros (Descarga agónica elige un truco; mientras no se elija, no aplica a ninguno). <code>perRoll: true</code> suma el bono a CADA tirada de daño (cada rayo); <code>false</code>, a una sola tirada del lanzamiento. Ejemplos:</p>
+<pre><code>{ &quot;type&quot;: &quot;SPELL_DAMAGE_BONUS&quot;, &quot;ability&quot;: &quot;INT&quot;, &quot;schools&quot;: [&quot;EVOCACION&quot;], &quot;spellListClassIds&quot;: [&quot;wizard&quot;], &quot;label&quot;: &quot;Evocación potenciada&quot; }
+{ &quot;type&quot;: &quot;SPELL_DAMAGE_BONUS&quot;, &quot;ability&quot;: &quot;CHA&quot;, &quot;spellsFromChoice&quot;: &quot;agonizing_blast_cantrip&quot;, &quot;perRoll&quot;: true, &quot;label&quot;: &quot;Descarga agónica&quot; }</code></pre>
+<p><strong><code>WEAPON_ABILITY</code></strong> — mientras esté activo, el modificador de <code>ability</code> sustituye al de Fuerza o Destreza en el ataque y el daño del arma de las armas que cumplan los filtros. <code>weaponIds</code> vacío = cualquier arma. <code>meleeOnly</code> limita a cuerpo a cuerpo. <code>grantsProficiency: true</code> hace que cuentes como competente con el arma (Pacto de la hoja). <code>condition: &quot;TOGGLE:&lt;id&gt;&quot;</code> lo activa solo mientras ese interruptor de la ficha esté encendido (Pacto de la hoja usa <code>TOGGLE:pact_weapon_bound</code>).</p>
+<pre><code>{ &quot;type&quot;: &quot;WEAPON_ABILITY&quot;, &quot;ability&quot;: &quot;CHA&quot;, &quot;meleeOnly&quot;: true, &quot;grantsProficiency&quot;: true, &quot;condition&quot;: &quot;TOGGLE:pact_weapon_bound&quot; }</code></pre>
+<p><strong>Elecciones de conjuro con usos gratis (<code>usesPerRest</code>).</strong> Un <code>CHOICE kind=SPELL</code> puede llevar <code>usesPerRest</code> (entero): el conjuro elegido se lanza ese número de veces entre descansos largos SIN gastar espacio. La ficha le pone su propio contador y un botón «Usar»; se recupera con descanso largo (el corto no). Sin el campo, el conjuro elegido usa espacios como cualquier otro. Es el patrón del <strong>Arcanum místico</strong> del Brujo:</p>
+<pre><code>{ &quot;type&quot;: &quot;CHOICE&quot;, &quot;id&quot;: &quot;mystic_arcanum_6_spell&quot;, &quot;title&quot;: &quot;Arcanum místico: conjuro de nivel 6&quot;,
+  &quot;kind&quot;: &quot;SPELL&quot;, &quot;spellLevel&quot;: 6, &quot;fromClass&quot;: &quot;warlock&quot;, &quot;usesPerRest&quot;: 1, &quot;reopenable&quot;: true }</code></pre>
 <h3 id="5-4-situacionales-objetos-declarativos">5.4 Situacionales / objetos (declarativos)</h3>
 <p>Se conservan tipados y se muestran como texto; la mayoría no produce cálculo automático: <code>ADVANTAGE</code>, <code>AUTO_SUCCESS</code>, <code>LIGHT_SOURCE</code>, <code>FUEL</code>, <code>MAGNIFICATION</code>, <code>LOCK</code>, <code>LIFT_CAPACITY_MULTIPLIER</code>, <code>MATERIAL_COMPONENT_SUBSTITUTE</code>, <code>EXPAND_BUNDLE</code>, <code>UTILITY_ACTION</code>.</p>
 <p><code>UNKNOWN</code> no se escribe a mano: es el resultado de un <code>type</code> que el motor no reconoce.</p>
