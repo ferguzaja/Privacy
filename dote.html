@@ -85,10 +85,11 @@
 <table>
   <tr><th>Campo</th><th>Tipo</th><th>Obligatorio</th><th>Notas</th></tr>
   <tr><td><code>id</code></td><td>string</td><td>Sí</td><td></td></tr>
-  <tr><td><code>category</code></td><td>string?</td><td>No</td><td><code>ORIGIN</code>, <code>GENERAL</code>, <code>FIGHTING_STYLE</code>, <code>EPIC</code>. Filtra qué CHOICE la ofrece.</td></tr>
+  <tr><td><code>category</code></td><td>string?</td><td>No</td><td><code>ORIGIN</code>, <code>GENERAL</code>, <code>COMBAT_STYLE</code> (estilos de combate), <code>EPIC</code>. Filtra qué CHOICE la ofrece. <code>FIGHTING_STYLE</code> era el nombre antiguo y se convierte a <code>COMBAT_STYLE</code> al cargar.</td></tr>
   <tr><td><code>display</code></td><td>DisplayInfo</td><td>Sí</td><td></td></tr>
-  <tr><td><code>prerequisite</code></td><td>Prerequisite?</td><td>No</td><td>Requisitos para poder elegirla.</td></tr>
+  <tr><td><code>prerequisite</code></td><td>Prerequisite?</td><td>No</td><td>Requisitos para poder elegirla. Solo se comprueban al <strong>subir de nivel</strong>; una dote de origen se ofrece al crear sin comprobarlos.</td></tr>
   <tr><td><code>repeatable</code></td><td>bool</td><td>No</td><td><code>true</code> = se puede tomar varias veces (p. ej. Mejora de característica). Default <code>false</code>.</td></tr>
+  <tr><td><code>requiresClass</code></td><td>string?</td><td>No</td><td>Id de una clase: solo esa clase puede elegirla (Guerrero bendito → <code>paladin</code>). Sin él, la ofrece cualquier clase cuyo <code>CHOICE</code> pida su categoría. Solo por JSON: el editor lo conserva pero no lo muestra.</td></tr>
   <tr><td><code>mechanics</code></td><td>[Grant]</td><td>No</td><td>Efectos de la dote.</td></tr>
 </table>
 <p><strong>Prerequisite</strong> (todos los campos opcionales):</p>
@@ -99,7 +100,8 @@
   &quot;minScore&quot;: 13,
   &quot;requiresSpellcasting&quot;: true
 }</code></pre>
-<p>Usa <code>ability</code> + <code>minScore</code> para una característica única, o <code>abilityOptions</code> + <code>minScore</code> cuando basta con cumplir una de varias.</p>
+<p>Usa <code>ability</code> + <code>minScore</code> para una característica única, o <code>abilityOptions</code> + <code>minScore</code> cuando basta con cumplir una de varias. Sin <code>minScore</code> no se exige puntuación, y un <code>minScore</code> sin característica se ignora. No existe prerrequisito de otra dote, de clase, de especie ni de competencias.</p>
+<p><strong>Qué dotes ofrece cada elección.</strong> Un <code>CHOICE</code> con <code>kind: &quot;FEAT&quot;</code> y <code>category</code> fija (<code>COMBAT_STYLE</code>, <code>EPIC</code>…) ofrece solo esa categoría. Sin <code>category</code> ofrece todas menos <code>ORIGIN</code>, <code>EPIC</code> y <code>COMBAT_STYLE</code>. Una dote ya tomada no vuelve a salir salvo que sea <code>repeatable</code> (la Mejora de característica del SRD lo es siempre).</p>
 <pre><code>{
   &quot;id&quot;: &quot;tough&quot;,
   &quot;category&quot;: &quot;ORIGIN&quot;,

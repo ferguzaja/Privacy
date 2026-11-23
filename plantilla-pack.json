@@ -120,10 +120,11 @@
   "backgrounds": [
     {
       "id": "plantilla_trasfondo",
-      "display": { "name": "Trasfondo de plantilla", "description": "Competencias y una dote de origen." },
+      "display": { "name": "Trasfondo de plantilla", "description": "Mejora de característica, competencias y una dote de origen." },
       "mechanics": [
         { "type": "PROFICIENCY", "kind": "SKILL", "items": ["Historia", "Perspicacia"] },
-        { "type": "CHOICE", "id": "plantilla_trasfondo_dote", "title": "Dote de origen", "kind": "FEAT", "level": 1, "category": "ORIGIN" }
+        { "type": "CHOICE", "id": "plantilla_trasfondo_asi", "title": "Mejoras de característica", "kind": "ABILITY_SCORE_IMPROVEMENT", "pool": ["STR", "CON", "WIS"], "points": 3 },
+        { "type": "CHOICE", "id": "plantilla_trasfondo_dote", "title": "Dote de origen", "kind": "FEAT", "level": 1, "category": "ORIGIN", "featId": "skilled" }
       ],
       "startingEquipment": [ { "display": { "name": "10 po" } } ],
       "goldAlternative": 50

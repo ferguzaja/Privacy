@@ -82,20 +82,65 @@
 <h1>Crear desde la app</h1>
 <h2 id="21-crear-desde-la-app-sin-escribir-json">21. Crear desde la app (sin escribir JSON)</h2>
 <p>Todo lo anterior describe el formato JSON, pero no hace falta escribirlo a mano: la app trae un editor gráfico en <strong>Ajustes → Contenido personalizado</strong>. Lo que creas ahí se guarda en un pack local (<code>user_custom</code>) y el motor lo usa igual que el contenido del SRD. Las capturas son de la versión Android; en iOS es la misma pantalla.</p>
-<h3 id="21-1-donde-esta">21.1 Dónde está</h3>
+<h3 id="indice-de-esta-pagina">Índice de esta página</h3>
+<ul>
+<li><a href="#21-1-donde-esta-y-en-que-orden-crear">21.1 Dónde está y en qué orden crear</a></li>
+<li><a href="#21-2-como-funcionan-los-controles">21.2 Cómo funcionan los controles</a></li>
+<li><a href="#21-3-crear-un-conjuro">21.3 Crear un conjuro</a></li>
+<li><a href="#21-4-crear-un-arma-magica">21.4 Crear un arma mágica</a></li>
+<li><a href="#21-5-agregar-efectos-grants">21.5 Agregar efectos (grants)</a></li>
+<li><a href="#21-6-crear-una-dote">21.6 Crear una dote</a></li>
+<li><a href="#21-7-crear-un-trasfondo">21.7 Crear un trasfondo</a></li>
+<li><a href="#21-8-crear-una-especie">21.8 Crear una especie</a></li>
+<li><a href="#21-9-crear-una-clase">21.9 Crear una clase</a></li>
+<li><a href="#21-10-crear-otros-objetos-de-equipo">21.10 Crear otros objetos de equipo</a></li>
+<li><a href="#21-11-que-se-puede-hacer-solo-con-json">21.11 Qué se puede hacer solo con JSON</a></li>
+</ul>
+<h3 id="21-1-donde-esta-y-en-que-orden-crear">21.1 Dónde está y en qué orden crear</h3>
 <p>En <strong>Ajustes</strong> toca <strong>Contenido personalizado</strong>. La pantalla tiene una sección por tipo: <strong>Dotes, Trasfondos, Especies, Clases, Equipo y Conjuros</strong>. Cada una tiene un botón <strong>+</strong> para crear, y cada objeto creado muestra <strong>Editar</strong> y <strong>Eliminar</strong>. Todas menos Conjuros tienen además un botón para importar un JSON suelto.</p>
 <figure><img src="img/contenido-personalizado.png" alt="Pantalla Contenido personalizado, con una sección por tipo" loading="lazy" /><figcaption>Pantalla Contenido personalizado, con una sección por tipo</figcaption></figure>
-<h3 id="21-2-crear-un-conjuro">21.2 Crear un conjuro</h3>
+<p><strong>Orden recomendado.</strong> Los trasfondos y las clases solo aceptan equipo, herramientas y dotes que <strong>ya existen</strong> en el catálogo (se buscan, no se escriben). Por eso conviene crear en este orden:</p>
+<ol>
+<li><strong>Equipo</strong> (armas, armaduras, herramientas, paquetes).</li>
+<li><strong>Dotes</strong>.</li>
+<li><strong>Trasfondos, especies y clases</strong>, que usan lo anterior.</li>
+<li><strong>Conjuros</strong>. Si es para una clase propia, crea antes la clase con el efecto *Lanzamiento de conjuros*; solo así su lista aparece en «¿Para qué clases es?».</li>
+</ol>
+<h3 id="21-2-como-funcionan-los-controles">21.2 Cómo funcionan los controles</h3>
+<p>Todos los formularios siguen la misma regla:</p>
+<table>
+  <tr><th>Control</th><th>Cuándo se usa</th><th>Ejemplos</th></tr>
+  <tr><td><strong>Desplegable</strong></td><td>Se elige <strong>una</strong> opción</td><td>Dado de golpe, categoría de dote, nivel y escuela del conjuro, tipo de daño, rareza</td></tr>
+  <tr><td><strong>Chips</strong></td><td>Se pueden marcar <strong>varias</strong></td><td>Características primarias, habilidades, propiedades de arma, clases de un conjuro</td></tr>
+  <tr><td><strong>Campo numérico</strong></td><td>Una cantidad libre</td><td>Velocidad, CA base, nivel de un rasgo, oro alternativo. Peso, velocidad, visión en la oscuridad y alcance admiten decimales (coma o punto): <code>1.5</code> kg, <code>10.5</code> m</td></tr>
+  <tr><td><strong>Cantidad + dado</strong></td><td>Una tirada</td><td><code>2</code> y <code>d6</code> dan <code>2d6</code></td></tr>
+  <tr><td><strong>Buscador de catálogo</strong></td><td>Un objeto que ya existe</td><td>Equipo inicial, herramientas, dote de origen</td></tr>
+</table>
+<p><strong>Dados.</strong> Escribe la <strong>cantidad</strong> y elige el <strong>dado</strong> (<code>d4</code>, <code>d6</code>, <code>d8</code>, <code>d10</code>, <code>d12</code>, <code>d20</code>, <code>d100</code>). Con cantidad vacía no se guarda nada. En los dados de <strong>daño y curación de conjuros</strong> hay además un campo <strong>Fijo</strong> para sumar un número (<code>1d4+1</code>, Proyectil mágico); se habilita al escribir la cantidad. Una fórmula importada que no cabe ahí (<code>1d6+1d4</code>) se muestra como <strong>texto libre</strong> y se conserva tal cual; si la borras vuelve el selector.</p>
+<p><strong>Valores con «Otro».</strong> El tiempo de lanzamiento, el alcance y la duración de un conjuro son desplegables con los valores habituales. Si necesitas otro, elige <strong>Otro</strong>: aparecen un campo numérico para la <strong>cantidad</strong> y un selector de <strong>unidad</strong>. Se guarda como texto, por ejemplo <code>10 min</code> o <code>24 m</code>.</p>
+<p><strong>Valores que no encajan.</strong> Si un objeto importado trae un valor que no está en las opciones (como el <code>9 m / 30 f / 6 cas</code> de los conjuros del SRD), el campo lo muestra como <strong>valor actual</strong> y lo conserva hasta que elijas otro.</p>
+<p><strong>Campos obligatorios.</strong> Los marcados con <code>*</code> (y los que se ponen en rojo, como las 2 salvaciones de una clase) deben completarse para que <strong>Guardar</strong> se habilite.</p>
+<h3 id="21-3-crear-un-conjuro">21.3 Crear un conjuro</h3>
 <ol>
 <li>En la sección <strong>Conjuros</strong> toca <strong>+</strong>.</li>
 <li>En <strong>Identidad</strong> escribe el nombre y, si quieres, la descripción.</li>
-<li>En <strong>Conjuro</strong> elige el nivel (<code>Truco</code> o 1 a 9) y la escuela. Justo debajo, en <strong>¿Para qué clases es?</strong>, marca las listas de clase que pueden usarlo (Bardo, Clérigo, Druida, Paladín, Explorador, Hechicero, Brujo, Mago; y las clases propias que tengan lanzamiento de conjuros): así aparece al elegir conjuros de esa clase. Si no marcas ninguna, el formulario te avisa en rojo y el conjuro no saldrá en ninguna lista. Después rellena tiempo de lanzamiento, alcance, componentes y duración, y marca <strong>Concentración</strong> o <strong>Ritual</strong> si aplica.</li>
+<li>En <strong>Conjuro</strong> elige el <strong>nivel</strong> (<code>Truco</code> o 1 a 9) y la <strong>escuela</strong>, ambos en desplegables. Un conjuro importado sin escuela muestra *Sin especificar* y la conserva así. Justo debajo, en <strong>¿Para qué clases es?</strong>, marca las listas de clase que pueden usarlo (Bardo, Clérigo, Druida, Paladín, Explorador, Hechicero, Brujo, Mago; y las clases propias que tengan lanzamiento de conjuros): así aparece al elegir conjuros de esa clase. Si no marcas ninguna, el formulario te avisa en rojo: el conjuro no sale en las listas por clase ni se puede preparar, aunque sí se encuentra buscándolo por nombre o dándolo como conjuro innato.</li>
+<li>Rellena los datos de lanzamiento:
+<ul>
+<li><strong>Tiempo de lanzamiento</strong>: Acción, Acción adicional, Reacción u <strong>Otro</strong> (minutos u horas).</li>
+<li><strong>Alcance</strong>: Lanzador, Toque, 3 m, 9 m, 18 m, 36 m, 90 m, 150 m u <strong>Otro</strong> (metros o kilómetros).</li>
+<li><strong>Componentes</strong>: marca <strong>V</strong>, <strong>S</strong> y/o <strong>M</strong>. Al marcar <strong>M</strong> aparece un campo para el material (opcional); se guarda como <code>V, S, M (pétalo de rosa)</code>.</li>
+<li><strong>Duración</strong>: Instantánea, 1 asalto, 1 min, 10 min, 1 h, 8 h, 24 h, Hasta que se disipe u <strong>Otro</strong> (asaltos, minutos, horas o días).</li>
+<li>Marca <strong>Concentración</strong> o <strong>Ritual</strong> si aplica, y rellena <strong>A niveles superiores</strong> si el conjuro mejora con espacios más altos (opcional). Es solo texto para el diálogo del catálogo: lo que calcula el escalado es la sección <strong>Escalado</strong> de más abajo.</li>
+<li>Los valores del SRD con otro formato, como <code>18 m / 60 f / 12 cas</code> o <code>Instant.</code>, no están entre las opciones: se muestran como valor actual y se conservan mientras no elijas otra.</li>
+</ul>
+</li>
 </ol>
 <figure><img src="img/conjuro-nuevo.png" alt="Formulario de conjuro nuevo: nivel, escuela y datos de lanzamiento" loading="lazy" /><figcaption>Formulario de conjuro nuevo: nivel, escuela y datos de lanzamiento</figcaption></figure>
 <ol>
 <li>Si el conjuro hace daño, activa <strong>Inflige daño</strong> y completa:
 <ul>
-<li><strong>Dados al nivel base</strong> (por ejemplo <code>8d6</code>).</li>
+<li><strong>Dados al nivel base</strong> (obligatorio): cantidad y dado, y <strong>Fijo</strong> si suma un número.</li>
 <li><strong>Tipo de daño</strong>, en un desplegable.</li>
 <li><strong>Salvación del objetivo</strong>: elige la característica, o «Ataque (sin salvación)» si es un ataque de conjuro. Con salvación puedes marcar que salvar reduce el daño a la mitad.</li>
 </ul>
@@ -103,26 +148,70 @@
 </ol>
 <figure><img src="img/conjuro-dano.png" alt="Sección Daño: dados, tipo y salvación" loading="lazy" /><figcaption>Sección Daño: dados, tipo y salvación</figcaption></figure>
 <ol>
-<li>Si el conjuro inflige <strong>otro tipo de daño a la vez</strong> (Tormenta de hielo: contundente y frío), toca <strong>Añadir otro daño (otro tipo)</strong> y completa sus dados, su tipo y su escalado. Puedes agregar todos los que necesites; comparten la salvación del daño principal y la ficha los tira juntos.</li>
-<li>En <strong>Escalado</strong> elige cómo crece el daño: <strong>por nivel de personaje</strong> (trucos: niveles 5, 11 y 17) o <strong>por nivel de espacio</strong> (conjuros nivelados), e indica los dados extra por escalón. Si el conjuro cura, usa la sección <strong>Curación</strong> de la misma forma.</li>
+<li>En <strong>Escalado</strong> elige cómo crece el daño: <strong>No escala</strong>, <strong>por nivel de personaje</strong> (trucos: niveles 5, 11 y 17) o <strong>por nivel de espacio</strong> (conjuros nivelados), e indica los dados extra por escalón (solo <code>NdM</code>, sin bono fijo).
+<ul>
+<li><strong>Varias tiradas</strong> (Proyectil mágico, Rayo abrasador, Descarga sobrenatural): marca *Varias tiradas*, elige cuántas (<strong>siempre la misma</strong>, <strong>más por nivel de personaje</strong> o <strong>más por nivel de espacio</strong>), las <strong>tiradas al nivel base</strong>, las <strong>extra por escalón</strong> y <strong>cómo se llaman</strong> (dardos, rayos, blancos). Los dados de arriba pasan a ser los de <strong>cada</strong> tirada: Proyectil mágico es <code>1d4+1</code>, tres dardos al nivel 1 y uno más por cada nivel de espacio. La ficha muestra «×N dardos» y cada tirada la haces tú.</li>
+</ul>
+</li>
+<li>Si el conjuro inflige <strong>otro tipo de daño a la vez</strong> (Tormenta de hielo: contundente y frío), toca <strong>Añadir otro daño (otro tipo)</strong> y completa sus dados, su tipo y su escalado. Puedes agregar todos los que necesites; comparten la salvación del daño principal y la ficha los tira juntos. Si el conjuro cura, usa la sección <strong>Curación</strong>: dados, si suma el modificador de aptitud mágica y su escalado (el de nivel de personaje solo se ofrece en los trucos). Un conjuro puede dañar y curar a la vez.</li>
 </ol>
 <figure><img src="img/conjuro-escalado.png" alt="Escalado del daño por nivel de personaje" loading="lazy" /><figcaption>Escalado del daño por nivel de personaje</figcaption></figure>
 <ol>
+<li><strong>Mientras está activo</strong> (opcional), para conjuros que se encienden y se apagan mientras duran (Favor divino, Arma espiritual, Impacto certero). Marca *Se enciende y se apaga mientras dura* y completa lo que necesites; los tres bloques son independientes:
+<ul>
+<li><strong>Daño extra en tus ataques con arma</strong>: dados y tipo por golpe (Favor divino: <code>1d4</code> radiante). Marca *Se repite en los niveles 5, 11 y 17* si crece con el nivel (Impacto certero).</li>
+<li><strong>Ataques que crea el conjuro</strong>: cada uno tiene su nombre (si el conjuro ofrece varios modos), dados, tipo, cómo se resuelve (ataque de conjuro o una salvación), escalado y si suma el modificador de aptitud mágica. Cada ataque añade una fila en Combate; si lo resuelve una salvación, la fila muestra la CD en vez del d20.</li>
+<li><strong>Tus ataques con arma usan tu aptitud mágica</strong> (Impacto certero, Shillelagh): puedes limitarlo a cuerpo a cuerpo, darte competencia con el arma y cambiar el dado del arma según tu nivel (1, 5, 11 y 17). Un conjuro de concentración apaga el anterior y un descanso apaga todos; no hay temporizador.</li>
+</ul>
+</li>
 <li>Toca <strong>Guardar</strong>. El conjuro ya está en el catálogo y se puede aprender, preparar y lanzar como cualquier otro; su celda de daño se tira desde la tarjeta del conjuro.</li>
 </ol>
-<blockquote>El editor conserva los datos que no muestra (por ejemplo, un conjuro que se activa o que lanza varios dardos): si editas uno importado desde un pack, esos campos no se pierden.</blockquote>
-<h3 id="21-3-crear-un-arma-magica">21.3 Crear un arma mágica</h3>
+<blockquote>El editor conserva los datos que no muestra: si editas un conjuro importado, por ejemplo los daños adicionales de un ataque que crea, no se pierden. Tres cosas se borran a propósito: <strong>desmarcar «Inflige daño»</strong> quita todo el bloque de daño (también las varias tiradas y los daños adicionales), <strong>desmarcar «Se enciende y se apaga»</strong> quita todo el efecto activo, y un escalado con los dados vacíos se descarta al guardar. Los ataques que crea el conjuro se guardan como <code>attack</code> (el primero) y <code>attacks</code> (los demás): el motor los junta en el mismo orden, así que el resultado es el mismo aunque el JSON cambie de forma.</blockquote>
+<h3 id="21-4-crear-un-arma-magica">21.4 Crear un arma mágica</h3>
 <ol>
 <li>En la sección <strong>Equipo</strong> toca <strong>+</strong>, escribe el nombre y en <strong>Categoría</strong> elige <strong>Arma</strong>.</li>
-<li>En <strong>Datos del arma</strong> completa dado, tipo de daño, características de ataque y propiedades.</li>
-<li>Elige el <strong>Bono mágico</strong> (<code>+1</code>, <code>+2</code> o <code>+3</code>): se suma al ataque y al daño de esa arma.</li>
+<li>En <strong>Datos del arma</strong> completa:
+<ul>
+<li><strong>Dado de daño</strong>: cantidad y dado (<code>1</code> y <code>d8</code> dan <code>1d8</code>).</li>
+<li><strong>Tipo de daño</strong> (cortante, perforante o contundente), en un desplegable.</li>
+<li><strong>Características de ataque</strong> (Fuerza y/o Destreza) y <strong>Propiedades</strong>, en chips. Si marcas *Versátil* aparece el <strong>Dado versátil</strong> (a dos manos).</li>
+<li><strong>Maestría de arma</strong> (desplegable, opcional): Cleave, Graze, Nick, Push, Sap, Slow, Topple o Vex, cada una con una frase de su efecto.</li>
+<li><strong>Armas a distancia o arrojadizas</strong>: si marcas *Arrojadiza* o *Munición* aparece el <strong>Alcance (metros)</strong> con el valor <strong>Normal</strong> (admite decimales) y el <strong>Largo</strong> (opcional). Sin alcance normal no se guarda alcance. Con *Munición* aparece además <strong>Tipo de munición que usa</strong> (Flechas, Virotes, Proyectiles de honda, Balas de arma de fuego o Dardos).</li>
+</ul>
+</li>
+<li>Elige el <strong>Bono mágico</strong> (<code>Sin bono</code>, <code>+1</code>, <code>+2</code> o <code>+3</code>) en su desplegable: se suma al ataque y al daño de esa arma.</li>
 <li>Con <strong>Añadir daño extra</strong> agrega una tirada aparte, por ejemplo <code>2d6</code> de fuego. Si el daño solo debe contar cuando el arma «está encendida» (como la Lengua de fuego), marca <strong>Solo mientras esté encendida</strong>: la ficha mostrará un botón para encenderla y apagarla.</li>
 <li>En <strong>Detalles</strong> puedes indicar la rareza y si <strong>requiere sintonización</strong>.</li>
 </ol>
 <figure><img src="img/arma-magica.png" alt="Datos del arma: bono mágico y daño extra" loading="lazy" /><figcaption>Datos del arma: bono mágico y daño extra</figcaption></figure>
-<h3 id="21-4-agregar-efectos-grants">21.4 Agregar efectos (grants)</h3>
-<p>El formulario de equipo tiene la sección <strong>Efectos mecánicos</strong> con <strong>Añadir efecto mecánico</strong>; los de dotes, especies, trasfondos y clases usan el mismo constructor en su apartado de efectos. Al tocar «Selecciona el tipo de efecto…» se abre la lista de tipos; cada uno trae una descripción corta.</p>
+<blockquote><strong>Un arco y sus flechas.</strong> Crea primero la munición (§21.10, categoría *Munición*, tipo *Flechas*, cantidad por lote). Después crea el arma con la propiedad *Munición*, el mismo tipo y su alcance. La ficha enlaza el arma con el lote del mismo tipo que lleve el personaje y va gastando las unidades.</blockquote>
+<p>Las <strong>propiedades</strong> que ofrece el editor son Ligera, Sutil, Arrojadiza, A dos manos, Versátil, Pesada, Alcance, Carga y Munición. Una propiedad que el editor no muestra (<code>special</code>, <code>two_handed_unless_mounted</code>) se conserva si editas un arma importada. El <strong>Dado versátil</strong> solo se guarda si *Versátil* está marcada.</p>
+<h3 id="21-5-agregar-efectos-grants">21.5 Agregar efectos (grants)</h3>
+<p>El formulario de equipo tiene la sección <strong>Efectos mecánicos</strong> con <strong>Añadir efecto mecánico</strong>; los de dotes, especies, trasfondos y clases usan el mismo constructor en su apartado de efectos (plegable como «avanzado» en especies y trasfondos) y dentro de cada rasgo. Al tocar «Selecciona el tipo de efecto…» se abre la lista de tipos; cada uno trae una descripción corta.</p>
 <figure><img src="img/efectos-tipos.png" alt="Lista de tipos de efecto, con los de magia al final" loading="lazy" /><figcaption>Lista de tipos de efecto, con los de magia al final</figcaption></figure>
+<p>Tipos de efecto disponibles en el constructor:</p>
+<table>
+  <tr><th>Efecto</th><th>Para qué sirve</th></tr>
+  <tr><td>Mejora de característica</td><td>Sube una o más características.</td></tr>
+  <tr><td>Competencia</td><td>Habilidades, salvaciones, armas, armaduras, herramientas o idiomas.</td></tr>
+  <tr><td>Sentidos</td><td>Visión en la oscuridad, visión ciega, etc.</td></tr>
+  <tr><td>Bono de velocidad</td><td>Suma metros a la velocidad base.</td></tr>
+  <tr><td>Fórmula de CA</td><td>CA sin armadura calculada con características (10 + DES + CON).</td></tr>
+  <tr><td>Bono de CA</td><td>Bono fijo a la CA (objetos mágicos).</td></tr>
+  <tr><td>Resistencia, vulnerabilidad e inmunidad a daño</td><td>Mitad, doble o ningún daño de ciertos tipos.</td></tr>
+  <tr><td>Inmunidad a estados</td><td>Asustado, hechizado, envenenado…, siempre o en ciertas situaciones.</td></tr>
+  <tr><td>Recurso gastable</td><td>Contador de usos (ki, furia…). Los usos pueden ser un número fijo, el nivel, el bono de competencia o un modificador de característica.</td></tr>
+  <tr><td>Bono a PG máximos</td><td>PG permanentes (dote Duro).</td></tr>
+  <tr><td>Conjuro innato</td><td>Un conjuro: siempre preparado, a voluntad o con usos por descanso largo.</td></tr>
+  <tr><td>Bono de iniciativa</td><td>Suma a la tirada de iniciativa.</td></tr>
+  <tr><td>Ataque adicional</td><td>Número total de ataques al atacar.</td></tr>
+  <tr><td>Acción de combate</td><td>Acción puntual que gasta un recurso (se elige de los que ya añadiste) y puede tirar dados.</td></tr>
+  <tr><td>Estado activable</td><td>Estado on/off que gasta un recurso (Furia).</td></tr>
+  <tr><td>Lanzamiento de conjuros</td><td>Declara a la clase como lanzadora (tipo de lanzador y característica).</td></tr>
+  <tr><td>Elección del jugador</td><td>Deja elegir habilidad, pericia, conjuro, dote de origen, aptitud de lanzamiento u opciones propias con sus efectos (linajes).</td></tr>
+  <tr><td>Bono al daño de conjuros</td><td>Ver abajo.</td></tr>
+  <tr><td>Característica del arma</td><td>Ver abajo.</td></tr>
+</table>
 <p>Los tipos de magia más recientes son:</p>
 <ul>
 <li><strong>Bono al daño de conjuros</strong>: suma el modificador de una característica al daño de los conjuros que cumplan los filtros (escuela, tipo de daño, lista de clase, solo trucos…).</li>
@@ -130,19 +219,164 @@
 <li><strong>Elección del jugador → Conjuro</strong>: deja elegir un conjuro, con nivel, lista de clase, escuelas y, opcionalmente, <strong>usos gratis por descanso largo</strong> (Arcanum místico).</li>
 <li><strong>Resistencia, vulnerabilidad e inmunidad a daño</strong> e <strong>inmunidad a estados</strong>.</li>
 </ul>
+<p><strong>Recursos, acciones y conjuros innatos.</strong></p>
+<ul>
+<li><strong>Recurso gastable</strong>: elige la recuperación y <strong>cuántos usos tiene</strong>: un número fijo, igual al nivel, igual al bono de competencia (el aliento del Dracónido) o igual a un modificador de característica (siempre con al menos 1 uso, aunque el modificador sea 0 o negativo). *Desde el nivel* hace que exista solo a partir de ese nivel.</li>
+<li>Si una <strong>acción de combate</strong> o un <strong>estado activable</strong> gasta el recurso, su botón ya muestra los usos y el contador propio desaparece solo. *Ocultar su contador* sirve para un recurso que solo consulta otro efecto. Al crear la <strong>acción de combate</strong>, el recurso se elige de la lista de los que ya añadiste en el mismo sitio; si no hay ninguno, se escribe su id.</li>
+<li><strong>Conjuro innato</strong>: *Siempre preparado* (sin contador propio), *A voluntad* (la ficha lo marca ilimitado, como el truco de un linaje) o *N usos por descanso largo*; y *Desde el nivel* para los que llegan más tarde (el segundo conjuro de un linaje, a nivel 3).</li>
+</ul>
+<p><strong>Elecciones con opciones propias (linajes, ancestros, legados).</strong> Con *Elección del jugador* y <strong>Qué se elige → Opciones propias</strong> creas una elección como el Linaje élfico o el Ancestro dracónico del SRD:</p>
+<ol>
+<li>Escribe el <strong>título</strong> y cuántas opciones elige el jugador.</li>
+<li>Toca <strong>Añadir una opción</strong> por cada una. Cada opción tiene <strong>nombre</strong>, <strong>descripción</strong> y sus propios <strong>efectos al elegirla</strong>, con este mismo constructor: conjuros innatos, resistencias, sentidos, competencias… Una opción puede no dar ningún efecto y ser solo texto.</li>
+<li>Hacen falta al menos dos opciones con nombre, y tantas como las que elige el jugador.</li>
+<li>Toca <strong>Añadir efecto</strong>.</li>
+</ol>
+<p>Por ejemplo, un «Linaje feérico» con dos opciones: *Ígnea* (resistencia al fuego y el truco Luz a voluntad) y *Glacial* (resistencia al frío). Al crear el personaje, el jugador ve las dos tarjetas con lo que da cada una y elige.</p>
+<p>Otros dos tipos de elección se crean igual de fácil: <strong>Característica de lanzamiento</strong> (el jugador elige con cuál de las características que marques lanza los conjuros innatos de ese origen; es lo que hacen el Elfo, el Gnomo y el Tiefling) y <strong>Dote de origen a elegir</strong> (como el Humano versátil).</p>
+<p>Cosas que conviene saber:</p>
+<ul>
+<li>Una elección ya creada <strong>no se edita</strong>: se borra y se vuelve a crear.</li>
+<li>El <code>id</code> de la elección sale de su título, y es la clave donde se guarda lo que eligió el jugador. Dos elecciones del mismo personaje con el mismo título (una de especie y otra de clase, por ejemplo) se pisarían: usa títulos distintos.</li>
+<li>En una especie, ponla en <strong>Efectos globales</strong> para que se ofrezca al crear el personaje (§11).</li>
+</ul>
 <p>Ejemplo: un objeto que suma Carisma al daño de tus conjuros de Evocación. Elige el tipo «Bono al daño de conjuros», marca <strong>Carisma</strong> y la escuela <strong>Evocación</strong>, y toca <strong>Añadir efecto</strong>.</p>
 <figure><img src="img/efecto-dano-conjuros.png" alt="Formulario Bono al daño de conjuros con Carisma y Evocación" loading="lazy" /><figcaption>Formulario Bono al daño de conjuros con Carisma y Evocación</figcaption></figure>
 <p>El efecto queda en la lista del objeto con un resumen; para quitarlo, toca el icono de eliminar. Para cambiarlo, elimínalo y créalo de nuevo.</p>
 <figure><img src="img/efecto-agregado.png" alt="Efecto agregado a la lista, con su resumen" loading="lazy" /><figcaption>Efecto agregado a la lista, con su resumen</figcaption></figure>
-<h3 id="21-5-que-se-puede-hacer-solo-con-json">21.5 Qué se puede hacer solo con JSON</h3>
+<h3 id="21-6-crear-una-dote">21.6 Crear una dote</h3>
+<ol>
+<li>En la sección <strong>Dotes</strong> toca <strong>+</strong>.</li>
+<li><strong>Identidad</strong>: nombre, descripción y, si quieres, un <strong>resumen corto</strong> (se usa donde hay poco espacio, como la ficha en PDF).</li>
+<li><strong>Categoría</strong>: elige en el desplegable <strong>Origen</strong>, <strong>General</strong>, <strong>Estilo de combate</strong> (<code>COMBAT_STYLE</code>) o <strong>Épica</strong>. Marca <strong>Repetible</strong> si se puede tomar más de una vez (Habilidoso, Resiliente).</li>
+<li><strong>Prerequisitos</strong> (opcionales; déjalos vacíos si no hay): <strong>Nivel mínimo</strong>, <strong>Característica mínima</strong> (marca una o varias; basta con cumplir el mínimo en una de ellas) con su <strong>Puntuación mínima</strong>, que es obligatoria si marcaste alguna característica (<strong>Guardar</strong> queda deshabilitado hasta rellenarla), y <strong>Requiere lanzar conjuros</strong>. No hay forma de exigir otra dote, una clase o una especie. Los prerrequisitos solo se comprueban al subir de nivel, no en la dote de origen del trasfondo.</li>
+<li><strong>Efectos mecánicos</strong>: añade los efectos con el constructor (§21.5): mejoras de característica, competencias, conjuros innatos, etc.</li>
+<li>Toca <strong>Guardar</strong>.</li>
+</ol>
+<p>Reglas que conviene saber:</p>
+<ul>
+<li>Al <strong>editar</strong> se conservan <code>requiresClass</code>, el icono y el texto de ambientación aunque el formulario no los muestre. Una dote que reutiliza el id de una del SRD la reemplaza.</li>
+<li>Una dote guardada con el editor antiguo como «Estilo de combate» (<code>FIGHTING_STYLE</code>) pasa sola a <code>COMBAT_STYLE</code>, y ya la ofrecen el Estilo de combate del Guerrero, el Paladín y el Explorador.</li>
+<li>El filtro de la enciclopedia «Estilo» y la etiqueta de las dotes de estilo usan <code>COMBAT_STYLE</code>.</li>
+<li><strong>Importar dote</strong> acepta archivos sin <code>category</code> (es opcional) y solo rechaza el archivo si trae claves de otro tipo en el primer nivel (<code>hitDie</code>, <code>speed</code>, <code>startingEquipment</code>…).</li>
+<li>Al importar un pack, el validador avisa (sin bloquear) de una categoría desconocida, un prerrequisito incompleto o con códigos que no son características, un <code>requiresClass</code> que no existe, una dote de origen con prerrequisito (no se comprueba) y elecciones que otorgan o filtran dotes inexistentes.</li>
+</ul>
+<h3 id="21-7-crear-un-trasfondo">21.7 Crear un trasfondo</h3>
+<ol>
+<li>En la sección <strong>Trasfondos</strong> toca <strong>+</strong>.</li>
+<li><strong>Identidad</strong>: nombre e historia.</li>
+<li><strong>Puntuaciones de característica</strong>: marca exactamente <strong>3</strong> (el contador muestra <code>Seleccionadas: n/3</code> y se pone rojo hasta llegar a 3). Al crear el personaje, el jugador reparte +2/+1 o +1/+1/+1 entre ellas.</li>
+<li><strong>Dote de origen</strong>: elige del catálogo la dote que otorga el trasfondo a nivel 1. «Sin dote» es válido y el trasfondo se guarda sin ninguna.</li>
+<li><strong>Competencias</strong>: marca las <strong>habilidades</strong> y busca las <strong>herramientas</strong> en el catálogo (solo se pueden añadir herramientas que ya existen).</li>
+<li><strong>Equipo inicial</strong>: busca cada objeto en el catálogo y pulsa <strong>Añadir</strong> (opción A). Indica el <strong>Oro incluido en el equipo</strong>, las monedas que acompañan a esos objetos (el «15 po» de las clases del SRD), y el <strong>Oro alternativo</strong>, lo que recibe si elige la opción B en vez del equipo.</li>
+<li><strong>Otros efectos (avanzado)</strong>, plegable: conjuros innatos, resistencias u otros efectos que no encajan arriba.</li>
+<li>Toca <strong>Guardar</strong>.</li>
+</ol>
+<p>Reglas que conviene saber:</p>
+<ul>
+<li>Al <strong>editar</strong> un trasfondo del SRD (o importado), la mejora de característica y la dote conservan su <code>id</code>, título y, con la misma dote, su <code>fromClass</code> y descripción; el <code>id</code> es la clave donde los personajes ya creados guardaron su reparto. Si cambias de dote se descarta lo de la anterior.</li>
+<li>Una <strong>dote a elegir por el jugador</strong> (grant <code>FEAT</code> sin <code>featId</code>) no se edita en la sección de dote: aparece en <strong>Otros efectos (avanzado)</strong> y se conserva.</li>
+<li>Las habilidades importadas con un nombre que no es de la lista (p. ej. «Juego de Manos» con mayúscula) aparecen como un chip más, marcado, para que puedas quitarlas. El motor compara los nombres tal cual, así que conviene usar los de la lista.</li>
+<li>Las herramientas guardan solo el nombre; el objeto de equipo sí guarda su <code>id</code> del catálogo.</li>
+<li>Si no indicas <strong>Oro alternativo</strong>, la opción B del jugador da 0 po.</li>
+<li>Al importar un pack, el validador avisa (sin bloquear) de un trasfondo sin mejora de característica, con <code>pool</code> distinto de 3, con una dote que no existe, con más de una dote, sin <code>goldAlternative</code> o con <code>id</code> de equipo desconocidos.</li>
+</ul>
+<h3 id="21-8-crear-una-especie">21.8 Crear una especie</h3>
+<ol>
+<li>En la sección <strong>Especies</strong> toca <strong>+</strong>.</li>
+<li><strong>Identidad</strong>: nombre y descripción.</li>
+<li><strong>Físico</strong>: elige el <strong>tipo de criatura</strong> (Humanoide es el habitual), la <strong>velocidad</strong> en metros y el <strong>tamaño</strong>. Si marcas <strong>más de un tamaño</strong>, el jugador elegirá entre ellos al crear el personaje (el formulario lo resume como «Elección: Pequeño o Mediano», de menor a mayor); no se puede dejar ninguno marcado. Rellena la <strong>visión en la oscuridad</strong> en metros o déjala vacía si no tiene. Una velocidad vacía o no válida se guarda como 9 m.</li>
+<li><strong>Rasgos</strong>: toca para añadir un rasgo (p. ej. «Linaje feérico»). Cada rasgo tiene <strong>nombre</strong>, <strong>descripción</strong>, <strong>nivel al que aparece</strong> (número de 1 a 20) y, si lo necesita, <strong>Efectos mecánicos</strong> (se despliega con el constructor de §21.5). Un rasgo puede ser solo texto.</li>
+<li><strong>Efectos globales (avanzado)</strong>, plegable: efectos de la especie que no son un rasgo con nombre (mejoras de característica, resistencias…). Es también el sitio para una <strong>elección</strong> que el jugador deba hacer al crear el personaje (una habilidad, por ejemplo): las elecciones dentro de un rasgo no se ofrecen en esa pantalla (§11).</li>
+<li>Toca <strong>Guardar</strong>.</li>
+</ol>
+<p>Reglas que conviene saber:</p>
+<ul>
+<li>Al <strong>editar</strong> una especie con elección de tamaño, el tamaño base, el <code>CHOICE</code> y su <code>id</code> se conservan mientras no cambies los tamaños marcados. Si los cambias se regeneran las opciones pero se mantiene el <code>id</code>, para no invalidar lo que ya eligieron los personajes. Una especie nueva usa el <code>id</code> <code>species_size</code>.</li>
+<li>Los <strong>rasgos sin nombre se descartan</strong> al guardar, sin aviso. Una especie importada sin tipo de criatura se guarda como Humanoide al editarla (la app ya lo asumía).</li>
+<li>La ficha y el PDF muestran el tamaño que <strong>eligió</strong> el jugador, no el base.</li>
+<li>Los <strong>linajes y subespecies</strong> (el Elfo, el Gnomo, el Tiefling, el Dracónido) se crean con una *Elección del jugador → Opciones propias* en <strong>Efectos globales</strong> (§21.5). También se pueden crear la elección de <strong>dote de origen</strong> (Humano) y la de <strong>aptitud de lanzamiento</strong>. Un efecto ya creado no se edita: se borra y se vuelve a crear.</li>
+</ul>
+<h3 id="21-9-crear-una-clase">21.9 Crear una clase</h3>
+<p>La clase es el formulario más largo. Crea antes el equipo y las herramientas que quieras como equipo inicial (§21.1). Después, en este orden:</p>
+<ol>
+<li>En la sección <strong>Clases</strong> toca <strong>+</strong>.</li>
+<li><strong>Identidad</strong>: nombre (obligatorio) y descripción.</li>
+<li><strong>Básico</strong>: elige el <strong>dado de golpe</strong> en el desplegable (<code>d6</code>, <code>d8</code>, <code>d10</code>, <code>d12</code>) y marca las <strong>características primarias</strong> en chips.</li>
+<li><strong>Competencias</strong>:
+<ul>
+<li><strong>Tiradas de salvación</strong>: deben ser <strong>exactamente 2</strong> (chips). El título se pone rojo hasta que lo cumplas y <strong>Guardar</strong> no se habilita.</li>
+<li><strong>Pool de habilidades</strong> de la clase (chips) y <strong>cuántas elige el jugador</strong> (campo numérico; no puede superar el pool, y vacío equivale a 0, o a 1 si el pool tiene una sola habilidad).</li>
+<li><strong>Armas</strong>: Simples y/o Marciales. <strong>Armadura</strong>: Ligera, Media, Pesada y/o Escudos.</li>
+<li><strong>Herramientas</strong>: se buscan en el catálogo.</li>
+</ul>
+</li>
+<li><strong>Equipo inicial</strong>: en la <strong>Opción A</strong> busca cada objeto en el catálogo y pulsa <strong>Añadir</strong>, e indica el <strong>Oro incluido</strong> (las monedas que acompañan a esos objetos, el «15 po» de las clases del SRD). Si la clase ofrece más de un conjunto, como el Guerrero, toca <strong>Añadir otro conjunto de equipo</strong>: aparece la <strong>Opción B</strong> (y luego C…) con su propio buscador y su oro incluido, y puedes quitarla con <strong>Quitar la opción</strong>. Al final, el <strong>Oro alternativo</strong> es siempre la última opción.</li>
+<li><strong>Rasgos</strong>: toca <strong>Añadir rasgo</strong> por cada rasgo de clase. Cada uno lleva <strong>nombre</strong>, <strong>descripción</strong>, <strong>nivel al que aparece</strong> (número de 1 a 20; Furia a nivel 1, Ataque adicional a nivel 5) y <strong>Efectos mecánicos</strong> (constructor de §21.5, plegable). Un rasgo puede ser solo texto.</li>
+<li><strong>Subclases</strong>: indica el <strong>nivel al que se elige subclase</strong> (número de 1 a 20) y toca <strong>Añadir subclase</strong>. Cada subclase tiene nombre, descripción y sus propios <strong>rasgos</strong> (se despliegan con la flecha). La app crea sola el rasgo «Subclase» en ese nivel con la elección.</li>
+<li><strong>Multiclase</strong> (opcional): marca las características que se exigen para tomar esta clase como clase secundaria, en <strong>TODAS</strong> (deben cumplirse todas) o <strong>UNA</strong> (basta con una; al marcar una en un grupo sale del otro), y la <strong>Puntuación mínima</strong> (13 en el SRD). Sin ninguna marcada, cualquiera puede multiclasear a ella. Debajo, las <strong>competencias que gana</strong> al multiclasear: armas, armadura, herramientas y cuántas <strong>habilidades</strong> elige (0 = ninguna).</li>
+<li>Toca <strong>Guardar</strong>.</li>
+</ol>
+<p>Reglas que conviene saber:</p>
+<ul>
+<li>El <strong>nivel de subclase</strong> vale 3 si no lo cambias, y la elección solo se crea si hay al menos una subclase <strong>con nombre</strong>. Si borras todas las subclases, el rasgo «Subclase» desaparece.</li>
+<li>Los <strong>rasgos y subclases sin nombre se descartan</strong> al guardar, sin aviso.</li>
+<li>El <strong>equipo inicial</strong> puede tener tantas opciones como quieras: la <strong>A</strong> son los objetos más el oro incluido, cada conjunto adicional es otra opción (B, C…) y el oro alternativo cierra la lista. Un conjunto sin objetos se descarta al guardar. Los trasfondos solo ofrecen A y oro.</li>
+<li>La <strong>progresión</strong> (bono de competencia de nivel 1 a 20) se rellena con la tabla estándar. Los rasgos se desbloquean por su propio nivel, no por la tabla.</li>
+<li>El <code>id</code> se genera del nombre con el prefijo <code>custom_</code>, sin tildes ni ñ («Bárbaro» queda <code>custom_barbaro</code>). Si ya existe una clase con ese id, la nueva queda como <code>custom_barbaro_2</code>, <code>_3</code>… y no pisa a la anterior. Lo mismo vale para los rasgos y subclases con el mismo nombre dentro de la clase, y para el resto de tipos (dotes, trasfondos, especies, equipo y conjuros). Editar un objeto nunca cambia su id.</li>
+<li>Una clase nueva tiene <strong>multiclase libre</strong> y no otorga competencias al multiclasear hasta que rellenes la sección <strong>Multiclase</strong>. Todas las clases del SRD piden 13 en su característica principal.</li>
+<li>El requisito del editor usa <strong>un solo mínimo</strong> para todas las características. Si importas una clase con mínimos distintos por característica, se conservan mientras no toques el requisito; al editarlo se unifican.</li>
+<li>Al <strong>editar una clase importada</strong>, los campos que el formulario no muestra (orden de características recomendado, progresión, icono, texto de ambientación y competencias de armas y armaduras en texto libre, también las de multiclase) se conservan al guardar.</li>
+</ul>
+<blockquote>Para que la clase lance conjuros, añade a uno de sus rasgos el efecto <strong>Lanzamiento de conjuros</strong> (tipo de lanzador y característica); así su lista aparece al crear conjuros (§21.3). Las tablas de espacios de conjuro propias y los recursos por nivel no se pueden definir desde el editor (§21.11).</blockquote>
+<h3 id="21-10-crear-otros-objetos-de-equipo">21.10 Crear otros objetos de equipo</h3>
+<p>Además del arma mágica (§21.4), el formulario <strong>Equipo</strong> sirve para el resto de objetos:</p>
+<ol>
+<li>En <strong>Equipo</strong> toca <strong>+</strong>, escribe el nombre y en la sección <strong>Tipo</strong> elige la <strong>Categoría</strong> (desplegable): Arma, Armadura, Escudo, Equipo de aventura, Herramienta, Consumible, Contenedor, Foco mágico, Objeto maravilloso o Munición. Arma y Herramienta piden además un <strong>Subtipo</strong> (desplegable); al cambiar de categoría el subtipo se borra, y volver a elegir la misma lo conserva.</li>
+<li><strong>Armadura</strong>: indica la <strong>CA base</strong> (número; vacío equivale a 10), su categoría (ligera, media o pesada; desplegable), el <strong>tope de modificador de DES</strong> (solo la media; vacío equivale a 2, el valor del SRD), el <strong>requisito de Fuerza</strong> (opcional) y si da <strong>desventaja en Sigilo</strong>. La ligera suma el DES completo y la pesada no lo suma. El subtipo de la armadura (<code>light</code>, <code>medium</code>, <code>heavy</code>) sale solo de esa categoría.</li>
+<li><strong>Detalles</strong> (todas las categorías): <strong>coste</strong> (número entero) y moneda (po, pp o pc, es decir oro, plata o cobre), <strong>peso</strong> en kg, <strong>rareza</strong> (Mundano por defecto) y <strong>Requiere sintonización</strong>.</li>
+<li><strong>Paquete</strong>: si la categoría es Equipo de aventura o Contenedor aparece <strong>Contenido del paquete</strong>; busca cada objeto en el catálogo, pulsa <strong>Añadir</strong> y ajusta la cantidad. El personaje recibe su contenido al obtenerlo.</li>
+<li><strong>Efectos mecánicos</strong>: bono de CA, recursos, resistencias, etc. (§21.5). Vacío = objeto puramente descriptivo.</li>
+<li>Toca <strong>Guardar</strong>.</li>
+</ol>
+<p><strong>Escudo.</strong> No tiene sección de datos propia: al guardar se crea con el bono de CA estándar de <strong>+2</strong>, que no se puede cambiar en el editor. Un escudo mágico se hace sumando un efecto *Bono de CA* con el extra. Si editas un escudo importado, su bloque <code>shield</code> (bono, acción de equipar, entrenamiento) se conserva.</p>
+<p><strong>Munición.</strong> Al elegir la categoría *Munición* aparece <strong>Datos de la munición</strong>: el <strong>Tipo de munición</strong> (Flechas, Virotes, Proyectiles de honda, Balas de arma de fuego o Dardos; es lo que la enlaza con las armas que la usan) y la <strong>Cantidad por lote</strong> (lo que recibe el personaje al obtenerla; vacío equivale a 1). La ficha lleva la cuenta de las unidades gastadas. El contenedor recomendado (<code>recommendedContainer</code>) solo se escribe por JSON.</p>
+<p><strong>Herramienta, Contenedor y Foco mágico.</strong> El editor solo les pone nombre, subtipo (en la herramienta), detalles y efectos; <strong>no crea sus datos propios</strong> (<code>tool</code>, <code>container</code>, <code>focus</code>, §15). Funcionan como objetos de inventario y la pestaña Inventario los agrupa bien (los focos en «Focos»), pero una <strong>Herramienta</strong> sin bloque <code>tool</code> no muestra característica ni usos. Si necesitas esos datos, importa el objeto desde un pack JSON; si luego lo editas en la app, se conservan.</p>
+<h3 id="21-11-que-se-puede-hacer-solo-con-json">21.11 Qué se puede hacer solo con JSON</h3>
 <p>El editor gráfico no cubre todo. Estas partes se hacen importando un pack JSON (§19):</p>
 <ul>
-<li>Conjuros que <strong>se activan</strong> (<code>activeEffect</code>: Favor divino, Arma espiritual…) y los que lanzan <strong>varios dardos o rayos</strong> (<code>count</code>).</li>
+<li><strong>Conjuros:</strong>
+<ul>
+<li>Elegir <strong>armas concretas</strong> en un conjuro que cambia la aptitud del arma (<code>weaponAbility.weaponIds</code>, como Shillelagh con bastón y garrote).</li>
+<li>Los <strong>daños adicionales</strong> y las <strong>varias tiradas</strong> dentro de un ataque que crea el conjuro. Si el conjuro ya los trae, se conservan al editarlo.</li>
+<li>Un tipo de daño fuera de los 13 del desplegable (el SRD usa <code>elemental</code> y <code>fuego o frío</code> en tres conjuros de invocación).</li>
+<li>La salvación de cada daño adicional: siempre es la del daño principal.</li>
+</ul>
+</li>
 <li>Los tipos de efecto que no aparecen en la lista del constructor (<code>DAMAGE_BONUS</code>, <code>ATTACK_BONUS</code>, <code>WEAPON_MASTERY</code>, <code>ROLL_TABLE</code>, <code>COMPUTED_STAT</code>, <code>ADVANTAGE</code>, etc.).</li>
 <li>Importar conjuros sueltos: solo se importan dentro de un pack completo.</li>
-<li>Los campos de arma <code>masteryProperty</code>, <code>range</code>, <code>ammunitionType</code> y <code>fixedDamage</code>.</li>
+<li><strong>Bestias</strong> (Forma Salvaje del Druida) e <strong>invocaciones sobrenaturales</strong> del Brujo: el editor no tiene sección para ellas; se crean en un pack JSON (§14 y §16).</li>
+<li><strong>Equipo:</strong>
+<ul>
+<li>Los campos de arma <code>fixedDamage</code> y <code>notes</code>, y una unidad de alcance distinta de metros.</li>
+<li>Los bloques <code>tool</code>, <code>container</code> y <code>focus</code>, el <code>recommendedContainer</code> de la munición y el bono de un escudo distinto de +2.</li>
+<li>Los campos de armadura <code>donMinutes</code> y <code>doffMinutes</code>.</li>
+<li>Daño extra con la etiqueta del interruptor personalizada o repetido por nivel (<code>toggleLabel</code>, <code>perCantripTier</code>), y varios paquetes en un mismo objeto.</li>
+<li><code>length</code>, <code>volumeMl</code>, <code>writingCapacityWords</code>, <code>writingCapacityPages</code>, <code>creatureCapacity</code> y <code>allowedSizes</code>.</li>
+<li>Un tipo de daño del arma base distinto de cortante, perforante o contundente.</li>
 </ul>
-<p>Si importas un objeto con esos datos y lo editas en la app, los campos que el formulario no muestra se conservan al guardar.</p>
+</li>
+<li><strong>Especies:</strong> el constructor cubre los tipos de efecto de las 9 especies del SRD (comprobado por tipo de efecto y de elección, no uno por uno). Lo que no se puede hacer desde la app:
+<ul>
+<li><strong>Editar</strong> un efecto o una opción de un linaje ya creados: solo se borran y se vuelven a crear.</li>
+<li><strong>Elegir una dote concreta</strong> como dote fija (<code>featId</code>) o filtrar la dote a elegir por lista de clase: el editor solo ofrece «una dote de origen cualquiera».</li>
+<li><code>minLevel</code> en los tipos de efecto que no sean recurso, conjuro innato o acción de combate.</li>
+<li>Las <strong>velocidades de vuelo, nado y trepar</strong> y los <strong>idiomas</strong> no son campos de la especie: se expresan con efectos (el Dracónido lo hace con un recurso).</li>
+</ul>
+</li>
+<li><strong>Clases:</strong> mínimos de multiclase distintos por característica, orden de características recomendado, tablas de progresión propias (espacios de conjuro, recursos por nivel con <code>FROM_TABLE</code>), <code>WEAPON_MASTERY</code> y la progresión propia de una subclase.</li>
+</ul>
+<p>Si importas un objeto con esos datos y lo editas en la app, el formulario conserva los campos que no muestra, incluidos el icono, el texto de ambientación y el resumen corto (<code>display</code>). Está comprobado en el código para <strong>clases</strong> (con sus rasgos y subclases), <strong>equipo</strong>, <strong>conjuros</strong> (también el <code>activeEffect</code> y el <code>count</code>, con las excepciones de §21.3) y <strong>especies</strong> (también el tamaño y su elección, §21.8). En dotes y trasfondos el <code>display</code> también se conserva; el resto de sus campos ocultos queda pendiente de revisar en la auditoría de cada tipo.</p>
   </div>
 </body>
 </html>

@@ -88,32 +88,42 @@
   <tr><td><code>display</code></td><td>DisplayInfo</td><td>Sí</td><td></td></tr>
   <tr><td><code>mechanics</code></td><td>[Grant]</td><td>No</td><td>Competencias, dotes de origen, conjuros, etc.</td></tr>
   <tr><td><code>startingEquipment</code></td><td>[EquipmentItem]</td><td>No</td><td>Cada ítem: <code>{ &quot;display&quot;: { &quot;name&quot;: &quot;…&quot; }, &quot;id&quot;: &quot;…&quot; }</code>. El <code>id</code> (opcional) enlaza al catálogo; ver §2.1.</td></tr>
-  <tr><td><code>goldAlternative</code></td><td>int?</td><td>No</td><td>Oro alternativo al equipo.</td></tr>
+  <tr><td><code>goldAlternative</code></td><td>int?</td><td>No</td><td>Oro de la <strong>opción B</strong>: el jugador elige entre <code>startingEquipment</code> (opción A) o este oro. Si lo omites, la opción B da <strong>0 po</strong>.</td></tr>
 </table>
+<p>Un trasfondo solo admite estas claves de primer nivel (<code>id</code>, <code>display</code>, <code>mechanics</code>, <code>startingEquipment</code>, <code>goldAlternative</code>). El botón <strong>Importar trasfondo</strong> (objeto suelto, §19.2) rechaza el archivo si trae otras o si no trae ninguna de las tres opcionales.</p>
+<p>La pantalla de creación entiende estos grants del trasfondo, y solo estos:</p>
+<table>
+  <tr><th>Grant</th><th>Qué hace</th></tr>
+  <tr><td><code>PROFICIENCY</code> <code>kind: &quot;SKILL&quot;</code> / <code>&quot;TOOL&quot;</code></td><td>Competencias fijas. El nombre debe coincidir <strong>exactamente</strong> con el de la habilidad o herramienta (<code>Juego de manos</code>, <code>Conocimiento arcano</code>).</td></tr>
+  <tr><td><code>CHOICE</code> <code>kind: &quot;ABILITY_SCORE_IMPROVEMENT&quot;</code> con <code>pool</code></td><td>El jugador reparte <strong>3 puntos</strong> entre las características del <code>pool</code> (+2/+1 o +1/+1/+1, máximo +2 en una). <code>points</code> y <code>pick</code> no cambian esa regla; el <code>pool</code> debería tener 3 características.</td></tr>
+  <tr><td><code>CHOICE</code> <code>kind: &quot;FEAT&quot;</code> con <code>featId</code></td><td>Dote de origen fija. Solo se usa la <strong>primera</strong>. Con <code>featId: &quot;magic_initiate&quot;</code> y <code>fromClass</code> (<code>cleric</code>, <code>druid</code> o <code>wizard</code>) la lista de conjuros queda fijada.</td></tr>
+  <tr><td>Cualquier otro (<code>INNATE_SPELL</code>, resistencias…)</td><td>Se aplica al personaje, sin pantalla propia de creación.</td></tr>
+</table>
+<p>Una elección <code>CUSTOM</code> con <code>options</code> de <code>ABILITY_BOOST</code> <strong>no</strong> se ofrece en el reparto de características de la creación: usa siempre <code>ABILITY_SCORE_IMPROVEMENT</code>.</p>
 <p>En el PHB 2024 el trasfondo suele otorgar competencias, una dote de origen y una mejora de característica. Todo eso se modela con grants:</p>
 <pre><code>{
   &quot;id&quot;: &quot;sage&quot;,
   &quot;display&quot;: { &quot;name&quot;: &quot;Sabio&quot;, &quot;description&quot;: &quot;Pasaste años estudiando…&quot;, &quot;icon&quot;: &quot;📚&quot; },
   &quot;mechanics&quot;: [
-    { &quot;type&quot;: &quot;PROFICIENCY&quot;, &quot;kind&quot;: &quot;SKILL&quot;, &quot;items&quot;: [&quot;Arcanos&quot;, &quot;Historia&quot;] },
-    { &quot;type&quot;: &quot;PROFICIENCY&quot;, &quot;kind&quot;: &quot;TOOL&quot;, &quot;items&quot;: [&quot;Utensilios de calígrafo&quot;] },
+    { &quot;type&quot;: &quot;PROFICIENCY&quot;, &quot;kind&quot;: &quot;SKILL&quot;, &quot;items&quot;: [&quot;Conocimiento arcano&quot;, &quot;Historia&quot;] },
+    { &quot;type&quot;: &quot;PROFICIENCY&quot;, &quot;kind&quot;: &quot;TOOL&quot;, &quot;items&quot;: [&quot;Suministros de calígrafo&quot;] },
     {
       &quot;type&quot;: &quot;CHOICE&quot;,
       &quot;id&quot;: &quot;sage_asi&quot;,
-      &quot;title&quot;: &quot;Mejora de característica del trasfondo&quot;,
-      &quot;pick&quot;: 1,
-      &quot;kind&quot;: &quot;CUSTOM&quot;,
-      &quot;options&quot;: [
-        { &quot;id&quot;: &quot;sage_int2&quot;, &quot;display&quot;: { &quot;name&quot;: &quot;+2 INT&quot; }, &quot;grants&quot;: [ { &quot;type&quot;: &quot;ABILITY_BOOST&quot;, &quot;boosts&quot;: [ { &quot;ability&quot;: &quot;INT&quot;, &quot;amount&quot;: 2, &quot;max&quot;: 20 } ] } ] }
-      ]
+      &quot;title&quot;: &quot;Mejoras de característica&quot;,
+      &quot;kind&quot;: &quot;ABILITY_SCORE_IMPROVEMENT&quot;,
+      &quot;pool&quot;: [&quot;CON&quot;, &quot;INT&quot;, &quot;WIS&quot;],
+      &quot;points&quot;: 3
     },
     {
       &quot;type&quot;: &quot;CHOICE&quot;,
       &quot;id&quot;: &quot;sage_origin_feat&quot;,
       &quot;title&quot;: &quot;Dote de origen&quot;,
-      &quot;pick&quot;: 1,
       &quot;kind&quot;: &quot;FEAT&quot;,
-      &quot;category&quot;: &quot;ORIGIN&quot;
+      &quot;level&quot;: 1,
+      &quot;category&quot;: &quot;ORIGIN&quot;,
+      &quot;featId&quot;: &quot;magic_initiate&quot;,
+      &quot;fromClass&quot;: &quot;wizard&quot;
     }
   ],
   &quot;startingEquipment&quot;: [
@@ -133,7 +143,7 @@
     &quot;description&quot;: &quot;Siempre tuviste labia para convencer a cualquiera de casi cualquier cosa.&quot;
   },
   &quot;mechanics&quot;: [
-    { &quot;type&quot;: &quot;PROFICIENCY&quot;, &quot;kind&quot;: &quot;SKILL&quot;, &quot;items&quot;: [&quot;Engaño&quot;, &quot;Juego de Manos&quot;] },
+    { &quot;type&quot;: &quot;PROFICIENCY&quot;, &quot;kind&quot;: &quot;SKILL&quot;, &quot;items&quot;: [&quot;Engaño&quot;, &quot;Juego de manos&quot;] },
     { &quot;type&quot;: &quot;PROFICIENCY&quot;, &quot;kind&quot;: &quot;TOOL&quot;, &quot;items&quot;: [&quot;Útiles de falsificación&quot;] },
     {
       &quot;type&quot;: &quot;CHOICE&quot;,
@@ -154,8 +164,7 @@
     }
   ],
   &quot;startingEquipment&quot;: [
-    { &quot;display&quot;: { &quot;name&quot;: &quot;Útiles de falsificación&quot; }, &quot;id&quot;: &quot;forgery_kit&quot; },
-    { &quot;display&quot;: { &quot;name&quot;: &quot;Ropas finas&quot; }, &quot;id&quot;: &quot;fine_clothes&quot; },
+    { &quot;display&quot;: { &quot;name&quot;: &quot;Ropas de viaje&quot; } },
     { &quot;display&quot;: { &quot;name&quot;: &quot;15 po&quot; } }
   ],
   &quot;goldAlternative&quot;: 50

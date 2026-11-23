@@ -91,8 +91,11 @@
   <tr><td><code>savingThrows</code></td><td>[string]</td><td>No</td><td>Salvaciones con competencia (p. ej. <code>[&quot;STR&quot;,&quot;CON&quot;]</code>).</td></tr>
   <tr><td><code>proficiencies</code></td><td>ClassProficiencies</td><td>No</td><td>Competencias de armadura/armas/habilidades.</td></tr>
   <tr><td><code>startingEquipment</code></td><td>[EquipmentItem]</td><td>No</td><td>Equipo inicial. Cada ítem lleva <code>display</code> y, opcionalmente, <code>id</code> del objeto del catálogo (ver §2.1).</td></tr>
-  <tr><td><code>goldAlternative</code></td><td>int?</td><td>No</td><td>Oro alternativo al equipo inicial.</td></tr>
+  <tr><td><code>startingEquipmentOptions</code></td><td>[StartingEquipmentOption]</td><td>No</td><td>Conjuntos <strong>alternativos</strong> de equipo inicial (opción B, C…): <code>[ { &quot;items&quot;: [ … ] } ]</code>. Vacío = la clase solo ofrece la opción A y el oro. Ver abajo.</td></tr>
+  <tr><td><code>goldAlternative</code></td><td>int?</td><td>No</td><td>Oro de la <strong>última opción</strong>: el jugador elige entre <code>startingEquipment</code> (opción A), los conjuntos de <code>startingEquipmentOptions</code> o este oro.</td></tr>
   <tr><td><code>subclassUnlockLevel</code></td><td>int?</td><td>No</td><td>Nivel al que se elige subclase (p. ej. 3).</td></tr>
+  <tr><td><code>multiclassReq</code></td><td>MulticlassRequirement?</td><td>No</td><td>Requisito de característica para tomar el primer nivel de esta clase como clase secundaria (ver §2.2). Sin él, la multiclase es libre.</td></tr>
+  <tr><td><code>multiclassProficiencies</code></td><td>ClassProficiencies?</td><td>No</td><td>Competencias que gana quien multiclasea a esta clase (suelen ser un subconjunto de <code>proficiencies</code>). Sin él, no gana ninguna.</td></tr>
   <tr><td><code>progression</code></td><td>[LevelRow]</td><td>No</td><td>Tabla nivel a nivel (1–20).</td></tr>
   <tr><td><code>features</code></td><td>[FeatureDef]</td><td>No</td><td>Rasgos de la clase.</td></tr>
   <tr><td><code>subclasses</code></td><td>[SubclassDef]</td><td>No</td><td>Subclases disponibles.</td></tr>
@@ -102,6 +105,7 @@
 <pre><code>{
   &quot;name&quot;: &quot;Bárbaro&quot;,
   &quot;description&quot;: &quot;Texto largo opcional.&quot;,
+  &quot;shortDescription&quot;: &quot;Resumen corto opcional (p. ej. para la ficha en PDF).&quot;,
   &quot;icon&quot;: &quot;🔥&quot;,
   &quot;flavorText&quot;: &quot;Cita ambiental opcional.&quot;
 }</code></pre>
@@ -114,6 +118,14 @@
   &quot;numSkillChoices&quot;: 2
 }</code></pre>
 <p><code>numSkillChoices</code> = cuántas habilidades elige el jugador de la lista <code>skills</code>.</p>
+<p>Valores que usa el editor de la app (úsalos si quieres que el formulario los reconozca al editar): <code>armor</code> = <code>light</code>, <code>medium</code>, <code>heavy</code>, <code>shields</code>; <code>weapon</code> = <code>simple</code>, <code>martial</code>. El modelo acepta cualquier texto, pero el SRD base también trae textos libres (p. ej. «Armas marciales ligeras»), y el formulario <strong>no los muestra</strong> (ver §21.9); si editas una clase importada, se conservan al guardar.</p>
+<h3 id="2-2-requisito-de-multiclase-multiclassreq">2.2 Requisito de multiclase (<code>multiclassReq</code>)</h3>
+<p>Dos mapas <code>característica → mínimo</code>, combinados con AND entre ellos: <code>allOf</code> (todas deben cumplirse) y <code>anyOf</code> (basta una). El mínimo habitual del SRD es 13.</p>
+<pre><code>&quot;multiclassReq&quot;: { &quot;allOf&quot;: { &quot;STR&quot;: 13, &quot;CHA&quot;: 13 } }</code></pre>
+<pre><code>&quot;multiclassReq&quot;: { &quot;anyOf&quot;: { &quot;STR&quot;: 13, &quot;DEX&quot;: 13 } }</code></pre>
+<p>Solo aplica al tomar el <strong>primer nivel</strong> de la clase como clase secundaria. Las salvaciones nunca se otorgan al multiclasear, por eso <code>multiclassProficiencies</code> no las incluye.</p>
+<p><strong>Qué exige la app.</strong> Para tomar una clase nueva el personaje debe cumplir el requisito de <strong>esa clase</strong> y también el de <strong>su clase inicial</strong>. Una clase sin <code>multiclassReq</code> no exige nada.</p>
+<p><strong>Qué gana quien la toma.</strong> <code>multiclassProficiencies</code> da <code>armor</code>, <code>weapon</code> y <code>tools</code> por el mismo camino que las competencias de la clase inicial. De las habilidades solo cuenta <code>numSkillChoices</code> (cuántas elige el jugador, entre las de la clase); sin ese número, o sin el bloque, no gana ninguna. En el SRD el Bardo, el Explorador y el Pícaro dan 1.</p>
 <h3 id="startingequipment">startingEquipment</h3>
 <p>Cada ítem tiene un <code>display</code> (nombre) y, opcionalmente, un <code>id</code> que lo enlaza a un objeto del catálogo (<code>EquipmentDef</code>). Cuando el <code>id</code> está presente, el motor mete ese objeto directo en el inventario del personaje al crearlo (enlace fiable). Sin <code>id</code>, intenta resolver el objeto por nombre (heurístico; puede fallar si el nombre no casa). <strong>Recomendado: usar <code>id</code>.</strong></p>
 <pre><code>&quot;startingEquipment&quot;: [
@@ -122,6 +134,20 @@
   { &quot;display&quot;: { &quot;name&quot;: &quot;15 po&quot; } }
 ]</code></pre>
 <blockquote>El oro suelto (<code>&quot;15 po&quot;</code>) va sin <code>id</code>: el motor lo detecta por el patrón &quot;N po&quot; y lo suma al oro inicial en vez de meterlo como objeto.</blockquote>
+<p><strong>Varias opciones de equipo (<code>startingEquipmentOptions</code>).</strong> La mayoría de las clases ofrecen dos opciones: A (<code>startingEquipment</code>) o el oro (<code>goldAlternative</code>). El Guerrero del SRD 5.2 ofrece <strong>tres</strong>: A (cota de malla y espadón…), B (cuero tachonado, cimitarra y arco largo…) y C (155 po). Para eso, <code>startingEquipment</code> es la A, cada elemento de <code>startingEquipmentOptions</code> es una opción más (B, C…) y <code>goldAlternative</code> es siempre la <strong>última</strong>. Cada conjunto lleva su oro suelto como una entrada <code>&quot;N po&quot;</code>:</p>
+<pre><code>&quot;startingEquipment&quot;: [
+  { &quot;display&quot;: { &quot;name&quot;: &quot;Cota de malla&quot; } }, { &quot;display&quot;: { &quot;name&quot;: &quot;Espadón&quot; } },
+  { &quot;display&quot;: { &quot;name&quot;: &quot;4 po&quot; } }
+],
+&quot;startingEquipmentOptions&quot;: [
+  { &quot;items&quot;: [
+      { &quot;display&quot;: { &quot;name&quot;: &quot;Armadura de cuero tachonado&quot; } },
+      { &quot;display&quot;: { &quot;name&quot;: &quot;Cimitarra&quot; } },
+      { &quot;display&quot;: { &quot;name&quot;: &quot;11 po&quot; } }
+  ] }
+],
+&quot;goldAlternative&quot;: 155</code></pre>
+<p>Al crear el personaje, la pantalla de la clase muestra una tarjeta por opción (A, B…, y el oro al final) y el jugador elige una. Un pack posterior que no declare <code>startingEquipmentOptions</code> conserva los del SRD; si los declara, los reemplaza.</p>
 <hr />
 <hr />
 <h2 id="3-la-tabla-de-progresion-progression">3. La tabla de progresión (<code>progression</code>)</h2>
@@ -136,6 +162,7 @@
 </table>
 <p><strong><code>table</code> es la clave de las mecánicas que escalan.</strong> Un <code>RESOURCE</code> (u otros grants) con <code>scaling.rule = &quot;FROM_TABLE&quot;</code> y <code>tableKey = &quot;rage_uses&quot;</code> lee el valor de <code>table[&quot;rage_uses&quot;]</code> en el nivel actual. Así defines &quot;cuántas furias por nivel&quot; sin escribir código.</p>
 <blockquote>Los <code>features</code> de la fila de progresión enlazan por <strong>id</strong> con el <code>features</code> de la clase. El texto del rasgo vive una sola vez en <code>features</code>; la tabla solo lo referencia.</blockquote>
+<blockquote><strong>Qué lee realmente el motor.</strong> Los rasgos se desbloquean por su propio <code>level</code>. De la tabla de progresión solo se usa el mapa <code>table</code>: se toma la fila de <strong>mayor <code>level</code> que no pase del nivel actual</strong>, así que las filas pueden ser dispersas (basta una fila por cada nivel en que cambia un valor). La lista <code>features</code> de la fila y su <code>proficiencyBonus</code> no las usa el motor: el bono de competencia sale siempre del nivel total del personaje. Por eso el editor de la app deja <code>features</code> vacío y rellena <code>proficiencyBonus</code> con la tabla estándar.  Una subclase puede traer su propia <code>progression</code> (<code>SubclassDef.progression</code>): para <code>Trucos</code> y <code>Conjuros preparados</code> se consulta primero la de la subclase elegida y, si no define la clave, la de la clase.</blockquote>
 <hr />
 <hr />
 <h2 id="4-rasgos-featuredef">4. Rasgos (<code>FeatureDef</code>)</h2>
@@ -219,7 +246,8 @@
 <p>Notas de la implementación actual (fase 1):</p>
 <ul>
 <li>El motor ya suma el <code>THIRD</code> al nivel de lanzador combinado y calcula espacios y CD de salvación correctamente a partir del <code>ability</code> indicado.</li>
-<li>Los <strong>límites por tabla de subclase</strong> (cuántos trucos/conjuros preparados concretos permite la subclase a cada nivel) y la <strong>restricción de escuela</strong> del PHB (Caballero Arcano: Abjuración/Evocación; Embaucador Arcano: Encantamiento/Ilusión) aún no se modelan: el jugador aprende de la lista de <code>spellListClassId</code> sin ese filtro. Son refinamientos futuros.</li>
+<li>Los <strong>límites de trucos y de conjuros preparados</strong> sí se modelan por tabla: pon las claves <code>Trucos</code> y <code>Conjuros preparados</code> en <code>table</code> de la <code>progression</code> de la <strong>subclase</strong> (o de la clase). Se usa la fila de mayor nivel que no pase del nivel actual.</li>
+<li>La <strong>restricción de escuela</strong> del PHB (Caballero Arcano: Abjuración/Evocación; Embaucador Arcano: Encantamiento/Ilusión) no la encontré implementada en el código: el jugador aprende de la lista de <code>spellListClassId</code> sin ese filtro.</li>
 </ul>
 <hr />
 <hr />
@@ -315,7 +343,7 @@
 <hr />
 <hr />
 <h2 id="ejemplo-clase-minima-y-funcional">Ejemplo — Clase — mínima y funcional</h2>
-<p>Guerrero reducido: d10, FUE/DES primarias, salvaciones FUE/CON, un rasgo de nivel 1 (recurso + toggle) y la elección de subclase a nivel 3. La <code>progression</code> estándar se completa sola al importar.</p>
+<p>Guerrero reducido: d10, FUE/DES primarias, salvaciones FUE/CON, un rasgo de nivel 1 (recurso + toggle) y la elección de subclase a nivel 3. Si la importas con <strong>Importar clase</strong> (objeto suelto), la <code>progression</code> estándar se completa sola; en un pack completo no encontré ese relleno, así que inclúyela.</p>
 <pre><code>{
   &quot;id&quot;: &quot;guardian_simple&quot;,
   &quot;display&quot;: { &quot;name&quot;: &quot;Guardián&quot;, &quot;description&quot;: &quot;Combatiente resistente.&quot; },

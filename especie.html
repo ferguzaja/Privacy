@@ -86,15 +86,15 @@
   <tr><td><code>id</code></td><td>string</td><td>Sí</td><td></td></tr>
   <tr><td><code>display</code></td><td>DisplayInfo</td><td>Sí</td><td></td></tr>
   <tr><td><code>creatureType</code></td><td>string?</td><td>No</td><td>Tipo de criatura (código en mayúsculas: <code>HUMANOID</code>, <code>FEY</code>, <code>UNDEAD</code>, <code>CONSTRUCT</code>, <code>DRAGON</code>, <code>ELEMENTAL</code>, …). <code>null</code> → la app asume <code>HUMANOID</code>.</td></tr>
-  <tr><td><code>speed</code></td><td>double?</td><td>No</td><td>Velocidad base <strong>en metros</strong> (p. ej. <code>9</code> = 9 m; goliat <code>10.5</code>).</td></tr>
-  <tr><td><code>size</code></td><td>string?</td><td>No</td><td>Tamaño por defecto (código: <code>TINY</code>, <code>SMALL</code>, <code>MEDIUM</code>, <code>LARGE</code>, <code>HUGE</code>, <code>GARGANTUAN</code>).</td></tr>
+  <tr><td><code>speed</code></td><td>double?</td><td>No</td><td>Velocidad base <strong>en metros</strong> (p. ej. <code>9</code> = 9 m; goliat <code>10.5</code>). Es opcional en un pack, pero el botón <strong>Importar especie</strong> (objeto suelto, §19.2) exige que esté presente.</td></tr>
+  <tr><td><code>size</code></td><td>string?</td><td>No</td><td>Tamaño por defecto (código en mayúsculas: <code>TINY</code>, <code>SMALL</code>, <code>MEDIUM</code>, <code>LARGE</code>, <code>HUGE</code>, <code>GARGANTUAN</code>).</td></tr>
   <tr><td><code>darkvision</code></td><td>double?</td><td>No</td><td>Radio de visión en la oscuridad <strong>en metros</strong> (0 = no tiene).</td></tr>
   <tr><td><code>traits</code></td><td>[FeatureDef]</td><td>No</td><td>Rasgos raciales (mismo <code>FeatureDef</code> que las clases).</td></tr>
   <tr><td><code>mechanics</code></td><td>[Grant]</td><td>No</td><td>Grants que aplican a nivel de especie.</td></tr>
 </table>
-<p>Hay dos sitios para poner mecánicas: dentro de un <code>trait</code> (<code>FeatureDef.mechanics</code>) cuando forman parte de un rasgo con nombre propio, o directamente en <code>mechanics</code> de la especie para efectos globales. Preferir <code>traits</code> cuando el rasgo tiene su propio nombre y texto.</p>
+<p>Hay dos sitios para poner mecánicas: dentro de un <code>trait</code> (<code>FeatureDef.mechanics</code>) o directamente en <code>mechanics</code> de la especie. Las dos funcionan, pero las <strong>9 especies del SRD</strong> ponen *todas* sus mecánicas en <code>mechanics</code> y dejan los <code>traits</code> como texto (nombre, descripción y nivel). Ten en cuenta una diferencia: una <strong>elección</strong> (<code>CHOICE</code>) en <code>mechanics</code> de la especie se ofrece en la pantalla de creación del personaje; una dentro de un <code>trait</code> no se ofrece ahí y queda como elección pendiente del motor. Si quieres que el jugador elija al crear (linaje, habilidad, tamaño), ponla en <code>mechanics</code>.</p>
 <h3 id="tamano-a-eleccion-choice-kind-size">Tamaño a elección (<code>CHOICE kind=SIZE</code>)</h3>
-<p>Si la especie permite <strong>elegir</strong> tamaño (p. ej. el aasimar: Pequeño o Mediano), <code>size</code> guarda el tamaño por defecto y se añade un grant <code>CHOICE</code> de <code>kind: &quot;SIZE&quot;</code> en <code>mechanics</code>. El jugador elige al crear el personaje; sus opciones son exactamente las de la lista (no hay rango automático):</p>
+<p>Si la especie permite <strong>elegir</strong> tamaño (p. ej. el aasimar: Pequeño o Mediano), <code>size</code> guarda el tamaño por defecto y se añade un grant <code>CHOICE</code> de <code>kind: &quot;SIZE&quot;</code> en <code>mechanics</code>. El jugador elige al crear el personaje y la ficha (y el PDF) muestran <strong>el tamaño elegido</strong>; si todavía no ha elegido, el <code>size</code> base. Las opciones son exactamente las de la lista (no hay rango automático). El <code>id</code> del <code>CHOICE</code> es la clave donde se guarda la elección, así que no lo cambies en una especie que ya usan personajes:</p>
 <pre><code>{
   &quot;type&quot;: &quot;CHOICE&quot;,
   &quot;id&quot;: &quot;aasimar_size&quot;,
@@ -132,7 +132,7 @@
   ],
   &quot;mechanics&quot;: []
 }</code></pre>
-<blockquote>El campo <code>darkvision</code> de la especie y un grant <code>SENSES</code> (<code>darkvision</code>) cumplen roles parecidos y <strong>ambos van en metros</strong>. El motor toma el máximo entre el <code>darkvision</code> de la especie y todos los <code>SENSES</code> activos (invocaciones, rasgos). Usa el campo para el dato base de la especie y el grant cuando el sentido lo aporta otra fuente. Ver §18 para unidades.</blockquote>
+<blockquote>El campo <code>darkvision</code> de la especie y un grant <code>SENSES</code> (<code>darkvision</code>) cumplen roles parecidos y <strong>ambos van en metros</strong>. El motor toma el máximo entre el <code>darkvision</code> de la especie y todos los <code>SENSES</code> activos (invocaciones, rasgos), y la pantalla de creación muestra ese mismo máximo. Usa el campo para el dato base de la especie y el grant cuando el sentido lo aporta otra fuente. Las 6 especies del SRD con visión en la oscuridad ponen el mismo valor en los dos sitios: es redundante, no un error. Ver §18 para unidades.</blockquote>
 <hr />
 <hr />
 <h2 id="ejemplo-especie-con-tamano-a-eleccion-y-tipo-de-criatura">Ejemplo — Especie — con tamaño a elección y tipo de criatura</h2>

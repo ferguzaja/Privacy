@@ -86,9 +86,9 @@
   <tr><th>Campo</th><th>Tipo</th><th>Obligatorio</th><th>Notas</th></tr>
   <tr><td><code>id</code></td><td>string</td><td>Sí</td><td></td></tr>
   <tr><td><code>display</code></td><td>DisplayInfo</td><td>Sí</td><td></td></tr>
-  <tr><td><code>level</code></td><td>int</td><td>Sí</td><td><code>0</code> = truco (cantrip).</td></tr>
-  <tr><td><code>school</code></td><td>string?</td><td>No</td><td>Escuela (texto libre).</td></tr>
-  <tr><td><code>castingTime</code></td><td>string?</td><td>No</td><td>P. ej. <code>&quot;1 acción&quot;</code>.</td></tr>
+  <tr><td><code>level</code></td><td>int</td><td>Sí</td><td><code>0</code> = truco (cantrip); de 1 a 9, conjuro de ese nivel. El editor solo ofrece 0 a 9.</td></tr>
+  <tr><td><code>school</code></td><td>string?</td><td>No</td><td>Escuela (texto libre; usa los códigos de abajo).</td></tr>
+  <tr><td><code>castingTime</code></td><td>string?</td><td>No</td><td>P. ej. <code>&quot;Acción&quot;</code>, <code>&quot;Acción adicional&quot;</code>, <code>&quot;1 min&quot;</code>.</td></tr>
   <tr><td><code>range</code></td><td>string?</td><td>No</td><td></td></tr>
   <tr><td><code>components</code></td><td>string?</td><td>No</td><td>P. ej. <code>&quot;V, S, M&quot;</code>.</td></tr>
   <tr><td><code>duration</code></td><td>string?</td><td>No</td><td></td></tr>
@@ -100,7 +100,7 @@
   <tr><td><code>healing</code></td><td>SpellHealing?</td><td>No</td><td>Curación estructurada (celda verde de tirada). Ver abajo.</td></tr>
   <tr><td><code>activeEffect</code></td><td>SpellActiveEffect?</td><td>No</td><td>Efecto que el conjuro mantiene mientras está activo (interruptor «Activar»). Ver abajo.</td></tr>
 </table>
-<p><strong>Códigos de escuela.</strong> <code>school</code> es texto libre, pero el catálogo y los filtros (<code>schools</code> en un <code>CHOICE</code>, <code>SPELL_DAMAGE_BONUS</code>) usan: <code>ABJURACION</code>, <code>ADIVINACION</code>, <code>CONJURACION</code>, <code>ENCANTAMIENTO</code>, <code>EVOCACION</code>, <code>ILUSION</code>, <code>NIGROMANCIA</code>, <code>TRANSMUTACION</code>.</p>
+<p><strong>Códigos de escuela.</strong> <code>school</code> es texto libre, pero el catálogo y los filtros (<code>schools</code> en un <code>CHOICE</code>, <code>SPELL_DAMAGE_BONUS</code>) usan: <code>ABJURACION</code>, <code>ADIVINACION</code>, <code>CONJURACION</code>, <code>ENCANTAMIENTO</code>, <code>EVOCACION</code>, <code>ILUSION</code>, <code>NIGROMANCIA</code>, <code>TRANSMUTACION</code>. Al comparar se ignoran mayúsculas y tildes (<code>Evocación</code> equivale a <code>EVOCACION</code>), pero conviene escribir el código sin tilde como hace el SRD: es lo que muestra el desplegable del editor.</p>
 <p><strong><code>damage</code> (<code>SpellDamage</code>)</strong> — todos los campos salvo <code>dice</code> y <code>type</code> son opcionales:</p>
 <table>
   <tr><th>Campo</th><th>Notas</th></tr>
@@ -110,28 +110,28 @@
   <tr><td><code>save</code></td><td>Característica de la salvación del objetivo (<code>&quot;DEX&quot;</code>). Ausente = <strong>ataque de conjuro</strong> (la ficha muestra la tirada de ataque).</td></tr>
   <tr><td><code>halfOnSave</code></td><td><code>true</code> = salvar reduce el daño a la mitad.</td></tr>
   <tr><td><code>extra</code></td><td>Lista de <strong>daños adicionales de otro tipo</strong> que el conjuro inflige a la vez: <code>[{ &quot;dice&quot;: &quot;4d6&quot;, &quot;type&quot;: &quot;cold&quot;, &quot;scaling&quot;: { … } }]</code>. Cada uno tiene sus propios dados, tipo y escalado, y comparte <code>save</code>, <code>halfOnSave</code> y <code>count</code> del bloque principal. La ficha los tira juntos y desglosa el resultado por tipo (para aplicar resistencias). Ejemplo: Tormenta de hielo = <code>2d10</code> contundente + <code>4d6</code> frío.</td></tr>
-  <tr><td><code>count</code></td><td>Para conjuros que escalan en <strong>cantidad</strong> de tiradas y no en dados: <code>{ &quot;rule&quot;: &quot;FIXED&quot; \| &quot;CANTRIP_LEVEL&quot; \| &quot;SLOT_LEVEL&quot;, &quot;base&quot;: 3, &quot;perStep&quot;: 1, &quot;label&quot;: &quot;dardos&quot; }</code> (Proyectil mágico, Rayo abrasador). La ficha muestra «×N dardos»; cada tirada la haces tú.</td></tr>
+  <tr><td><code>count</code></td><td>Para conjuros que escalan en <strong>cantidad</strong> de tiradas y no en dados: <code>{ &quot;rule&quot;: &quot;FIXED&quot; \| &quot;CANTRIP_LEVEL&quot; \| &quot;SLOT_LEVEL&quot;, &quot;base&quot;: 3, &quot;perStep&quot;: 1, &quot;label&quot;: &quot;dardos&quot; }</code> (Proyectil mágico, Rayo abrasador). <code>label</code> es obligatorio; <code>rule</code> vale <code>FIXED</code>, <code>base</code> 1 y <code>perStep</code> 1 por defecto, y una <code>rule</code> desconocida se trata como <code>FIXED</code>. La ficha muestra «×N dardos»; cada tirada la haces tú.</td></tr>
 </table>
-<p><strong><code>healing</code> (<code>SpellHealing</code>)</strong>: <code>dice</code> (dados base), <code>scaling</code> (igual que en el daño) y <code>addSpellMod</code> (default <code>true</code>: suma el modificador de aptitud mágica).</p>
+<p><strong>Fórmulas de dados.</strong> <code>dice</code> y <code>dicePerStep</code> deben ser <code>NdM</code> o <code>NdM+K</code> (<code>2d6</code>, <code>1d4+1</code>; <code>-K</code> también vale). Cualquier otra cosa (<code>1d6+1d4</code>, texto) se importa pero <strong>la ficha no puede tirarla</strong> y el conjuro se queda sin celda de daño, sin ningún aviso.</p>
+<p><strong><code>healing</code> (<code>SpellHealing</code>)</strong>: <code>dice</code> (dados base), <code>scaling</code> (igual que en el daño) y <code>addSpellMod</code> (default <code>true</code>: suma el modificador de aptitud mágica). No lleva tipo de daño ni salvación. Con <code>scaling.rule = CANTRIP_LEVEL</code> solo tiene sentido en trucos.</p>
 <p><strong>Gasto del espacio.</strong> La ficha tira los dados, pero <strong>no gasta el espacio de conjuro por ti</strong>: el jugador lo marca a mano. El selector de nivel de lanzamiento sí ofrece los niveles de espacio que tienes (los de pacto del Brujo incluidos) para calcular el escalado.</p>
 <p><strong><code>activeEffect</code> (<code>SpellActiveEffect</code>)</strong> — conjuros que se encienden y se apagan mientras duran:</p>
 <table>
   <tr><th>Campo</th><th>Para qué</th></tr>
-  <tr><td><code>weaponBonusDamage</code></td><td>Lista de <code>{ &quot;dice&quot;, &quot;type&quot; }</code> que se suma a cada ataque con arma mientras está activo (Favor divino 1d4 radiante, Maleficio 1d6 necrótico, Marca del cazador).</td></tr>
+  <tr><td><code>weaponBonusDamage</code></td><td>Lista de <code>{ &quot;dice&quot;, &quot;type&quot; }</code> que se suma a cada ataque con arma mientras está activo (Favor divino 1d4 radiante, Maleficio 1d6 necrótico, Marca del cazador). Admite también <code>perCantripTier: true</code> para repetir los dados en los niveles 5, 11 y 17 (Impacto certero).</td></tr>
   <tr><td><code>attack</code> / <code>attacks</code></td><td>Ataque(s) que el conjuro crea: <code>{ &quot;damage&quot;: SpellDamage, &quot;addSpellMod&quot;: true, &quot;name&quot;: &quot;Puño cerrado&quot; }</code>. Añaden una fila en Combate (Arma espiritual, Mano de Bigby). Si el <code>damage</code> lleva <code>save</code>, la fila muestra la CD en vez del d20.</td></tr>
-  <tr><td><code>weaponAbility</code></td><td>Tus ataques con arma usan tu aptitud mágica (Impacto certero, Shillelagh): <code>weaponIds</code>, <code>meleeOnly</code>, <code>damageDiceByTier</code> (dado del arma en <code>[nv.1, nv.5, nv.11, nv.17]</code>), <code>grantsProficiency</code>.</td></tr>
+  <tr><td><code>weaponAbility</code></td><td>Tus ataques con arma usan tu aptitud mágica (Impacto certero, Shillelagh): <code>weaponIds</code>, <code>meleeOnly</code>, <code>damageDiceByTier</code> (dado del arma en <code>[nv.1, nv.5, nv.11, nv.17]</code>), <code>grantsProficiency</code>. Todos los campos son opcionales: <code>&quot;weaponAbility&quot;: {}</code> es válido y significa «cualquier arma, sin cambiar el dado».</td></tr>
 </table>
 <p>Encender un conjuro de concentración apaga el anterior; un descanso apaga todos. No hay temporizador: el jugador lo apaga cuando termina.</p>
 <pre><code>{
   &quot;id&quot;: &quot;fire_bolt&quot;,
   &quot;display&quot;: { &quot;name&quot;: &quot;Rayo de fuego&quot;, &quot;description&quot;: &quot;Lanzas una mota de fuego…&quot; },
   &quot;level&quot;: 0,
-  &quot;school&quot;: &quot;Evocación&quot;,
-  &quot;castingTime&quot;: &quot;1 acción&quot;,
+  &quot;school&quot;: &quot;EVOCACION&quot;,
+  &quot;castingTime&quot;: &quot;Acción&quot;,
   &quot;range&quot;: &quot;36 m&quot;,
   &quot;components&quot;: &quot;V, S&quot;,
   &quot;duration&quot;: &quot;Instantánea&quot;,
-  &quot;higherLevel&quot;: &quot;El daño aumenta a niveles 5, 11 y 17.&quot;,
   &quot;classes&quot;: [&quot;sorcerer&quot;, &quot;wizard&quot;],
   &quot;damage&quot;: { &quot;dice&quot;: &quot;1d10&quot;, &quot;type&quot;: &quot;fire&quot;, &quot;scaling&quot;: { &quot;rule&quot;: &quot;CANTRIP_LEVEL&quot;, &quot;dicePerStep&quot;: &quot;1d10&quot; } }
 }</code></pre>
