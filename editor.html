@@ -136,6 +136,7 @@
 </ul>
 </li>
 </ol>
+<figure><img src="img/conjuro-lanzamiento.png" alt="Tiempo de lanzamiento, alcance, componentes y duración como desplegables y chips" loading="lazy" /><figcaption>Tiempo de lanzamiento, alcance, componentes y duración como desplegables y chips</figcaption></figure>
 <figure><img src="img/conjuro-nuevo.png" alt="Formulario de conjuro nuevo: nivel, escuela y datos de lanzamiento" loading="lazy" /><figcaption>Formulario de conjuro nuevo: nivel, escuela y datos de lanzamiento</figcaption></figure>
 <ol>
 <li>Si el conjuro hace daño, activa <strong>Inflige daño</strong> y completa:
@@ -276,7 +277,7 @@
 <ul>
 <li>Al <strong>editar</strong> un trasfondo del SRD (o importado), la mejora de característica y la dote conservan su <code>id</code>, título y, con la misma dote, su <code>fromClass</code> y descripción; el <code>id</code> es la clave donde los personajes ya creados guardaron su reparto. Si cambias de dote se descarta lo de la anterior.</li>
 <li>Una <strong>dote a elegir por el jugador</strong> (grant <code>FEAT</code> sin <code>featId</code>) no se edita en la sección de dote: aparece en <strong>Otros efectos (avanzado)</strong> y se conserva.</li>
-<li><strong>Nombres de habilidad.</strong> El motor compara las competencias como texto exacto. Al importar (pack u objeto suelto) la app corrige sola los nombres que solo difieren del de la lista en mayúsculas, tildes o espacios («Juego de Manos» → «Juego de manos») en las competencias de habilidad, en el <code>pool</code> de las elecciones de habilidad y en las habilidades de clase; el validador lo avisa con una nota. Una palabra distinta («Arcanos» en vez de «Conocimiento arcano») no se corrige: usa el nombre de la lista. Las herramientas no se tocan.</li>
+<li><strong>Nombres de habilidad.</strong> El motor compara las competencias como texto exacto. Al importar (pack u objeto suelto) la app corrige sola los nombres que solo difieren del de la lista en mayúsculas, tildes o espacios («Juego de Manos» → «Juego de manos») en las competencias de habilidad, en el <code>pool</code> de las elecciones de habilidad y en las habilidades de clase; el validador lo avisa con una nota. Una palabra distinta («Arcanos» en vez de «Conocimiento arcano») no se corrige: usa el nombre de la lista. Lo mismo vale para las <strong>herramientas</strong>, los instrumentos y los juegos del catálogo («útiles de herborista» → «Útiles de herborista»), con una diferencia: las herramientas solo se muestran en la ficha y el PDF, ninguna regla depende de ellas, así que el efecto es evitar que salgan repetidas con dos grafías.</li>
 <li>Las herramientas guardan solo el nombre; el objeto de equipo sí guarda su <code>id</code> del catálogo.</li>
 <li>Si no indicas <strong>Oro alternativo</strong>, la opción B del jugador da 0 po.</li>
 <li>Al importar un pack, el validador avisa (sin bloquear) de un trasfondo sin mejora de característica, con <code>pool</code> distinto de 3, con una dote que no existe, con más de una dote, sin <code>goldAlternative</code> o con <code>id</code> de equipo desconocidos.</li>
@@ -374,9 +375,38 @@
 <li>Las <strong>velocidades de vuelo, nado y trepar</strong> y los <strong>idiomas</strong> no son campos de la especie: se expresan con efectos (el Dracónido lo hace con un recurso).</li>
 </ul>
 </li>
-<li><strong>Clases:</strong> mínimos de multiclase distintos por característica, orden de características recomendado, tablas de progresión propias (espacios de conjuro, recursos por nivel con <code>FROM_TABLE</code>), <code>WEAPON_MASTERY</code> y la progresión propia de una subclase.</li>
+<li><strong>Clases:</strong>
+<ul>
+<li><strong>Mínimos de multiclase distintos</strong> por característica: el editor usa un único mínimo (13) para todas las marcadas.</li>
+<li>El <strong>orden de características recomendado</strong> y las <strong>tablas de progresión propias</strong> (espacios de conjuro, recursos por nivel con <code>FROM_TABLE</code>). La progresión estándar se rellena sola.</li>
+<li><code>WEAPON_MASTERY</code> como efecto y la progresión propia de una subclase.</li>
+<li><strong>Elegir una dote concreta</strong> (<code>featId</code>) o filtrar la dote a elegir por lista de clase.</li>
 </ul>
-<p>Si importas un objeto con esos datos y lo editas en la app, el formulario conserva los campos que no muestra, incluidos el icono, el texto de ambientación y el resumen corto (<code>display</code>). Está comprobado en el código para <strong>clases</strong> (con sus rasgos y subclases), <strong>equipo</strong>, <strong>conjuros</strong> (también el <code>activeEffect</code> y el <code>count</code>, con las excepciones de §21.3) y <strong>especies</strong> (también el tamaño y su elección, §21.8). En dotes y trasfondos el <code>display</code> también se conserva; el resto de sus campos ocultos queda pendiente de revisar en la auditoría de cada tipo.</p>
+</li>
+<li><strong>Trasfondos:</strong>
+<ul>
+<li><strong>Conjuntos de equipo alternativos</strong>: el trasfondo solo tiene la opción A (objetos y oro incluido) y la B (oro alternativo). Las clases sí admiten más conjuntos (§21.9).</li>
+<li>Una <strong>herramienta enlazada al catálogo por <code>id</code></strong>: el editor guarda solo el nombre.</li>
+<li>Otro <strong>reparto</strong> de las mejoras de característica: es siempre de 3 puntos entre 3 características (+2/+1 o +1/+1/+1, máximo +2 en una); <code>points</code> y <code>pick</code> no lo cambian.</li>
+<li>Una <strong>dote a elegir</strong> (grant <code>FEAT</code> sin <code>featId</code>): el editor la conserva en «Otros efectos (avanzado)» pero no la crea.</li>
+</ul>
+</li>
+<li><strong>Dotes:</strong>
+<ul>
+<li><strong><code>requiresClass</code></strong> (dote exclusiva de una clase, como Guerrero bendito): el editor lo conserva al editar pero no lo muestra.</li>
+<li>Prerrequisitos de <strong>otra dote, clase, especie o competencia</strong>: el modelo no los tiene. Los prerrequisitos solo se comprueban al subir de nivel, no en la dote de origen del trasfondo.</li>
+<li><code>abilityCap</code> y <code>grantsSavingThrowProficiency</code> de las mejoras de característica: el constructor no los ofrece, así que no se pueden crear los dones épicos (tope 30) ni Resiliente (competencia en la salvación). Se conservan si los importas.</li>
+</ul>
+</li>
+<li><strong>En cualquier tipo:</strong> un efecto o una opción ya creados <strong>no se editan</strong>, solo se borran y se vuelven a crear.</li>
+</ul>
+<p>Si importas un objeto con esos datos y lo editas en la app, el formulario conserva los campos que no muestra, incluidos el icono, el texto de ambientación y el resumen corto (<code>display</code>). Está comprobado en el código para los seis tipos:</p>
+<ul>
+<li><strong>Clases</strong> (con sus rasgos y subclases), <strong>equipo</strong>, <strong>conjuros</strong> (también el <code>activeEffect</code> y el <code>count</code>, con las excepciones de §21.3) y <strong>especies</strong> (también el tamaño y su elección, §21.8).</li>
+<li><strong>Trasfondos</strong>: la mejora de característica y la dote conservan su <code>id</code>, título, <code>fromClass</code> y descripción mientras no cambies de dote (§21.7).</li>
+<li><strong>Dotes</strong>: <code>requiresClass</code>, el icono y la ambientación (§21.6).</li>
+</ul>
+<p><strong>Qué corrige la app al importar.</strong> Las habilidades y herramientas escritas distinto del catálogo en mayúsculas, tildes o espacios («Juego de Manos») se corrigen solas, y la categoría antigua de dote <code>FIGHTING_STYLE</code> pasa a <code>COMBAT_STYLE</code>. El validador (§19) avisa de lo demás sin bloquear la importación.</p>
   </div>
 </body>
 </html>
